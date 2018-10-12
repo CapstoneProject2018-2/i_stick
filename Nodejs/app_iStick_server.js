@@ -6,8 +6,8 @@ var hasher = bkfd2Password();                     //  hash func
 var app = express();
 var conn = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  password: 'password',
+  user: 'root',         
+  password: 'password', //  must change when you want to use
   database: 'i_stick'
 });
 
