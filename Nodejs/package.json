@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ckddn9496/i_stick#readme",
   "dependencies": {
     "express": "^4.16.3",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "pbkdf2-password": "^1.2.1"
   }
 }

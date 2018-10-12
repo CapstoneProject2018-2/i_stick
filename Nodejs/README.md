@@ -32,3 +32,7 @@ getExtra : no, id 받기
 
 - 담당 user추가 dialog : user id, pw입력하여 등록 : yet
 /parent/regist
+
+<h1>2018-10-13 Hashing</h1>
+<li>사용자 회원가입, 로그인, 개인정보 변경에서 password에 암호화 설정</li>
+<li>DB에 암호화되어 저장</li>

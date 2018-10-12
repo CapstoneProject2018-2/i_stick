@@ -1,12 +1,13 @@
-const express = require('express');
-const mysql = require('mysql');
-// const bodyParser = require('body-parser');  //  for post (req.body.*)
+const express = require('express');               //  for app
+const mysql = require('mysql');                   //  for conn with mysql
+const bkfd2Password = require('pbkdf2-password'); //  for hash the passwd
+var hasher = bkfd2Password();                     //  hash func
 
 var app = express();
 var conn = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '111111',
+  password: 'password',
   database: 'i_stick'
 });
 
@@ -14,6 +15,8 @@ conn.connect(); //  database 접속
 app.use(express.urlencoded({ extended: false }))
 // var jsonParser = bodyParser.json()
 app.use(express.json());
+
+// const bodyParser = require('body-parser');  //  for post (req.body.*)
 // parse various different custom JSON types as JSON
 // app.use(bodyParser.json())
 // app.use(bodyParser.json({ type: 'application/*+json' }))
@@ -48,16 +51,20 @@ app.post('/login', (req, res) => {
     } else if (datas[0] == null) {
       console.log('unknown ID');
       res.send('unknown ID');
-    } else if (inputData.pw === datas[0].pw){
-      let info = {
-        no: datas[0].no,
-        id: datas[0].id
-      };
-      res.json(info);
-    } else {
-      console.log('wrong Password');
-      res.send('wrong Password');
-    }
+    } //  Error or do not exist corresponding ID...
+    var opts = {password : inputData.pw, salt : datas[0].salt}  //  login pw, db salt
+    hasher(opts, function(err, pass, salt, hash) {
+      if (hash == datas[0].pw) {
+        var info = {
+          no : datas[0].no,
+          id : datas[0].id
+        }
+        res.send(info);
+      } else {
+        console.log('wrong Password');
+        res.send('wrong Password');        
+      }
+    });
   });
 });
 
@@ -88,29 +95,37 @@ app.post('/register', function(req, res) {  //  id pw name mobile type
   const inputData = req.body;
   console.log(inputData);
   var sql = '';
+  var id = inputData.id;
+  var pw = inputData.pw;
+  var name = inputData.name;
+  var mobile = inputData.mobile;
+  
   if (inputData.type === 0) {  //  user
-    sql = 'INSERT INTO user (id, pw, name, mobile) VALUES (?,?,?,?);';
+    sql = 'INSERT INTO user (id, pw, salt, name, mobile) VALUES (?,?,?,?,?);';
   } else if (inputData.type === 1) {  //  parent
-    sql = 'INSERT INTO parent (id, pw, name, mobile) VALUES (?,?,?,?);';
+    sql = 'INSERT INTO parent (id, pw, salt, name, mobile) VALUES (?,?,?,?,?);';
   }
-  conn.query(sql, [inputData.id, inputData.pw, inputData.name, inputData.mobile], function(err, data) {
-    if (err) {
-      console.log(err);
-      res.send('failed the ID creation...')
-    } else {
-      console.log(data[0]);
-      res.send(inputData.id);
-    }
+  var opts = { password : pw };
+  hasher(opts, function(err, pass, salt, hash) {
+    conn.query(sql, [id, hash, salt, name, mobile], function(err, data) {
+      if (err) {
+        console.log(err);
+        res.send('failed the ID creation...')
+      } else {
+        console.log(data[0]);
+        res.send(inputData.id);
+      }
+    });
   });
 });
 
 //  implement
 //  user mode
 //  user login -> client(user) send location periodically
-app.post('/user/navigate', function(req, res) { //  길찾기 모드
-  //  get data from user's application
+// app.post('/user/navigate', function(req, res) { //  길찾기 모드
+//   //  get data from user's application
 
-});
+// });
 
 // user main : send current location to Server 1008
 app.post('/user', function(req, res) {
@@ -145,28 +160,35 @@ app.post('/parent/edit', function(req, res) {
   var oldpw = inputData.oldpw;
   var newpw = inputData.newpw;
   /*  oldpw가 일치하면 UPDATE, 일치하지 않으면 send error msg */
-  var sql = 'SELECT pw FROM parent WHERE id=?'
-  conn.query(sql, inputData.id, function(err, pw) {
+  var sql = 'SELECT pw, salt FROM parent WHERE id=?'
+  conn.query(sql, inputData.id, function(err, data) {
+    console.log(data);
     if (err) {
       console.log(err);
       res.send(err);
     } else {  //  id 는 무조건 존재한다. query 의 결과는 하나가 나옴
-      if (pw[0].pw != oldpw) { //  비밀번호 불일치
-        console.log('Wrong Password');
-        res.send('Wrong Password');
-      } else {  //  비밀번호 일치 -> 변경
-        var sql = 'UPDATE parent SET pw=? WHERE id=?'
-        conn.query(sql, [newpw, id], function(err, results) {
-          if (err) {
-            console.log(err);
-            res.send('Error');
-          } else {
-            console.log(results);
-            console.log('change completed!!');
-            res.send('OK');
-          }
-        })
-      }
+      var opts = { password: oldpw, salt: data[0].salt}
+      hasher(opts, function(err, pass, salt, hash) {
+        if (data[0].pw != hash) {  // 비밀번호 불일치
+          console.log('Wrong Password');
+          res.send('Wrong Password');        
+        } else {  //  일치 -> update
+          hasher({ password: newpw}, function(err, pass, salt, hash) {
+            // 새로운 hash(db pw) 와 salt값 갱신
+            var sql = 'UPDATE parent SET pw=?, salt=? WHERE id=?'
+            conn.query(sql, [hash, salt, id], function(err, results) {
+              if (err) {
+                console.log(err);
+                res.send('Error');
+              } else {
+                console.log(results);
+                console.log('change completed!!');
+                res.send('OK');
+              }
+            })
+          });
+        }
+      });
     }
   });
 }); //  내 정보 수정
@@ -209,8 +231,6 @@ app.post('/parent', function(req, res) {  //  /parent 1008
   });
 });
 
-
-
-app.listen(5555, () => {  //  portNum
-  console.log('Example app listening on port 5555!');
-});
+app.listen(5555, function() {
+  console.log('I Stick Server is listening on port 5555');
+})
