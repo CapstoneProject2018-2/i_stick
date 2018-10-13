@@ -51,20 +51,24 @@ app.post('/login', (req, res) => {
     } else if (datas[0] == null) {
       console.log('unknown ID');
       res.send('unknown ID');
-    } //  Error or do not exist corresponding ID...
-    var opts = {password : inputData.pw, salt : datas[0].salt}  //  login pw, db salt
-    hasher(opts, function(err, pass, salt, hash) {
-      if (hash == datas[0].pw) {
-        var info = {
-          no : datas[0].no,
-          id : datas[0].id
+      //  Error or do not exist corresponding ID...
+    } else {  
+      /*  Problem - else를 넣지 않았을때, opts 까지 만들고 res.send('unknown ID')가 수행.. Error
+      **  Solution - 동기적인 진행을 위하여 else 문에 넣어서 위의 조건에 닿을시 실행이 되지 않도록 구성 */
+      var opts = {password : inputData.pw, salt : datas[0].salt}  //  login pw, db salt
+      hasher(opts, function(err, pass, salt, hash) {
+        if (hash == datas[0].pw) {
+          var info = {
+            no : datas[0].no,
+            id : datas[0].id
+          }
+          res.send(info);
+        } else {
+          console.log('wrong Password');
+          res.send('wrong Password');        
         }
-        res.send(info);
-      } else {
-        console.log('wrong Password');
-        res.send('wrong Password');        
-      }
-    });
+      });
+    }
   });
 });
 
