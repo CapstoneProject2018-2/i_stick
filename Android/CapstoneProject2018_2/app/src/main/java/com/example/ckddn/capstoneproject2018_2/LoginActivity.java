@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,16 +26,16 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-//어플리케이션 첫 화면 로그인 or 등록 화면
-//implemented by 손창우
-//modifed by 양인수
+//implemented by Changwoo Son
+//modified by Insu Yang
 
 public class LoginActivity extends AppCompatActivity {
-    public static final int REQUEST_CODE_REG = 101;
+    //    public static final int REQUEST_CODE_REG = 101;
     private EditText id;
     private EditText password;
     private RadioButton user_radio;
     private RadioButton parent_radio;
+    private RadioGroup radioGroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,32 +45,35 @@ public class LoginActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.password);
         user_radio = (RadioButton) findViewById(R.id.user_radio_btn);
         parent_radio = (RadioButton) findViewById(R.id.parent_radio_btn);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
 
         final Button signInBut = (Button) findViewById(R.id.sign_in_button);
         signInBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new SignInTask().execute("http://192.168.0.14:5555/login", id.getText().toString(), password.getText().toString());
+                if ((id.getText().toString().equals("") || password.getText().toString().equals("") || radioGroup.getCheckedRadioButtonId() == -1))
+                    Toast.makeText(getApplicationContext(), "fill the login info", Toast.LENGTH_LONG).show();
+                else
+                    new SignInTask().execute("http://" + ServerInfo.ipAddress +"/login", id.getText().toString(), password.getText().toString());
 
                 //intended for off-line coding
                 //does not request for correctness to server (free pass)
-                signInBut.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(LoginActivity.this, ParentActivity.class);
-                        startActivity(intent);
-                    }
-                });
             }
         });
+//        signInBut.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(LoginActivity.this, ParentActivity.class);
+//                        startActivity(intent);
+//                    }
+//        });
 
         Button regBut = (Button) findViewById(R.id.register_button);
         regBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent regIntent = new Intent(getApplicationContext(), RegistActivity.class);
-                startActivityForResult(regIntent, REQUEST_CODE_REG);
-//                new RegistTask().execute();
+                startActivity(regIntent);
             }
         });
     }
@@ -136,7 +141,6 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(result);  //  get json file from server(res.json(data))
                 Intent signInIntent = new Intent();
-
                 if (user_radio.isChecked()){
                     signInIntent.setClass(getApplicationContext(), UserActivity.class);
                 }
@@ -144,27 +148,17 @@ public class LoginActivity extends AppCompatActivity {
 //                    Log.d(TAG, "onPostExecute: parent mode login");
                     signInIntent.setClass(getApplicationContext(), ParentActivity.class);
                 }
-
+                signInIntent.putExtra("no", jsonObject.getString("no"));
                 signInIntent.putExtra("id", jsonObject.getString("id"));
                 startActivity(signInIntent);
             } catch (JSONException e) { //  JSON형식이 아니라면 ERROR
                 Log.d(TAG, "onPostExecute: " + result);
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
     }
 
-//    public class RegistTask extends AsyncTask<String, String, String> {
-//        @Override
-//        protected String doInBackground(String... strings) {
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String s) {
-//            super.onPostExecute(s);
-//        }
-//    }
-
 }
+
 

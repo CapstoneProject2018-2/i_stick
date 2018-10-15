@@ -98,9 +98,11 @@
 
                 <EditText
                     android:id="@+id/p_pw_now"
-                    android:hint="현재 비밀번호를 입력하시오"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:hint="현재 비밀번호를 입력하시오"
+                    android:inputType="textPassword"
+                    android:maxLines="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -115,9 +117,11 @@
 
                 <EditText
                     android:id="@+id/p_pw_new"
-                    android:hint="새로운 비밀번호를 입력하시오"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:hint="새로운 비밀번호를 입력하시오"
+                    android:inputType="textPassword"
+                    android:maxLines="1"/>
 
             </LinearLayout>
 
@@ -132,9 +136,11 @@
 
                 <EditText
                     android:id="@+id/p_pw_confirm"
-                    android:hint="다시 비밀번호를 입력하시오"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:hint="다시 비밀번호를 입력하시오"
+                    android:inputType="textPassword"
+                    android:maxLines="1"/>
 
                 <Button
                     android:id="@+id/cPwBtn"

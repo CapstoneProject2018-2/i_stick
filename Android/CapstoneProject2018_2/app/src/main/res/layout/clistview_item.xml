@@ -12,7 +12,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_weight="4"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
         <TextView
@@ -32,4 +32,8 @@
             />
     </LinearLayout>
 
+    <RadioButton
+        android:id="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

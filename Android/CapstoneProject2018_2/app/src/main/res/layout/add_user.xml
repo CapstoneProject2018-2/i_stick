@@ -12,7 +12,7 @@
         android:id="@+id/add_title"
         android:layout_centerHorizontal="true"
         android:text="새로운 사용자 추가"
-        android:textSize="20sp"
+        android:textSize="30sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -25,12 +25,14 @@
 
     <EditText
         android:id="@+id/enter_id"
-        android:ems="10"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@+id/add_id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <requestFocus/>/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_id"
+        android:layout_marginBottom="10dp"
+        android:ems="10"
+        android:maxLines="1">
+
+        <requestFocus />/>
     </EditText>
 
 
@@ -43,12 +45,13 @@
 
     <EditText
         android:id="@+id/enter_pw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_pw"
+        android:layout_marginBottom="10dp"
         android:ems="10"
         android:inputType="textPassword"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@id/add_pw"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:maxLines="1" />
 
     <Button
         android:id="@+id/d_add_btn"
