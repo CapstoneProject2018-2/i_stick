@@ -163,8 +163,8 @@ app.post('/user', function(req, res) {
  * if user regist yet, then insert into rpu table 
  * if not, send error messages
  */
-app.post('/parent/regist', function(req, res) { //  pno id pw 받아와 인증 후 등록
-  console.log('/parent/regist');
+app.post('/parent/register', function(req, res) { //  pno id pw 받아와 인증 후 등록
+  console.log('/parent/register');
   const inputData = req.body; //  id, pw
   const pno = inputData.no;
   const id = inputData.id;
