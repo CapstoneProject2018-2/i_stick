@@ -29,7 +29,7 @@ app.use(express.json());
 
 
 
-//   from login page
+/*  Login Page */
 // {id,pw,type}
 app.post('/login', (req, res) => {
   console.log('/login');
@@ -123,8 +123,8 @@ app.post('/register', function(req, res) {  //  id pw name mobile type
   });
 });
 
-//  implement
-//  user mode
+/*  User Mode */
+
 //  user login -> client(user) send location periodically
 // app.post('/user/navigate', function(req, res) { //  길찾기 모드
 //   //  get data from user's application
@@ -151,10 +151,62 @@ app.post('/user', function(req, res) {
   });
 });
 
-// parent mode
+/*  Parent Mode */
+
 // parent login -> client(parent)
 // can request registing the user using user's id, pw
 // ParentActivity에서 '내 정보 수정' 버튼 클릭시 이동, 비밀번호 수정
+
+
+/** /parent/regist get parameter : pno, userID, userPW
+ * check userID existence if it exist, check pw correction.
+ * if user regist yet, then insert into rpu table 
+ * if not, send error messages
+ */
+app.post('/parent/regist', function(req, res) { //  pno id pw 받아와 인증 후 등록
+  console.log('/parent/regist');
+  const inputData = req.body; //  id, pw
+  const pno = inputData.no;
+  const id = inputData.id;
+  const pw = inputData.pw;
+  /* id로 pw와 salt일치 여부 확인 */
+  var sql = 'SELECT no, pw, salt FROM user WHERE id=?'; //  uno, pw(hash), salt
+  conn.query(sql, id, function(err, info) {
+    if (err) {
+      console.log(err);
+      res.send(err)
+    } else if (info[0] == null) {
+      console.log('Wrong ID');
+      res.send('존재하지 않는 사용자의 ID입니다.');
+    } else {  //  id 존재 hasher로 pw비교
+      hasher({password: pw, salt: info[0].salt}, function(err, pass, salt, hash) {
+        if (err) {
+          console.log(err);
+          res.send(err);;
+        } else if (info[0].pw == hash) {  //  add relation to rpu relation
+          console.log('correct!');
+          var sql = 'INSERT INTO rpu(pno, uno) VALUES(?,?)'
+          conn.query(sql, [pno, info[0].no], function(err, results) {
+            if (err) {
+              console.log(err);
+              res.send(err);
+            } else {
+              console.log(results[0]);
+              /* implement 1. when user is already registered...
+              **           2. when registration succeed*/ 
+            }
+          });
+        } else {
+          console.log('Wrong password');
+          res.send('비밀번호를 잘못 입력하셨습니다.');
+        }
+
+      });
+    }
+  });
+
+}); //  button "추가" : regist user
+
 app.post('/parent/edit', function(req, res) {
   /*  form : id, recent pw, new pw (비밀번호 확인은 android 책임)*/
   console.log('/parent/edit');
@@ -196,7 +248,6 @@ app.post('/parent/edit', function(req, res) {
     }
   });
 }); //  내 정보 수정
-
 
 //  ParentActiviy에서 getUserInfo함수 호출, 서버로 부터 해당 no의 parent가 관리하는 user의 정보를 받아와 List에 담는다.
 app.post('/parent', function(req, res) {  //  /parent 1008
