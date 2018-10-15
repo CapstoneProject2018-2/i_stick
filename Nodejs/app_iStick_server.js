@@ -166,11 +166,11 @@ app.post('/user', function(req, res) {
 app.post('/parent/register', function(req, res) { //  pno id pw 받아와 인증 후 등록
   console.log('/parent/register');
   const inputData = req.body; //  id, pw
-  const pno = inputData.no;
+  const pno = inputData.pno;
   const id = inputData.id;
   const pw = inputData.pw;
   /* id로 pw와 salt일치 여부 확인 */
-  var sql = 'SELECT no, pw, salt FROM user WHERE id=?'; //  uno, pw(hash), salt
+  var sql = 'SELECT * FROM user WHERE id=?'; //  uno, pw(hash), salt
   conn.query(sql, id, function(err, info) {
     if (err) {
       console.log(err);
@@ -179,6 +179,7 @@ app.post('/parent/register', function(req, res) { //  pno id pw 받아와 인증
       console.log('Wrong ID');
       res.send('존재하지 않는 사용자의 ID입니다.');
     } else {  //  id 존재 hasher로 pw비교
+      var uno = info[0].no;
       hasher({password: pw, salt: info[0].salt}, function(err, pass, salt, hash) {
         if (err) {
           console.log(err);
@@ -186,14 +187,16 @@ app.post('/parent/register', function(req, res) { //  pno id pw 받아와 인증
         } else if (info[0].pw == hash) {  //  add relation to rpu relation
           console.log('correct!');
           var sql = 'INSERT INTO rpu(pno, uno) VALUES(?,?)'
-          conn.query(sql, [pno, info[0].no], function(err, results) {
+          conn.query(sql, [pno, uno], function(err, results) {
             if (err) {
+              // console.log('Error');
               console.log(err);
-              res.send(err);
+              res.send('이미 등록된 사용자 입니다.');
             } else {
-              console.log(results[0]);
-              /* implement 1. when user is already registered...
-              **           2. when registration succeed*/ 
+              /* implement 1. when user is already registered... : error
+              **           2. when registration succeed*/
+              console.log(info[0]); //  select * from user
+              res.send(info[0]);
             }
           });
         } else {
@@ -229,7 +232,7 @@ app.post('/parent/edit', function(req, res) {
           console.log('Wrong Password');
           res.send('Wrong Password');        
         } else {  //  일치 -> update
-          hasher({ password: newpw}, function(err, pass, salt, hash) {
+          hasher({ password: newpw }, function(err, pass, salt, hash) {
             // 새로운 hash(db pw) 와 salt값 갱신
             var sql = 'UPDATE parent SET pw=?, salt=? WHERE id=?'
             conn.query(sql, [hash, salt, id], function(err, results) {
