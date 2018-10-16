@@ -29,3 +29,9 @@ I Stick Server Notification using Nodejs
   <li>DB에 암호화되어 저장</li>
   <li>비동기적 진행으로 인한 로그인 과정 에러 해결</li>
 </ul>
+
+<h1>2018-10-16 Connect with Android Application</h1>
+<ul>
+  <li>Parnet화면에서 관리하려는 사용자(User)추가 기능 추가</li>
+  <li>Istick ver1.0 에서 ver1.1 업데이트</li>
+</ul>
