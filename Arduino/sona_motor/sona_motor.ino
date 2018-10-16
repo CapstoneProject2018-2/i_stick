@@ -1,7 +1,7 @@
 
 int trigPin = 9;
 int echoPin = 8;
-int motorPin = 6;
+int motorPin = 3;
 void setup(){
   Serial.begin(9600);
   pinMode(trigPin, OUTPUT);
@@ -20,7 +20,8 @@ void loop(){
   Serial.print("DIstance:");
   Serial.print(d);
   Serial.println("cm\n");
-  analogWrite( motorPin , 100 );
+  analogWrite( motorPin , 200 );
   delay(500);
   }
+  analogWrite(motorPin, 0);  
 }
