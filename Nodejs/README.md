@@ -35,3 +35,7 @@ I Stick Server Notification using Nodejs
   <li>Parnet화면에서 관리하려는 사용자(User)추가 기능 추가</li>
   <li>Istick ver1.0 에서 ver1.1 업데이트</li>
 </ul>
+<h1>2018-10-29</h1>
+<ul>
+  <li>클라우드 서버 외부 고정 ip 설정 - Android Server interface에 갱신</li>
+</ul>
