@@ -29,3 +29,8 @@ I Stick Server Notification using Nodejs
   <li>DB에 암호화되어 저장</li>
   <li>비동기적 진행으로 인한 로그인 과정 에러 해결</li>
 </ul>
+
+<h1>2018-10-29</h1>
+<ul>
+  <li>클라우드 서버 외부 고정 ip 설정 - Android Server interface에 갱신</li>
+</ul>
