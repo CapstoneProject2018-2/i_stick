@@ -38,4 +38,6 @@ I Stick Server Notification using Nodejs
 <h1>2018-10-29</h1>
 <ul>
   <li>클라우드 서버 외부 고정 ip 설정 - Android Server interface에 갱신</li>
+  <li>lib디렉터리 생성 - 소스코드의 모듈화 정리</li>
+  <li>app_iStick_server(main) 소스 수정</li>
 </ul>
