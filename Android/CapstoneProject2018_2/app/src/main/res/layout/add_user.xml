@@ -28,14 +28,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_id"
-        android:layout_marginBottom="10dp"
-        android:ems="10"
-        android:maxLines="1">
-
-        <requestFocus />/>
-    </EditText>
-
-
+        android:maxLines="1"
+        android:singleLine="true" />
+    
     <TextView
         android:id="@+id/add_pw"
         android:text="사용자 패스워드: "
@@ -49,9 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/add_pw"
         android:layout_marginBottom="10dp"
-        android:ems="10"
         android:inputType="textPassword"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:singleLine="true" />
 
     <Button
         android:id="@+id/d_add_btn"
