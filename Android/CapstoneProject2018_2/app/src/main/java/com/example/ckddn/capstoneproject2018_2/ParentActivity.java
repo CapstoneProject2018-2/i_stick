@@ -47,6 +47,12 @@ public class ParentActivity extends AppCompatActivity {
     ListView contact_listview = null;
 
 
+    /*  implement by ckddn */
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        // logout 버튼으로만 나갈 수 있다.
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,23 +67,9 @@ public class ParentActivity extends AppCompatActivity {
         logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /* modify by ckddn*/
-//                Intent intent = new Intent(ParentActivity.this, ParentMenu.class);
-//                startActivity(intent);
-                finish();   //  logout -> finish this activity and go back to login activity
-                // same with when press the back button
-                // if you want to change do not go back when you press the back button
-                // implement
-                /*
-                *  @Override
-                *  public void onBackPressed() {
-                *       //super.onBackPressed();
-                *       // logout 으로만 로그인 화면으로 가기 가능
-                *  }
-                * */
+        finish();   //  logout -> finish this activity and go back to login activity
             }
         });
-
 
         final ArrayList<ContactListViewItem> items = new ArrayList<ContactListViewItem>();
 
@@ -109,13 +101,6 @@ public class ParentActivity extends AppCompatActivity {
                 AddUserDialog();
             }
         });
-        /*  example items of not using server */
-//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.parent_icon), "Iron Man", "010-1111-1111");
-//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.parent_icon), "Iron Man", "010-1111-1111");
-//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.parent_icon), "Iron Man", "010-1111-1111");
-//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.parent_icon), "Iron Man", "010-1111-1111");
-//        adapter.addItem(ContextCompat.getDrawable(this, R.drawable.parent_icon), "Iron Man", "010-1111-1111");
-
 
         Button deleteButton = (Button) findViewById(R.id.c_delete);
         deleteButton.setOnClickListener(new Button.OnClickListener() {
@@ -140,11 +125,6 @@ public class ParentActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable edit) {
                 String filterText = edit.toString();
-                /*  changes : hide display box that shows using black box */
-//                if (filterText.length() > 0)
-//                    contact_listview.setFilterText(filterText);
-//                else
-//                    contact_listview.clearTextFilter();
                 ((ContactListViewAdapter)contact_listview.getAdapter()).getFilter().filter(filterText);
 
             }
@@ -166,8 +146,11 @@ public class ParentActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ParentActivity.this, ParentMenu.class);
+                // pno, uno 추가 181029
+                intent.putExtra("pno", pno);
+                ContactListViewItem item = (ContactListViewItem)adapter.getItem(position);
+                intent.putExtra("uno", item.getUno());
                 startActivity(intent);
-
             }
         });
 
@@ -197,8 +180,6 @@ public class ParentActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String id = userId.getText().toString();
                 String pw = userPw.getText().toString();
-                //String으로 변환해서 id, pw에 저장하였음
-                //여기에 서버로 넘기는 코드 짜면 됨
                 /*  implement by ckddn  */
                 new AddUserTask(adapter).execute("http://" + ServerInfo.ipAddress + "/parent/register", id, pw);
                 dialog.dismiss();
@@ -271,7 +252,7 @@ public class ParentActivity extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray(result);    //  get JSONArray from Server...
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.parent_icon), jsonObject.getString("name"), jsonObject.getString("mobile"));
+                    adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.parent_icon),jsonObject.getString("no"), jsonObject.getString("name"), jsonObject.getString("mobile"));
                 }
             } catch (JSONException e) { //  JSON형식이 아니라면 ERROR
 //                Toast.makeText(getApplicationContext(), "get String", Toast.LENGTH_LONG).show();    //  맡고있는 user가 없을 시
@@ -345,7 +326,7 @@ public class ParentActivity extends AppCompatActivity {
             super.onPostExecute(result);
             try {
                 JSONObject userInfo = new JSONObject(result);
-                adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.parent_icon), userInfo.getString("name"), userInfo.getString("mobile"));
+                adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.parent_icon), userInfo.getString("no"), userInfo.getString("name"), userInfo.getString("mobile"));
                 Toast.makeText(getApplicationContext(), "Json", Toast.LENGTH_LONG).show();
 
             } catch (JSONException e) {

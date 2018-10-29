@@ -72,13 +72,13 @@ public class ContactListViewAdapter extends BaseAdapter implements Filterable {
         return filteredItemList.get(position);
     }
 
-    public void addItem(Drawable icon, String title, String desc){
+    public void addItem(Drawable icon, String uno, String title, String desc){
         ContactListViewItem item = new ContactListViewItem();
 
         item.setIcon(icon);
+        item.setUno(uno);
         item.setTitle(title);
         item.setDesc(desc);
-
         clistViewItemList.add(item);
     }
     @Override

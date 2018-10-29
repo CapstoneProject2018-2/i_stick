@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 //implemented by 양인수
 
 public class ContactListViewItem {
-
+    private String uno; //  implement by ckddn: add for parent menu application
     private Drawable iconDrawable;
     private String titleStr;
     private String descStr;
@@ -33,6 +33,14 @@ public class ContactListViewItem {
 
     public String getDesc(){
         return  this.descStr;
+    }
+
+    public String getUno() {
+        return uno;
+    }
+
+    public void setUno(String uno) {
+        this.uno = uno;
     }
 }
 
