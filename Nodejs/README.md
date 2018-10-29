@@ -41,3 +41,8 @@ I Stick Server Notification using Nodejs
   <li>lib디렉터리 생성 - 소스코드의 모듈화 정리</li>
   <li>app_iStick_server(main) 소스 수정</li>
 </ul>
+<h1>2018-10-30</h1>
+<ul>
+  <li>전체적인 쿼리문 수정 - 보안강화</li>
+  <li>./lib/parent.reqLoc 추가, 위치기능 구현이후 테스트 해야함</li>
+</ul>
