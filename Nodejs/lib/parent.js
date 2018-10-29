@@ -2,6 +2,19 @@ var db = require('./db')
 const bkfd2Password = require('pbkdf2-password'); //  for hash the passwd
 var hasher = bkfd2Password();                     //  hash func
 
+/** Request user's location
+ * params: usernumber: uno
+ * res: recent longitude and latitude information of uno
+ */
+exports.reqLoc = function(req, res) {
+    console.log('/parent/reqLoc');
+    const inputData = req.body; //  uno
+    // query
+    res.send('implement!!!')
+}
+
+
+
 /** /parent/regist get parameter : pno, userID, userPW
  * check userID existence if it exist, check pw correction.
  * if user regist yet, then insert into rpu table 
