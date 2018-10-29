@@ -1,292 +1,35 @@
 const express = require('express');               //  for app
-const mysql = require('mysql');                   //  for conn with mysql
-const bkfd2Password = require('pbkdf2-password'); //  for hash the passwd
-var hasher = bkfd2Password();                     //  hash func
 
-var app = express();
-var conn = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',         
-  password: 'password', //  must change when you want to use
-  database: 'i_stick'
-});
+const login = require('./lib/login')        //  for login
+const register = require('./lib/register')  //  for register
+const parent = require('./lib/parent')      //  for parent
+const user = require('./lib/user')          //  for user
 
-conn.connect(); //  database 접속
+var app = express()
 app.use(express.urlencoded({ extended: false }))
-// var jsonParser = bodyParser.json()
 app.use(express.json());
 
-// const bodyParser = require('body-parser');  //  for post (req.body.*)
-// parse various different custom JSON types as JSON
-// app.use(bodyParser.json())
-// app.use(bodyParser.json({ type: 'application/*+json' }))
-// parse some custom thing into a Buffer
-// app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
-
-// parse an HTML body into a string
-// app.use(bodyParser.text({ type: 'text/html' }))
-//  app.post에서 req.body 체크해보기
-
-
-
-/*  Login Page */
-// {id,pw,type}
 app.post('/login', (req, res) => {
-  console.log('/login');
-  const inputData = req.body;
-  console.log(inputData);
-  var sql = '';
-  if (inputData.type === 0) {  //  user
-    sql = 'SELECT * FROM user WHERE id=?';
-  } else if (inputData.type === 1) {  //  parent
-    sql = 'SELECT * FROM parent WHERE id=?';
-  }
-  console.log(sql);
-  conn.query(sql, inputData.id, function(err, datas, fields) {
-    console.log(datas);
-    // console.log(fields);
-    if (err) {
-      console.log('Error!');
-      res.send('Error!');
-    } else if (datas[0] == null) {
-      console.log('unknown ID');
-      res.send('unknown ID');
-      //  Error or do not exist corresponding ID...
-    } else {  
-      /*  Problem - else를 넣지 않았을때, opts 까지 만들고 res.send('unknown ID')가 수행.. Error
-      **  Solution - 동기적인 진행을 위하여 else 문에 넣어서 위의 조건에 닿을시 실행이 되지 않도록 구성 */
-      var opts = {password : inputData.pw, salt : datas[0].salt}  //  login pw, db salt
-      hasher(opts, function(err, pass, salt, hash) {
-        if (hash == datas[0].pw) {
-          var info = {
-            no : datas[0].no,
-            id : datas[0].id
-          }
-          res.send(info);
-        } else {
-          console.log('wrong Password');
-          res.send('wrong Password');        
-        }
-      });
-    }
-  });
+  login.signIn(req, res);
 });
-
-//  id check
 app.post('/check/id', function(req, res) {  //  id, type
-  console.log('/check/id');
-  const inputData = req.body;
-  console.log(inputData);
-  var sql = '';
-  if (inputData.type === 0) {  //  user
-    sql = 'SELECT * FROM user WHERE id=?';
-  } else if (inputData.type === 1) {  //  parent
-    sql = 'SELECT * FROM parent WHERE id=?';
-  }
-  conn.query(sql, inputData.id, function(err, data) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(data[0]);
-      res.send(data[0]);
-    }
-  });
+  register.checkId(req, res);
 });
-
 app.post('/register', function(req, res) {  //  id pw name mobile type
-  console.log('/register');
-  //  register data from android and INSERT in Database
-  const inputData = req.body;
-  console.log(inputData);
-  var sql = '';
-  var id = inputData.id;
-  var pw = inputData.pw;
-  var name = inputData.name;
-  var mobile = inputData.mobile;
-  
-  if (inputData.type === 0) {  //  user
-    sql = 'INSERT INTO user (id, pw, salt, name, mobile) VALUES (?,?,?,?,?);';
-  } else if (inputData.type === 1) {  //  parent
-    sql = 'INSERT INTO parent (id, pw, salt, name, mobile) VALUES (?,?,?,?,?);';
-  }
-  var opts = { password : pw };
-  hasher(opts, function(err, pass, salt, hash) {
-    conn.query(sql, [id, hash, salt, name, mobile], function(err, data) {
-      if (err) {
-        console.log(err);
-        res.send('failed the ID creation...')
-      } else {
-        console.log(data[0]);
-        res.send(inputData.id);
-      }
-    });
-  });
+  register.signUp(req, res);
 });
-
-/*  User Mode */
-
-//  user login -> client(user) send location periodically
-// app.post('/user/navigate', function(req, res) { //  길찾기 모드
-//   //  get data from user's application
-
-// });
 
 // user main : send current location to Server 1008
-app.post('/user', function(req, res) {
-  console.log('/user');
-  const inputData = req.body; //  longitude, latitude
-  var uno = inputData.no;
-  var longitude = inputData.longitude;
-  var latitude = inputData.latitude;
-  var sql = 'INSERT INTO user_location (no, longitude, latitude) VALUES (?, ?, ?)'
-  // INSERT INTO user_location (no, longitude, latitude) VALUES ('2',13,13);
-  // 2018-10-08 23:30:59 |  2 |        13 |       13
-  conn.query(sql, [uno, longitude, latitude], function(err, datas, fields) {
-    if (err) {
-      console.log(err);
-      res.send('Error');
-    } else {
-      res.send('OK');  //  저장후 안전하게 완료되었다고 응답.
-    }
-  });
-});
+app.post('/user', function(req, res) {});
 
-/*  Parent Mode */
-
-// parent login -> client(parent)
-// can request registing the user using user's id, pw
-// ParentActivity에서 '내 정보 수정' 버튼 클릭시 이동, 비밀번호 수정
-
-
-/** /parent/regist get parameter : pno, userID, userPW
- * check userID existence if it exist, check pw correction.
- * if user regist yet, then insert into rpu table 
- * if not, send error messages
- */
 app.post('/parent/register', function(req, res) { //  pno id pw 받아와 인증 후 등록
-  console.log('/parent/register');
-  const inputData = req.body; //  id, pw
-  const pno = inputData.pno;
-  const id = inputData.id;
-  const pw = inputData.pw;
-  /* id로 pw와 salt일치 여부 확인 */
-  var sql = 'SELECT * FROM user WHERE id=?'; //  uno, pw(hash), salt
-  conn.query(sql, id, function(err, info) {
-    if (err) {
-      console.log(err);
-      res.send(err)
-    } else if (info[0] == null) {
-      console.log('Wrong ID');
-      res.send('존재하지 않는 사용자의 ID입니다.');
-    } else {  //  id 존재 hasher로 pw비교
-      var uno = info[0].no;
-      hasher({password: pw, salt: info[0].salt}, function(err, pass, salt, hash) {
-        if (err) {
-          console.log(err);
-          res.send(err);;
-        } else if (info[0].pw == hash) {  //  add relation to rpu relation
-          console.log('correct!');
-          var sql = 'INSERT INTO rpu(pno, uno) VALUES(?,?)'
-          conn.query(sql, [pno, uno], function(err, results) {
-            if (err) {
-              // console.log('Error');
-              console.log(err);
-              res.send('이미 등록된 사용자 입니다.');
-            } else {
-              /* implement 1. when user is already registered... : error
-              **           2. when registration succeed*/
-              console.log(info[0]); //  select * from user
-              res.send(info[0]);
-            }
-          });
-        } else {
-          console.log('Wrong password');
-          res.send('비밀번호를 잘못 입력하셨습니다.');
-        }
-
-      });
-    }
-  });
-
+  parent.registUser(req, res);
 }); //  button "추가" : regist user
-
 app.post('/parent/edit', function(req, res) {
-  /*  form : id, recent pw, new pw (비밀번호 확인은 android 책임)*/
-  console.log('/parent/edit');
-  const inputData = req.body; //  id, oldpw, newpw
-  console.log(inputData); //  data check
-  var id = inputData.id;
-  var oldpw = inputData.oldpw;
-  var newpw = inputData.newpw;
-  /*  oldpw가 일치하면 UPDATE, 일치하지 않으면 send error msg */
-  var sql = 'SELECT pw, salt FROM parent WHERE id=?'
-  conn.query(sql, inputData.id, function(err, data) {
-    console.log(data);
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {  //  id 는 무조건 존재한다. query 의 결과는 하나가 나옴
-      var opts = { password: oldpw, salt: data[0].salt}
-      hasher(opts, function(err, pass, salt, hash) {
-        if (data[0].pw != hash) {  // 비밀번호 불일치
-          console.log('Wrong Password');
-          res.send('Wrong Password');        
-        } else {  //  일치 -> update
-          hasher({ password: newpw }, function(err, pass, salt, hash) {
-            // 새로운 hash(db pw) 와 salt값 갱신
-            var sql = 'UPDATE parent SET pw=?, salt=? WHERE id=?'
-            conn.query(sql, [hash, salt, id], function(err, results) {
-              if (err) {
-                console.log(err);
-                res.send('Error');
-              } else {
-                console.log(results);
-                console.log('change completed!!');
-                res.send('OK');
-              }
-            })
-          });
-        }
-      });
-    }
-  });
+  parent.editInfo(req, res);
 }); //  내 정보 수정
-
-//  ParentActiviy에서 getUserInfo함수 호출, 서버로 부터 해당 no의 parent가 관리하는 user의 정보를 받아와 List에 담는다.
-app.post('/parent', function(req, res) {  //  /parent 1008
-  console.log('/parent');
-  const inputData = req.body;  //  pno, id 받아오기
-  console.log(inputData);
-  //  ParnetActivity : getUserList(String pid) = 담당하는 user의 목록 불러오기
-  var sql = 'SELECT * FROM rpu WHERE pno=?'
-  conn.query(sql, inputData.pno, function(err, results, fields) {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {  //  results : RowDataPacket형태
-      var num = results.length;
-      if (num === 0) {
-        res.send('no registed user...');  //  맡고있는 user가 없을때
-      } else {  //  있을 때
-        var sql = 'SELECT * FROM user WHERE ';
-        for (var i = 0; i < num; i++){
-          sql = sql + 'no=\'' + results[i].uno + '\'';
-          if (i+1 != num)
-            sql = sql + ' or ';
-        }
-        console.log(sql);
-        conn.query(sql, function(err, userInfo, fields) {
-          if (err) {
-            console.log(err);
-            res.send(err);
-          } else {
-            console.log(userInfo);  //  JSONArray
-            res.send(userInfo);
-          }
-        });
-      }
-    }
-  });
+app.post('/parent', function(req, res) {  //
+  parent.main(req, res);
 });
 
 app.listen(5555, function() {
