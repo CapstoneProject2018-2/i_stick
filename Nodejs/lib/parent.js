@@ -2,6 +2,42 @@ var db = require('./db')
 const bkfd2Password = require('pbkdf2-password'); //  for hash the passwd
 var hasher = bkfd2Password();                     //  hash func
 
+/** Request user's location
+ * params: usernumber: uno
+ * res: recent longitude and latitude information of uno
+ */
+exports.reqLoc = function(req, res) {
+    console.log('/parent/reqLoc');
+    const inputData = req.body; //  uno
+    const uno = inputData.uno;
+    // query
+    var sql = 'select * from my_practice.location \
+    where no=(select max(no) from my_practice.location where uno=?)'
+    db.query(sql, uno, function(err, data) {
+        if (err) {
+            console.log(err);
+            res.send('서버에 에러가 있습니다. 나중에 다시 시도해 주세요.')
+        } else if (data[0] == null){
+            console.log('no location data')
+            res.send('확인된 사용자의 위치정보가 없습니다.')
+        } else {    //  위치 정보가 있을때
+            var lastTime = Date(data[0].time)   // 2018-10-26 00:41:55 formatting
+            var curTime = Date();               // Current Date
+            if ((curTime - lastTime) < 3000000) {   //  When the difference between the current time and the lastest time is 300000 ms...
+                console.log('send location data');
+                var location = {
+                    longitude : data[0].longitude,
+                    latitude : data[0].latitude
+                }
+                res.send()
+            } else {
+                res.send('최신의 사용자의 위치정보가 없습니다.')
+            }
+        }
+    });
+    res.send('implement!')
+}
+
 /** /parent/regist get parameter : pno, userID, userPW
  * check userID existence if it exist, check pw correction.
  * if user regist yet, then insert into rpu table 
@@ -40,7 +76,12 @@ exports.registUser = function(req, res) {
                 /* implement 1. when user is already registered... : error
                 **           2. when registration succeed*/
                 console.log(info[0]); //  select * from user
-                res.send(info[0]);
+                var returnInfo = {
+                    no: info[0].no,
+                    name: info[0].name,
+                    mobile: info[0].mobile
+                }
+                res.send(returnInfo);
                 }
             });
             } else {
@@ -76,7 +117,7 @@ exports.editInfo = function(req, res) {
         hasher(opts, function(err, pass, salt, hash) {
             if (data[0].pw != hash) {  // 비밀번호 불일치
             console.log('Wrong Password');
-            res.send('Wrong Password');
+            res.send('기존의 비밀번호가 일치하지 않습니다.');
             } else {  //  일치 -> update
             hasher({ password: newpw}, function(err, pass, salt, hash) {
                 // 새로운 hash(db pw) 와 salt값 갱신
@@ -84,10 +125,10 @@ exports.editInfo = function(req, res) {
                 db.query(sql, [hash, salt, id], function(err, results) {
                 if (err) {
                     console.log(err);
-                    res.send('Error');
+                    res.send('데이터 저장에 오류가 생겼습니다. 나중에 다시 시도해 주세요.');
                 } else {
                     console.log(results);
-                    console.log('change completed!!');
+                    console.log('succeed!');
                     res.send('OK');
                 }
                 })
@@ -111,9 +152,9 @@ exports.main = function(req, res) {
         } else {  //  results : RowDataPacket형태
             var num = results.length;
             if (num === 0) {
-            res.send('no registed user...');  //  맡고있는 user가 없을때
+            res.send('등록된 사용자가 존재하지 않습니다.');  //  맡고있는 user가 없을때
             } else {  //  있을 때
-            var sql = 'SELECT * FROM user WHERE ';
+            var sql = 'SELECT no, name, mobile FROM user WHERE ';
             for (var i = 0; i < num; i++){
                 sql = sql + 'no=\'' + results[i].uno + '\'';
                 if (i+1 != num)
@@ -123,7 +164,7 @@ exports.main = function(req, res) {
             db.query(sql, function(err, userInfo, fields) {
                 if (err) {
                 console.log(err);
-                res.send(err);
+                res.send('데이터 검색에 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
                 } else {
                 console.log(userInfo);  //  JSONArray
                 res.send(userInfo);

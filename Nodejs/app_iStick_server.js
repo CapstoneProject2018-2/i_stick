@@ -19,8 +19,9 @@ app.post('/register', function(req, res) {  //  id pw name mobile type
   register.signUp(req, res);
 });
 
-// user main : send current location to Server 1008
-app.post('/user', function(req, res) {});
+app.post('/user', function(req, res) {
+  user.send(req, res);
+});
 
 app.post('/parent/register', function(req, res) { //  pno id pw 받아와 인증 후 등록
   parent.registUser(req, res);

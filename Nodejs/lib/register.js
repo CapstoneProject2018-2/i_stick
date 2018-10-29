@@ -22,7 +22,7 @@ exports.signUp = function(req, res) {
       db.query(sql, [id, hash, salt, name, mobile], function(err, data) {
         if (err) {
           console.log(err);
-          res.send('failed the ID creation...')
+          res.send('에러로 인해 아이디 등록이 실패하였습니다. 잠시후 다시 시도해주세요.')
         } else {
           console.log(data[0]);
           res.send(inputData.id);
@@ -32,21 +32,21 @@ exports.signUp = function(req, res) {
 }
 
 exports.checkId = function(req, res) {
-    console.log('/check/id');
-    const inputData = req.body;
-     console.log(inputData);
-     var sql = '';
-    if (inputData.type === 0) {  //  user
-        sql = 'SELECT * FROM user WHERE id=?';
-    } else if (inputData.type === 1) {  //  parent
-        sql = 'SELECT * FROM parent WHERE id=?';
+  console.log('/check/id');
+  const inputData = req.body;
+  console.log(inputData);
+  var sql = '';
+  if (inputData.type === 0) {  //  user
+    sql = 'SELECT * FROM user WHERE id=?';
+  } else if (inputData.type === 1) {  //  parent
+    sql = 'SELECT * FROM parent WHERE id=?';
+  }
+  db.query(sql, inputData.id, function(err, data) {
+    if (err) {
+    console.log(err);
+    } else {
+    console.log(data[0]);
+    res.send(data[0]);
     }
-    db.query(sql, inputData.id, function(err, data) {
-        if (err) {
-        console.log(err);
-        } else {
-        console.log(data[0]);
-        res.send(data[0]);
-        }
-    });
-}
+  });
+} // select * from 에서 *수정하기 (pw, salt 암호화가 되어야함)
