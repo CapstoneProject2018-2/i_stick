@@ -5,14 +5,18 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
@@ -36,20 +40,60 @@ import java.util.TimerTask;
 
 
 //내 담당 관리대상의 위치 보기
-//implememnted by 양인수, ckddn
+//implememnted by 양인수
+//server implemented by 손창우
 
 public class HisLocActivity extends AppCompatActivity {
     private String pno, uno;    //  parent no and managed user no
-    private String gap, longitude, latitude; //  user's lastest locInfo
+    double gap, longitude, latitude; //  user's lastest locInfo
+
+
+
+    TMapView tMapView = null;
+    TMapGpsManager tmapgps = null;
+    Button currentLocBtn;
+    LinearLayout linearLayoutTmap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_his_loc);
 
+        linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
+        tMapView = new TMapView(this);
+        tMapView.setSKTMapApiKey( "85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n" );
+
+
         pno = getIntent().getStringExtra("pno");
         uno = getIntent().getStringExtra("uno");
-
         new ReqLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
+
+        double curLongitude, curLatitude;
+
+
+
+
+//        TMapMarkerItem curMarker = new TMapMarkerItem();
+//        TMapPoint curPoint = new TMapPoint(latitude,longitude);
+//        curMarker.setTMapPoint(curPoint);
+//        curMarker.setVisible(TMapMarkerItem.VISIBLE);
+//        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),R.drawable.ic_place_black_24dp);
+//        curMarker.setIcon(bitmap);
+//        tMapView.setLocationPoint(latitude,longitude);
+//        tMapView.setCenterPoint(latitude,longitude,false);
+//        tMapView.addMarkerItem("현 위치", curMarker);
+//
+//        tMapView.setIconVisibility(true);
+//        tMapView.setZoomLevel(15);
+//        tMapView.setMapType(TMapView.MAPTYPE_STANDARD);
+//        linearLayoutTmap.addView( tMapView );
+
+
+
+
+
+
+
     }
 
 
@@ -111,14 +155,26 @@ public class HisLocActivity extends AppCompatActivity {
 //            Toast.makeText(getApplicationContext(),result.toString(), Toast.LENGTH_LONG).show();
             try {
                 JSONObject jsonObject = new JSONObject(result);
-                gap = jsonObject.getString("gap");
-                longitude = jsonObject.getString("longitude");
-                latitude = jsonObject.getString("latitude");
+                gap = jsonObject.getDouble("gap");
+        longitude = jsonObject.getDouble("longitude");
+        latitude = jsonObject.getDouble("latitude");
                 Toast.makeText(getApplicationContext(), "User Last Location from server, gap: " + jsonObject.getString("gap") +
-                        "\nlongitude: " + jsonObject.getString("longitude") + "\nlatitude: " + jsonObject.getString("latitude"), Toast.LENGTH_LONG).show();
-            } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-            }
-        }
+                "\nlongitude: " + jsonObject.getString("longitude") + "\nlatitude: " + jsonObject.getString("latitude"), Toast.LENGTH_LONG).show();
+
+                tMapView.setLocationPoint(longitude,latitude);
+                tMapView.setCenterPoint(longitude,latitude);
+                tMapView.setCompassMode(false);
+                tMapView.setIconVisibility(true);
+                tMapView.setZoomLevel(15);
+                tMapView.setMapType(TMapView.MAPTYPE_STANDARD);
+                tMapView.setLanguage(TMapView.LANGUAGE_KOREAN);
+                tMapView.setTrackingMode(false);
+                tMapView.setSightVisible(false);
+                linearLayoutTmap.addView(tMapView);
+
+    } catch (JSONException e) {
+        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+    }
+}
     }
 }
