@@ -1,0 +1,43 @@
+Vishal
+
+Vishal has joined the conversation
+21:14
+Hello. Welcome to oblu. May I help you.
+You (change name)
+Hi! i have a question for your device
+You (change name)
+What kind of data does the sensor module return? im trying to make a Pedestrian navigation and im wondering if the sensor module returns the whole position coordinates or just the phsyical values of the movement?
+I'll be happy to answer your question. Could you please share you email id and name.
+Sensor modules returns displacement (dx,dy,dz) and heading change (dtheta) at every step. This can be used to obtain coordinates in the application.
+We have APIs available for this purpose.
+You (change name)
+Thanks! I have emailed your company before.
+My name is Jason and my email address is insu0929@naver.com 
+I'm planning on buying your product, and I see you offer three types.
+We are building a pedestrian navigation service for the visually impaired!
+We are using ADUINO for other functions and targeting for android phone.
+Which of the three options (demo,learners diy kit) do you think is adequate for us?
+I guess you meant Arduino?
+You (change name)
+yes!
+You (change name)
+i misspelled
+Are you planning to connect oblu with Arduino?
+You (change name)
+No not with Arduino, with the Android device only. We are utilizing Arduino for other purposes, such as a sonar sensor so Arduino and oblu would have no relations whatsoever.
+OK.
+We recommend either Demo or Learners kit.
+I guess you are students.
+You (change name)
+Yes, we are juniors in collge.
+OK. Learners kit includes calibration devices, which is great from learning perspective. We recommend it for researchers / students.
+You may do everything with Demo kit. But, with learner's kit, you would get to know about the calibration process. Though we send oblu after calibration. But it may need recalibration during your project for good results.
+I am also going to reply to your mail in sometime.
+You (change name)
+Thank you so much! Your answers helped big time. I'll discuss with my team about which one to purchase.
+Glad to know. Your most welcome!
+Hope you have received email with answer to your question.
+You (change name)
+Thanks so much. It
+You (change name)
+It's been great help
