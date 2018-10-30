@@ -2,6 +2,25 @@ var db = require('./db')
 const bkfd2Password = require('pbkdf2-password'); //  for hash the passwd
 var hasher = bkfd2Password();                     //  hash func
 
+/** Delete user relationship with parent
+ *  delete in rpu table and send sign to client */
+exports.deleteUser = function(req, res) {
+    console.log('/parent/delete');
+    const inputData = req.body;
+    const pno = inputData.pno;
+    const uno = inputData.uno;
+    var sql = "delete from rpu where pno=? and uno=?"
+    db.query(sql, [pno, uno], function(err, data) {
+        if (err) {
+            console.log(err)
+            res.send('삭제 과정에서 오류가 발생하였습니다. 잠시후 다시 시도해주세요.')
+        } else {
+            console.log('delete succeed');
+            res.send('ok')
+        }
+    })
+}
+
 /** Request user's location
  * params: usernumber: uno
  * res: recent longitude and latitude information of uno
@@ -95,10 +114,10 @@ exports.registUser = function (req, res) {
     });
 };
 
-// parent mode
-// parent login -> client(parent)
-// can request registing the user using user's id, pw
-// ParentActivity에서 '내 정보 수정' 버튼 클릭시 이동, 비밀번호 수정
+/**parent mode
+ * parent login -> client(parent)
+ * can request registing the user using user's id, pw
+ * ParentActivity에서 '내 정보 수정' 버튼 클릭시 이동, 비밀번호 수정 */
 exports.editInfo = function (req, res) {
     /*  form : id, recent pw, new pw (비밀번호 확인은 android 책임)*/
     console.log('/parent/edit');
@@ -140,6 +159,7 @@ exports.editInfo = function (req, res) {
         }
     });
 };
+
 
 exports.main = function (req, res) {
     console.log('/parent');

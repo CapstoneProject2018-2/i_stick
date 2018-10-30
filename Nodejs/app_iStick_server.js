@@ -18,6 +18,7 @@ app.post('/user', function (req, res) { user.send(req, res); });
 /* parent mode */
 app.post('/parent/reqLoc', function(req, res) { parent.reqLoc(req, res) });
 app.post('/parent/register', function (req, res) { parent.registUser(req, res) });
+app.post('/parent/delete', function (req, res) { parent.deleteUser(req, res) });
 app.post('/parent/edit', function (req, res) { parent.editInfo(req, res) });
 app.post('/parent', function (req, res) { parent.main(req, res) });
 /* listen... */
