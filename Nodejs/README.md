@@ -48,4 +48,5 @@ I Stick Server Notification using Nodejs
   <li>버그수정 ./lib/user.js</li>
   <li>버그수정 ./lib/parent.reqLoc</li>
   <li>안드로이드 서버통신작업 코드 생성</li>
+  <li>./lib/parent.deleteUser 추가 및 안드로이드 소스 추가</li>
 </ul>
