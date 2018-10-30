@@ -254,6 +254,7 @@ public class ParentActivity extends AppCompatActivity {
             if (result.equals("ok")) {
                 adapter.deleteItem(uno);
                 adapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(), "삭제 완료.",Toast.LENGTH_LONG).show();
             } else
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
         }
@@ -327,7 +328,7 @@ public class ParentActivity extends AppCompatActivity {
                     adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.parent_icon),jsonObject.getString("no"), jsonObject.getString("name"), jsonObject.getString("mobile"));
                 }
             } catch (JSONException e) { //  JSON형식이 아니라면 ERROR
-//                Toast.makeText(getApplicationContext(), "get String", Toast.LENGTH_LONG).show();    //  맡고있는 user가 없을 시
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();    //  맡고있는 user가 없을 시
                 e.printStackTrace();
             }
         }
@@ -399,10 +400,10 @@ public class ParentActivity extends AppCompatActivity {
             try {
                 JSONObject userInfo = new JSONObject(result);
                 adapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.parent_icon), userInfo.getString("no"), userInfo.getString("name"), userInfo.getString("mobile"));
-                Toast.makeText(getApplicationContext(), "Json", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(getApplicationContext(), userInfo.getString("name") + "님을 관리 목록에 추가하였습니다.", Toast.LENGTH_LONG).show();
+                adapter.notifyDataSetChanged();
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "string..", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }

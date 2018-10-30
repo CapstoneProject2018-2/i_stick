@@ -30,7 +30,7 @@
         android:layout_below="@+id/add_id"
         android:maxLines="1"
         android:singleLine="true" />
-    
+
     <TextView
         android:id="@+id/add_pw"
         android:text="사용자 패스워드: "

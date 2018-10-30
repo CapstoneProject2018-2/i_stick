@@ -1,11 +1,17 @@
 package com.example.ckddn.capstoneproject2018_2;
 
+import android.Manifest;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +40,7 @@ import java.net.URL;
 
 
 public class UserActivity extends AppCompatActivity {
+    final private String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
     private String uno;
     private String userId;
     TextView textView;
@@ -52,11 +59,14 @@ public class UserActivity extends AppCompatActivity {
         getLoc = (ToggleButton)findViewById(R.id.getLoc);
 
         final LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
+        ActivityCompat.requestPermissions(this, permissions, PackageManager.PERMISSION_GRANTED);
         getLoc.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
                 try{
                     if(getLoc.isChecked()){
                         textView.setText("수신중...");
@@ -94,7 +104,7 @@ public class UserActivity extends AppCompatActivity {
             String provider = location.getProvider();   //위치제공자
 
 
-            /*이곳에 네트워크에 위치 보내는 코드 작성*/
+            /* 이곳에 네트워크에 위치 보내는 코드 작성 */
             new SendLocTask().execute("http://" + ServerInfo.ipAddress +"/user", longitude+"", latitude+"");
 
 
@@ -118,7 +128,9 @@ public class UserActivity extends AppCompatActivity {
             Log.d("test", "onStatusChanged, provider:" + provider + ", status:" + status + " ,Bundle:" + extras);
         }
     };
-    /* implement by ckddn */
+
+
+    // by ckddn
     public class SendLocTask extends AsyncTask<String, String, String> {
         String TAG = "SendLocTask>>>";
         @Override

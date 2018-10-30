@@ -44,10 +44,8 @@ import java.util.TimerTask;
 //server implemented by 손창우
 
 public class HisLocActivity extends AppCompatActivity {
-    private String pno, uno;    //  parent no and managed user no
+    private String pno, uno, userName, userMobile;    //  parent no and managed user no
     double gap, longitude, latitude; //  user's lastest locInfo
-
-
 
     TMapView tMapView = null;
     TMapGpsManager tmapgps = null;
@@ -59,41 +57,17 @@ public class HisLocActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_his_loc);
 
+
+        pno = getIntent().getStringExtra("pno");
+        uno = getIntent().getStringExtra("uno");
+        userName = getIntent().getStringExtra("userName");
+        userMobile = getIntent().getStringExtra("userMobile");
+
         linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
         tMapView.setSKTMapApiKey( "85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n" );
 
-
-        pno = getIntent().getStringExtra("pno");
-        uno = getIntent().getStringExtra("uno");
         new ReqLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
-
-        double curLongitude, curLatitude;
-
-
-
-
-//        TMapMarkerItem curMarker = new TMapMarkerItem();
-//        TMapPoint curPoint = new TMapPoint(latitude,longitude);
-//        curMarker.setTMapPoint(curPoint);
-//        curMarker.setVisible(TMapMarkerItem.VISIBLE);
-//        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),R.drawable.ic_place_black_24dp);
-//        curMarker.setIcon(bitmap);
-//        tMapView.setLocationPoint(latitude,longitude);
-//        tMapView.setCenterPoint(latitude,longitude,false);
-//        tMapView.addMarkerItem("현 위치", curMarker);
-//
-//        tMapView.setIconVisibility(true);
-//        tMapView.setZoomLevel(15);
-//        tMapView.setMapType(TMapView.MAPTYPE_STANDARD);
-//        linearLayoutTmap.addView( tMapView );
-
-
-
-
-
-
-
     }
 
 
@@ -156,10 +130,10 @@ public class HisLocActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 gap = jsonObject.getDouble("gap");
-        longitude = jsonObject.getDouble("longitude");
-        latitude = jsonObject.getDouble("latitude");
-                Toast.makeText(getApplicationContext(), "User Last Location from server, gap: " + jsonObject.getString("gap") +
-                "\nlongitude: " + jsonObject.getString("longitude") + "\nlatitude: " + jsonObject.getString("latitude"), Toast.LENGTH_LONG).show();
+                longitude = jsonObject.getDouble("longitude");
+                latitude = jsonObject.getDouble("latitude");
+                Toast.makeText(getApplicationContext(),  userName + "님의 위치 정보\n시간: " + jsonObject.getString("gap") +
+                                "\n위도: " + jsonObject.getString("latitude") + "\n경도: " + jsonObject.getString("longitude"), Toast.LENGTH_LONG).show();
 
                 tMapView.setLocationPoint(longitude,latitude);
                 tMapView.setCenterPoint(longitude,latitude);
@@ -172,9 +146,9 @@ public class HisLocActivity extends AppCompatActivity {
                 tMapView.setSightVisible(false);
                 linearLayoutTmap.addView(tMapView);
 
-    } catch (JSONException e) {
-        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-    }
-}
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

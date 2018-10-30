@@ -64,9 +64,8 @@ public class RegistActivity extends AppCompatActivity {
         check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (radioGroup.getCheckedRadioButtonId() == -1 || id.getText().toString() == "") {  //  id 랑 radiobut 클릭 확인
-                    alertToast("please check the user or parent button and fill in the ID text");
-//                    regFlag = false;
+                if (radioGroup.getCheckedRadioButtonId() == -1 || id.getText().toString().equals("")) {  //  id 랑 radiobut 클릭 확인
+                    alertToast("사용자/보호자 선택 또는 아이디를 적어주세요");
                 } else if (tempId != id.getText().toString()) {    //  인증받은 id라면 만족하면 중복확인
                     new CheckIDTask().execute("http://" + ServerInfo.ipAddress + "/check/id");
                 }
@@ -76,23 +75,23 @@ public class RegistActivity extends AppCompatActivity {
     /*  Sign Up area is Filled? */
     private boolean isFilled() {
         if (radioGroup.getCheckedRadioButtonId() == -1) {
-            alertToast("please check the user or parent button");
+            alertToast("사용자인지 보호자인지 선택해주세요");
             return false;
         }
         if (name.getText().toString().equals("")) {
-            alertToast("please fill in the name text");
+            alertToast("이름을 적어주세요");
             return false;
         }
         if (!(id.getText().toString().equals(tempId)) || tempId == ""){
-            alertToast("please fill in the ID text\ntempId : " + tempId);
+            alertToast("아이디를 적어주세요\n사용가능한 아이디 : " + tempId);
             return false;
         }
         if (password.getText().toString().equals("")) {
-            alertToast("please fill in the PW text");
+            alertToast("비밀번호를 적어주세요");
             return false;
         }
         if (mobile.getText().toString().equals("")) {
-            alertToast("please fill in the mobile text");
+            alertToast("전화번호를 적어주세요");
             return false;
         }
 
@@ -160,9 +159,9 @@ public class RegistActivity extends AppCompatActivity {
             if (result.equals("")) { //  가능!    undefined == ""
                 Log.d(TAG, "onPostExecute: available!");
                 tempId = id.getText().toString();
-                alertToast("tempID : " + tempId);
+                alertToast("사용가능한 아이디 입니다.");
             } else {    //  불가능! : 이미존재
-                alertToast("not available ID");
+                alertToast("이미 존재하는 아이디 입니다.");
             }
         }
     }

@@ -57,19 +57,19 @@ public class EditParentInfo extends AppCompatActivity {
     /*  check that Password editTexts are filled  */
     private boolean isFilled() {
         if (oldpw.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "please fill the current password text", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "현재 비밀번호를 입력해주세요.", Toast.LENGTH_LONG).show();
             return false;
         }
         if (newpw.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "please fill the new password text", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "새로운 비밀번호를 입력해주세요.", Toast.LENGTH_LONG).show();
             return false;
         }
         if (confirm.getText().toString().equals("")) {
-            Toast.makeText(getApplicationContext(), "please fill the confirm password text", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "변경하시려는 비밀번호를 다시 한번 입력해주세요.", Toast.LENGTH_LONG).show();
             return false;
         }
         if ( !(newpw.getText().toString().equals(confirm.getText().toString()))) {
-            Toast.makeText(getApplicationContext(), "The passwords do not match", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "변경하려는 비밀번호가 일치하지 않습니다.", Toast.LENGTH_LONG).show();
             return false;
         }
 

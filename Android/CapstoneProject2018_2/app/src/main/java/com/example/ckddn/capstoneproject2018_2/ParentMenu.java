@@ -68,6 +68,8 @@ public class ParentMenu extends AppCompatActivity implements View.OnClickListene
             case R.id.his_loc : intent = new Intent(this, HisLocActivity.class);
                 intent.putExtra("uno", uno);
                 intent.putExtra("pno", pno);
+                intent.putExtra("userName", name);
+                intent.putExtra("userMobile", mobile);
                 startActivity(intent);
                 break;
             default: break;

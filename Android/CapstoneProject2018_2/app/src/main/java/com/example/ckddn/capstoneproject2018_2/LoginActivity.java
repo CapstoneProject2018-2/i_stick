@@ -30,7 +30,6 @@ import java.net.URL;
 //modified by Insu Yang
 
 public class LoginActivity extends AppCompatActivity {
-    //    public static final int REQUEST_CODE_REG = 101;
     private EditText id;
     private EditText password;
     private RadioButton user_radio;
@@ -52,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if ((id.getText().toString().equals("") || password.getText().toString().equals("") || radioGroup.getCheckedRadioButtonId() == -1))
-                    Toast.makeText(getApplicationContext(), "fill the login info", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "로그인을 위한 정보를 적어주세요.", Toast.LENGTH_LONG).show();
                 else
                     new SignInTask().execute("http://" + ServerInfo.ipAddress +"/login", id.getText().toString(), password.getText().toString());
 
@@ -145,7 +144,6 @@ public class LoginActivity extends AppCompatActivity {
                     signInIntent.setClass(getApplicationContext(), UserActivity.class);
                 }
                 else if (parent_radio.isChecked()) {
-//                    Log.d(TAG, "onPostExecute: parent mode login");
                     signInIntent.setClass(getApplicationContext(), ParentActivity.class);
                 }
                 signInIntent.putExtra("no", jsonObject.getString("no"));
