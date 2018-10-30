@@ -11,8 +11,7 @@ exports.reqLoc = function (req, res) {
     const inputData = req.body; //  uno
     const uno = inputData.uno;
     // query
-    var sql = 'select * from my_practice.location \
-    where no=(select max(no) from my_practice.location where uno=?)'
+    var sql = 'select * from user_location where no=(select max(no) from user_location where uno=?)'
     db.query(sql, uno, function (err, data) {
         if (err) {
             console.log(err);
@@ -21,21 +20,24 @@ exports.reqLoc = function (req, res) {
             console.log('no location data')
             res.send('확인된 사용자의 위치정보가 없습니다.')
         } else {    //  위치 정보가 있을때
-            var lastTime = Date(data[0].time)   // 2018-10-26 00:41:55 formatting
-            var curTime = Date();               // Current Date
-            if ((curTime - lastTime) < 3000000) {   //  When the difference between the current time and the lastest time is 300000 ms...
+            console.log(data[0]);
+            var lastTime = new Date(data[0].time);
+            var curTime = new Date();               // Current Date
+            var gap = (curTime - lastTime)
+            if (gap < 3000000) {   //  When the difference between the current time and the lastest time is 300000 ms...
                 console.log('send location data');
                 var location = {
+                    gap: gap,
                     longitude: data[0].longitude,
                     latitude: data[0].latitude
-                }
-                res.send()
+                };
+                console.log(location);
+                res.send(location);
             } else {
                 res.send('최신의 사용자의 위치정보가 없습니다.')
             }
         }
     });
-    res.send('implement!')
 }
 
 /** /parent/regist get parameter : pno, userID, userPW

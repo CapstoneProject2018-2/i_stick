@@ -16,6 +16,7 @@ app.post('/register', function (req, res) { register.signUp(req, res) });
 /* user mode */
 app.post('/user', function (req, res) { user.send(req, res); });
 /* parent mode */
+app.post('/parent/reqLoc', function(req, res) { parent.reqLoc(req, res) });
 app.post('/parent/register', function (req, res) { parent.registUser(req, res) });
 app.post('/parent/edit', function (req, res) { parent.editInfo(req, res) });
 app.post('/parent', function (req, res) { parent.main(req, res) });
