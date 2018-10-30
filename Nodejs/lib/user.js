@@ -9,7 +9,7 @@ exports.send = function (req, res) {
     var uno = inputData.uno;
     var longitude = inputData.longitude;
     var latitude = inputData.latitude;
-    var sql = 'INSERT INTO rpu (uno, longitude, latitude) VALUES(?,?,?)'
+    var sql = 'INSERT INTO user_location (uno, longitude, latitude) VALUES(?,?,?)'
     db.query(sql, [uno, longitude, latitude], function (err, result) {
         if (err) {
             console.log(err);
