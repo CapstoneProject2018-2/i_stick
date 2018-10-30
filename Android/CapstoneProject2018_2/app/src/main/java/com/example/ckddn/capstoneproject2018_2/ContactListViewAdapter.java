@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class ContactListViewAdapter extends BaseAdapter implements Filterable {
 
-    //전체 contactlist 자료구조=> 서버에 등록된 관리 대상자들을 여기에 저장한다.
+    //전체 contactlist 자료구조=> 서버에 등록된 관리 여기에 저장한다.
     private ArrayList<ContactListViewItem> clistViewItemList = new ArrayList<ContactListViewItem>();
 
     //검색어에 따라 filter된 리스트. (처음엔 clistViewItemList와 동일하다)
@@ -81,6 +81,17 @@ public class ContactListViewAdapter extends BaseAdapter implements Filterable {
         item.setDesc(desc);
         clistViewItemList.add(item);
     }
+
+    public void deleteItem(String uno) {
+        for (int i = 0; i < clistViewItemList.size(); i++) {
+            ContactListViewItem item = clistViewItemList.get(i);
+            if (item.getUno().equals(uno)) {
+                clistViewItemList.remove(i);
+                break;
+            }
+        }
+    }
+
     @Override
     public Filter getFilter() {
         if(listFilter == null){

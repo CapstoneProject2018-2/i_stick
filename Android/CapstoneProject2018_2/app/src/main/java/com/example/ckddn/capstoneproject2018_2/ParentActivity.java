@@ -3,6 +3,7 @@ package com.example.ckddn.capstoneproject2018_2;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -105,23 +106,6 @@ public class ParentActivity extends AppCompatActivity {
             }
         });
 
-        Button deleteButton = (Button) findViewById(R.id.c_delete);
-        deleteButton.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int count;
-                int checked;
-                count = adapter.getCount();
-                if (count > 0) {
-                    checked = contact_listview.getCheckedItemPosition();
-                    if (checked > -1 && checked < count) {
-                        items.remove(checked);
-                        contact_listview.clearChoices();
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        });
         final EditText editTextFilter = (EditText) findViewById(R.id.editTextFilter);
         editTextFilter.addTextChangedListener(new TextWatcher() {
 
@@ -153,7 +137,9 @@ public class ParentActivity extends AppCompatActivity {
                 intent.putExtra("pno", pno);
                 ContactListViewItem item = (ContactListViewItem)adapter.getItem(position);
                 intent.putExtra("uno", item.getUno());
-                startActivity(intent);
+                intent.putExtra("name", item.getTitle());
+                intent.putExtra("mobile", item.getDesc());
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -163,6 +149,18 @@ public class ParentActivity extends AppCompatActivity {
     /*  implement by ckddn  */
     private void getUserInfo() {
         new RequestUserInfoTask(adapter).execute("http://" + ServerInfo.ipAddress +"/parent");
+    }
+    /* delete task request from ParentMenu */
+    /* implement by ckddn */
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        Toast.makeText(getApplicationContext(), "액티비티리절트", Toast.LENGTH_LONG).show();
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            String deleteUno = data.getStringExtra("uno");
+            new DeleteUserTask(adapter, deleteUno).execute("http://" + ServerInfo.ipAddress + "/parent/delete");
+        }
     }
 
     //  change to private
@@ -190,6 +188,77 @@ public class ParentActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+    public class DeleteUserTask extends AsyncTask<String, String, String> {
+        private ContactListViewAdapter adapter;
+        private String uno;
+        String TAG = "DeleteUserTask>>>";
+        /*  constructor : needs adapter to add userInfo into ListView   */
+        public DeleteUserTask(ContactListViewAdapter adapter, String uno) {
+            this.adapter = adapter;
+            this.uno = uno;
+        }
+        @Override
+        protected String doInBackground(String... strings) {
+            try {   //  json accumulate
+                JSONObject requestObject = new JSONObject();
+                requestObject.accumulate("pno", pno);
+                requestObject.accumulate("uno", uno);
+
+                Log.d(TAG, "doInBackground: create json");
+                HttpURLConnection conn = null;
+                BufferedReader reader = null;
+                try {   //  for HttpURLConnection
+                    URL url = new URL(strings[0]);
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");  //  POST방식
+                    conn.setRequestProperty("Cache-Control", "no-cache");        // 컨트롤 캐쉬 설정(?)
+                    conn.setRequestProperty("Content-Type", "application/json"); // json형식 전달
+                    conn.setRequestProperty("Accept", "application/text");       // text형식 수신
+                    conn.setRequestProperty("Accept", "application/json");       // json형식 수신
+                    conn.setDoOutput(true); //  OutputStream으로 POST데이터 전송
+                    conn.setDoInput(true);  //  InputStream으로 서버로부터 응답 전달받음
+                    conn.connect();
+
+                    OutputStream outputStream = conn.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+                    //  버퍼생성
+                    writer.write(requestObject.toString());
+                    writer.flush();
+                    writer.close();
+                    //  send request to server
+                    InputStream stream = conn.getInputStream();
+                    reader = new BufferedReader(new InputStreamReader(stream));
+                    StringBuffer buffer = new StringBuffer();
+                    String line = "";
+                    while((line = reader.readLine()) != null) {
+                        //  readLine : string or null(if end of data...)
+                        buffer.append(line);
+                        Log.d(TAG, "doInBackground: readLine, " + line);
+                    }
+                    return buffer.toString();
+                } catch (MalformedURLException e) {
+                    //  이상한 URL일 때
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            // rpu 제거가 성공하였으면
+            if (result.equals("ok")) {
+                adapter.deleteItem(uno);
+                adapter.notifyDataSetChanged();
+            } else
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     /*  request user info to Server */
     public class RequestUserInfoTask extends AsyncTask<String, String, String> {
