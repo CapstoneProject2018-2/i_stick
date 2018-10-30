@@ -1,15 +1,32 @@
 package com.example.ckddn.capstoneproject2018_2;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 //LocationManager & LocationListener를 이용한 실시간 위치 찍기
 //ver 1.0
@@ -17,7 +34,8 @@ import android.widget.ToggleButton;
 
 
 public class UserActivity extends AppCompatActivity {
-
+    private String uno;
+    private String userId;
     TextView textView;
     ToggleButton getLoc;
 
@@ -25,6 +43,8 @@ public class UserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+        uno = getIntent().getStringExtra("no");
+        userId = getIntent().getStringExtra("id");
 
         textView = (TextView)findViewById(R.id.user_location_result);
         textView.setText("위치정보 미수신중"); //DEFAULT
@@ -75,6 +95,7 @@ public class UserActivity extends AppCompatActivity {
 
 
             /*이곳에 네트워크에 위치 보내는 코드 작성*/
+            new SendLocTask().execute("http://" + ServerInfo.ipAddress +"/user", longitude+"", latitude+"");
 
 
             textView.setText("위치정보 : " + provider + "\n위도 : " + longitude + "\n경도 : " + latitude
@@ -97,4 +118,66 @@ public class UserActivity extends AppCompatActivity {
             Log.d("test", "onStatusChanged, provider:" + provider + ", status:" + status + " ,Bundle:" + extras);
         }
     };
+    /* implement by ckddn */
+    public class SendLocTask extends AsyncTask<String, String, String> {
+        String TAG = "SendLocTask>>>";
+        @Override
+        protected String doInBackground(String... strings) {
+            try {   //  json accumulate
+                JSONObject locationInfo = new JSONObject();
+                locationInfo.accumulate("uno", uno);
+                locationInfo.accumulate("longitude", strings[1]);
+                locationInfo.accumulate("latitude", strings[2]);
+
+                Log.d(TAG, "doInBackground: create json");
+                HttpURLConnection conn = null;
+                BufferedReader reader = null;
+                try {   //  for HttpURLConnection
+                    URL url = new URL(strings[0]);
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");  //  POST방식
+                    conn.setRequestProperty("Cache-Control", "no-cache");        // 컨트롤 캐쉬 설정(?)
+                    conn.setRequestProperty("Content-Type", "application/json"); // json형식 전달
+                    conn.setRequestProperty("Accept", "application/text");       // text형식 수신
+                    conn.setRequestProperty("Accept", "application/json");       // json형식 수신
+                    conn.setDoOutput(true); //  OutputStream으로 POST데이터 전송
+                    conn.setDoInput(true);  //  InputStream으로 서버로부터 응답 전달받음
+                    conn.connect();
+
+                    OutputStream outputStream = conn.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
+                    //  버퍼생성
+                    writer.write(locationInfo.toString());
+                    writer.flush();
+                    writer.close();
+                    //  send Sign In Info to Server...
+                    InputStream stream = conn.getInputStream();
+                    reader = new BufferedReader(new InputStreamReader(stream));
+                    StringBuffer buffer = new StringBuffer();
+                    String line = "";
+                    while((line = reader.readLine()) != null) {
+                        //  readLine : string or null(if end of data...)
+                        buffer.append(line);
+                        Log.d(TAG, "doInBackground: readLine, " + line);
+                    }
+                    return buffer.toString();
+                } catch (MalformedURLException e) {
+                    //  이상한 URL일 때
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (!result.equals("ok"))
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+        }
+    }
 }

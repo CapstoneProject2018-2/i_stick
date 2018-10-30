@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -62,6 +63,8 @@ public class ParentActivity extends AppCompatActivity {
         /*  implement by ckddn*/
         pno = getIntent().getStringExtra("no");
         parentId = getIntent().getStringExtra("id");
+        TextView welcome = (TextView) findViewById(R.id.id);
+        welcome.setText("welcome " + parentId);
 
         Button logOutBtn = (Button) findViewById(R.id.logout);
         logOutBtn.setOnClickListener(new View.OnClickListener() {

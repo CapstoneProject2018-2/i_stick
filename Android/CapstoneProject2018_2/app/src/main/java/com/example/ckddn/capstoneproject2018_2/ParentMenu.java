@@ -41,6 +41,8 @@ public class ParentMenu extends AppCompatActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
             case R.id.his_loc : intent = new Intent(this, HisLocActivity.class);
+                intent.putExtra("uno", uno);
+                intent.putExtra("pno", pno);
                 startActivity(intent);
                 break;
             default: break;
