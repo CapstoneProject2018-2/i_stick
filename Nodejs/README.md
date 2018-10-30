@@ -45,4 +45,7 @@ I Stick Server Notification using Nodejs
 <ul>
   <li>전체적인 쿼리문 수정 - 보안강화</li>
   <li>./lib/parent.reqLoc 추가, 위치기능 구현이후 테스트 해야함</li>
+  <li>버그수정 ./lib/user.js</li>
+  <li>버그수정 ./lib/parent.reqLoc</li>
+  <li>안드로이드 서버통신작업 코드 생성</li>
 </ul>
