@@ -29,8 +29,8 @@ exports.reqLoc = function (req, res) {
     console.log('/parent/reqLoc');
     const inputData = req.body; //  uno
     const uno = inputData.uno;
-    // query
-    var sql = 'select * from user_location where no=(select max(no) from user_location where uno=?)'
+    
+    var sql = 'select * from user_location where no=(select max(no) from user_location where uno=?)'// query
     db.query(sql, uno, function (err, data) {
         if (err) {
             console.log(err);
@@ -40,10 +40,11 @@ exports.reqLoc = function (req, res) {
             res.send('확인된 사용자의 위치정보가 없습니다.')
         } else {    //  위치 정보가 있을때
             console.log(data[0]);
-            var lastTime = new Date(data[0].time);
+            var lastTime = new Date(data[0].time);  // Lastest Date
             var curTime = new Date();               // Current Date
             var gap = (curTime - lastTime)
-            if (gap < 3000000) {   //  When the difference between the current time and the lastest time is 300000 ms...
+            //  When the difference between the current time and the lastest time is 300000 ms...
+            if (gap < 3000000) {   
                 console.log('send location data');
                 var location = {
                     gap: gap,

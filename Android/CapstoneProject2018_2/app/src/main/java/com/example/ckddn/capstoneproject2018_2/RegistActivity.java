@@ -33,6 +33,7 @@ public class RegistActivity extends AppCompatActivity {
     private EditText name;
     private EditText id;
     private EditText password;
+    private EditText confirm;
     private EditText mobile;
     //    private boolean regFlag = false;    //  flag that check the available ID
     private String tempId = "";
@@ -47,6 +48,7 @@ public class RegistActivity extends AppCompatActivity {
         name = (EditText) findViewById(R.id.name);
         id = (EditText) findViewById(R.id.id);
         password = (EditText) findViewById(R.id.password);
+        confirm = (EditText) findViewById(R.id.pwconfirm);
         mobile = (EditText) findViewById(R.id.mobile);
 
         Button sign_up_btn = (Button) findViewById(R.id.sign_up_button);
@@ -88,6 +90,14 @@ public class RegistActivity extends AppCompatActivity {
         }
         if (password.getText().toString().equals("")) {
             alertToast("비밀번호를 적어주세요");
+            return false;
+        }
+        if (confirm.getText().toString().equals("")) {
+            alertToast("비밀번호 확인도 적어주세요");
+            return false;
+        }
+        if (!password.getText().toString().equals(confirm.getText().toString())) {
+            alertToast("기입한 비밀번호가 일치하지 않습니다.");
             return false;
         }
         if (mobile.getText().toString().equals("")) {
