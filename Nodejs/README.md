@@ -50,3 +50,7 @@ I Stick Server Notification using Nodejs
   <li>안드로이드 서버통신작업 코드 생성</li>
   <li>./lib/parent.deleteUser 추가 및 안드로이드 소스 추가</li>
 </ul>
+<h1>2018-11-09</h1>
+<ul>
+  <li>보호자 사용자의 목적지 지정 기능 테스트 서버 추가 ./lib/parent/setDestination</li>
+</ul>

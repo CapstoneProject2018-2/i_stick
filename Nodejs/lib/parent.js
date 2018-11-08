@@ -2,6 +2,20 @@ var db = require('./db')
 const bkfd2Password = require('pbkdf2-password'); //  for hash the passwd
 var hasher = bkfd2Password();                     //  hash func
 
+/** set User Destination
+ * uno, longitude and latitude will pass to user
+ */
+exports.setDestination = function(req, res) {
+    console.log('/parent/setDestination');
+    const inputData = req.body;
+    const uno = inputData.body;
+    const longitude = inputData.longitude;
+    const latitude = inputData.latitude;
+    console.log('uno: ',uno,'long: ', longitude, "lati: ", latitude);
+    
+    res.send('ok');
+}
+
 /** Delete user relationship with parent
  *  delete in rpu table and send sign to client */
 exports.deleteUser = function(req, res) {
