@@ -20,7 +20,7 @@ public class ParentMenu extends AppCompatActivity implements View.OnClickListene
     private String pno, uno, name, mobile;    //  parent no and managed user no
     private CardView setPath, hisLoc;
     private TextView nameText, mobileText;
-    // REQUEST_CODE = 1
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,10 +63,11 @@ public class ParentMenu extends AppCompatActivity implements View.OnClickListene
 
         switch (v.getId()){
             case R.id.set_path : intent = new Intent(this,SetPathActivity.class);
+                intent.putExtra("uno", uno);    //  for set user location
                 startActivity(intent);
                 break;
             case R.id.his_loc : intent = new Intent(this, HisLocActivity.class);
-                intent.putExtra("uno", uno);
+                intent.putExtra("uno", uno);    //  for get user location
                 intent.putExtra("pno", pno);
                 intent.putExtra("userName", name);
                 intent.putExtra("userMobile", mobile);
