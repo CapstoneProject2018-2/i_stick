@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.skt.Tmap.TMapPoint;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +45,7 @@ public class UserActivity extends AppCompatActivity {
     final private String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
     private String uno;
     private String userId;
+    private TMapPoint destPoint;    //  destination point, initialize in SendLocTask onPostExecute...
     TextView textView;
     ToggleButton getLoc;
 
@@ -188,8 +191,15 @@ public class UserActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (!result.equals("ok"))
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+            if (!result.equals("ok")) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    TMapPoint destPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude"));
+                    Toast.makeText(getApplicationContext(), destPoint.toString(), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

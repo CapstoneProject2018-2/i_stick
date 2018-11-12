@@ -33,6 +33,8 @@
         <activity android:name=".ParentMenu" />
         <activity android:name=".SetPathActivity" />
         <activity android:name=".HisLocActivity"></activity>
+
+        
     </application>
 
 </manifest>

@@ -5,26 +5,37 @@ var hasher = bkfd2Password();                     //  hash func
 /** set User Destination
  * uno, longitude and latitude will pass to user
  */
-exports.setDestination = function(req, res) {
+exports.setDestination = function (req, res) {
     console.log('/parent/setDestination');
     const inputData = req.body;
-    const uno = inputData.body;
+    const pno = inputData.pno;
+    const uno = inputData.uno;
     const longitude = inputData.longitude;
     const latitude = inputData.latitude;
-    console.log('uno: ',uno,'long: ', longitude, "lati: ", latitude);
-    
-    res.send('ok');
+    console.log('uno: ', uno, ' pno: ', pno, ' longitude: ', longitude, " latitude: ", latitude);
+    // insert in nav_hist table...
+    var sql = "insert into nav_hist(uno, pno, longitude, latitude) values(?,?,?,?)";    //  default type 'N' : not sent to user...
+    db.query(sql, [uno, pno, longitude, latitude], function (err, data) {
+        if (err) {
+            console.log(err);
+            res.send('목적지 설정에 오류가 존재합니다. 잠시 후 다시 설정해 주세요.');
+        } else {
+            /* implement 1. when user is already registered... : error  2. when registration succeed*/
+            console.log(data[0]); //  select * from user
+            res.send('목표지설정이 완료되었습니다');
+        }
+    });
 }
 
 /** Delete user relationship with parent
  *  delete in rpu table and send sign to client */
-exports.deleteUser = function(req, res) {
+exports.deleteUser = function (req, res) {
     console.log('/parent/delete');
     const inputData = req.body;
     const pno = inputData.pno;
     const uno = inputData.uno;
     var sql = "delete from rpu where pno=? and uno=?"
-    db.query(sql, [pno, uno], function(err, data) {
+    db.query(sql, [pno, uno], function (err, data) {
         if (err) {
             console.log(err)
             res.send('삭제 과정에서 오류가 발생하였습니다. 잠시후 다시 시도해주세요.')
@@ -43,7 +54,7 @@ exports.reqLoc = function (req, res) {
     console.log('/parent/reqLoc');
     const inputData = req.body; //  uno
     const uno = inputData.uno;
-    
+
     var sql = 'select * from user_location where no=(select max(no) from user_location where uno=?)'// query
     db.query(sql, uno, function (err, data) {
         if (err) {
@@ -58,7 +69,7 @@ exports.reqLoc = function (req, res) {
             var curTime = new Date();               // Current Date
             var gap = (curTime - lastTime)
             //  When the difference between the current time and the lastest time is 300000 ms...
-            if (gap < 3000000) {   
+            if (gap < 3000000) {
                 console.log('send location data');
                 var location = {
                     gap: gap,

@@ -24,18 +24,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/* 181109 add AsyncTask by ckddn
-*  should implement getting longitude and latitude using POI services
-*/
-
 public class SetPathActivity extends AppCompatActivity {
-    private String uno;
+    private String uno, pno;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_path);
 
         uno = getIntent().getStringExtra("uno");
+        pno = getIntent().getStringExtra("pno");
         Button send = (Button) findViewById(R.id.send_path);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +50,7 @@ public class SetPathActivity extends AppCompatActivity {
             try {   //  json accumulate
                 JSONObject destInfo = new JSONObject();
                 destInfo.accumulate("uno", uno);
+                destInfo.accumulate("pno", pno);
 
                 /* longitude와 latitude는 보호자가 POI검색으로 받아온 목적지의 위도경도이다 */
                 destInfo.accumulate("longitude", 126.9707345);

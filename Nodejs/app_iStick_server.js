@@ -1,4 +1,4 @@
-const express = require('express');               //  for app
+const express = require('express');         //  for app
 const login = require('./lib/login')        //  for login
 const register = require('./lib/register')  //  for register
 const parent = require('./lib/parent')      //  for parent
