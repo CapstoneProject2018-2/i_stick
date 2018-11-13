@@ -42,7 +42,6 @@ import java.net.URL;
 
 
 public class UserActivity extends AppCompatActivity {
-    final private String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
     private String uno;
     private String userId;
     private TMapPoint destPoint;    //  destination point, initialize in SendLocTask onPostExecute...
@@ -62,7 +61,7 @@ public class UserActivity extends AppCompatActivity {
         getLoc = (ToggleButton)findViewById(R.id.getLoc);
 
         final LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        ActivityCompat.requestPermissions(this, permissions, PackageManager.PERMISSION_GRANTED);
+        ActivityCompat.requestPermissions(this, ServerInfo.permissions, PackageManager.PERMISSION_GRANTED);
         getLoc.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -90,6 +89,13 @@ public class UserActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        lm.removeUpdates(mLocationListener);
     }
 
     private final LocationListener mLocationListener = new LocationListener() {
