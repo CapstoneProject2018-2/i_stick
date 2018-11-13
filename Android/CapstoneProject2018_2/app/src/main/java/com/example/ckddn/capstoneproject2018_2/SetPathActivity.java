@@ -35,6 +35,7 @@ public class SetPathActivity extends AppCompatActivity {
     private String uno, pno;
     private String keyword;
     TMapView tMapView;
+    PoiListViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,6 @@ public class SetPathActivity extends AppCompatActivity {
 
         final TMapData tMapData = new TMapData();
         final ListView listView;
-        final PoiListViewAdapter adapter;
 
         adapter = new PoiListViewAdapter();
 
@@ -57,6 +57,8 @@ public class SetPathActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    adapter = new PoiListViewAdapter();
+                                    listView.setAdapter(adapter);
                                     keyword = poiName_editText.getText().toString();
                                     if(!TextUtils.isEmpty(keyword)){
                                         tMapData.findAllPOI(keyword, new TMapData.FindAllPOIListenerCallback() {
