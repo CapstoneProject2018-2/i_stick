@@ -4,51 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".SetPathActivity">
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <TextView
-            android:text="현재 위치: "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/cur_loc"
-            android:hint="현재 피보호자의 위치가 표시"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-
-    </LinearLayout>
+    tools:context=".MainActivity">
 
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:gravity="center">
-
-        <TextView
-            android:text="도착지: "
+        <ImageView
+            android:id="@+id/search_img"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_search_category_default"/>
         <EditText
-            android:id="@+id/destination"
+            android:id="@+id/des_edit_text"
             android:hint="목적지를 입력하시오"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/searchBtn"
+            android:text="검색"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayoutTmap"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/send_path"
-        android:text="경로 보내기"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <ListView
+            android:id="@+id/poi_listView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></ListView>
+    </LinearLayout>
 
 </LinearLayout>

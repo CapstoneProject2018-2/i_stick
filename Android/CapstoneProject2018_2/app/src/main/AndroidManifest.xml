@@ -2,12 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ckddn.capstoneproject2018_2">
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -32,9 +31,8 @@
         <activity android:name=".EditParentInfo" />
         <activity android:name=".ParentMenu" />
         <activity android:name=".SetPathActivity" />
-        <activity android:name=".HisLocActivity"></activity>
-
-        
+        <activity android:name=".HisLocActivity" />
+        <activity android:name=".ConfirmPathActivity"></activity>
     </application>
 
 </manifest>
