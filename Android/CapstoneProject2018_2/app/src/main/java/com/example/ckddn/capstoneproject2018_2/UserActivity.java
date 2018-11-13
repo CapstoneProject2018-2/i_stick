@@ -1,10 +1,16 @@
 package com.example.ckddn.capstoneproject2018_2;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,16 +20,28 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.skt.Tmap.MapUtils;
+import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapPoint;
+import com.skt.Tmap.TMapPolyLine;
+import com.skt.Tmap.TMapView;
+import com.skt.Tmap.util.HttpConnect;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,6 +53,15 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 
 //LocationManager & LocationListener를 이용한 실시간 위치 찍기
 //ver 1.0
@@ -44,84 +71,120 @@ import java.net.URL;
 public class UserActivity extends AppCompatActivity {
     private String uno;
     private String userId;
-    private TMapPoint destPoint;    //  destination point, initialize in SendLocTask onPostExecute...
-    TextView textView;
-    ToggleButton getLoc;
+    private TMapPoint curPoint, destPoint;    //  curPoint in LocationListener, destPoint in SendLocTask.onPostExecute()
+    private TextView textView;
+
+    /*  for FindPath    */
+    private LinearLayout linearLayoutTmap;
+    private TMapView tMapView = null;
+    private TextView pathtext;
+    private StringBuilder pathPoint = new StringBuilder();
+    private ArrayList<PathItem> pathlist = null;
+    private TMapPolyLine polyLine;
+    private int pathlistIdx = 0;
+
+    /*  Arduino */
+    private TextView mConnectionStatus;
+    private final int REQUEST_BLUETOOTH_ENABLE = 100;
+    private ConnectedTask mConnectedTask = null;
+    private String mConnectedDeviceName = null;
+    static BluetoothAdapter mBluetoothAdapter;
+    static boolean isConnectionError = false;
+    private static final String TAG = "BluetoothClient";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+
+        // get user info from login page
         uno = getIntent().getStringExtra("no");
         userId = getIntent().getStringExtra("id");
 
-        textView = (TextView)findViewById(R.id.user_location_result);
-        textView.setText("위치정보 미수신중"); //DEFAULT
+        textView = (TextView) findViewById(R.id.user_location_result);
+        textView.setText(userId + ": 위치정보 미수신중"); //DEFAULT
 
-        getLoc = (ToggleButton)findViewById(R.id.getLoc);
+        linearLayoutTmap = (LinearLayout) findViewById(R.id.linearLayoutTmap);
+        tMapView = new TMapView(getApplicationContext());
+        tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
+        pathtext = (TextView) findViewById(R.id.path_text); //  경로에 대한 포인트의 정보 출력 뷰
+        pathtext.setMovementMethod(new ScrollingMovementMethod());
+        polyLine = new TMapPolyLine();
+        polyLine.setLineWidth(2);
+        polyLine.setLineColor(Color.BLUE);
 
-        final LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        /*  Location Manager    */
+        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         ActivityCompat.requestPermissions(this, ServerInfo.permissions, PackageManager.PERMISSION_GRANTED);
-        getLoc.setOnClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                try{
-                    if(getLoc.isChecked()){
-                        textView.setText("수신중...");
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        try {
+            textView.setText("수신중...");
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, // 등록할 위치제공자
+                    100, // 0.1초
+                    1, // 1m 이상 움직이면 갱신한다
+                    mLocationListener); //위치가 바뀌면 onLocationChanged로 인해서 갱신된다.
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
+                    100, // 0.1초
+                    1, // 1m 이상 움직이면 갱신
+                    mLocationListener);
 
-                        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, // 등록할 위치제공자
-                                100, // 0.1초
-                                1, // 1m 이상 움직이면 갱신한다
-                                mLocationListener); //위치가 바뀌면 onLocationChanged로 인해서 갱신된다.
-                        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
-                                100, // 0.1초
-                                1, // 1m 이상 움직이면 갱신
-                                mLocationListener);
-                    }else{
-                        textView.setText("위치정보 미수신중");
-                        lm.removeUpdates(mLocationListener);
-                    }
-                }catch (SecurityException ex){}
-            }
-        });
-
+        } catch (SecurityException ex) {
+        }
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy() {    /*  뒤로 가기로 화면이 꺼지면 LocationManager 서비스 종료*/
         super.onDestroy();
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lm.removeUpdates(mLocationListener);
+        /*  Arduino */
+        if ( mConnectedTask != null ) {
+            mConnectedTask.cancel(true);
+        }
     }
 
     private final LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
-
+            curPoint = new TMapPoint(location.getLatitude(), location.getLongitude());
             Log.d("test", "onLocationChanged, location:" + location);
-            double longitude = location.getLongitude(); //경도
-            double latitude = location.getLatitude();   //위도
-            double altitude = location.getAltitude();   //고도
-            float accuracy = location.getAccuracy();    //정확도
-
-            //getAccuracy는 horizontal accuracy라는 값을 사용하는데 정확한 정체는 확인이 힘들다
-            //값이 높을 수록 좌표의 신뢰성이 높다고 생각하면 될듯
+            double longitude = location.getLongitude(); //  경도
+            double latitude = location.getLatitude();   //  위도
 
             String provider = location.getProvider();   //위치제공자
 
-
             /* 이곳에 네트워크에 위치 보내는 코드 작성 */
-            new SendLocTask().execute("http://" + ServerInfo.ipAddress +"/user", longitude+"", latitude+"");
+            new SendLocTask().execute("http://" + ServerInfo.ipAddress + "/user", longitude + "", latitude + "");
 
 
-            textView.setText("위치정보 : " + provider + "\n위도 : " + longitude + "\n경도 : " + latitude
-                    + "\n고도 : " + altitude + "\n정확도 : "  + accuracy);
+            /* implement algorithm...  */
+            if (pathlist != null) {
+                if (pathlistIdx < pathlist.size()) {
+                    double distance = MapUtils.getDistance(pathlist.get(pathlistIdx).getPoint(), curPoint);
+//                    Toast.makeText(getApplicationContext(), "distance: " + distance + "  idx: " + pathlistIdx, Toast.LENGTH_LONG).show();
+                    if (distance < 10) { //  10m 이내면
+                        Toast.makeText(getApplicationContext(), pathlist.get(pathlistIdx).getTurnType() + "", Toast.LENGTH_LONG).show();
+                        /*  send turnType to Arduino    */
+                        String sendMessage = pathlist.get(pathlistIdx).getTurnType() + "";//보낼 택스트
+                        if ( sendMessage.length() > 0 ) {
+                            sendMessage(sendMessage);
+                        }
+                        pathlistIdx++;
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "목적지로 도착하였습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+
+
+            textView.setText("위치정보 : " + provider + "\n위도 : " + longitude + "\n경도 : " + latitude);
         }
-        //LocationListener 때문에 넣어둔 함수들.
-        //어짜피 폰에 찍히기 때문에 Log는 무시해도 무방하다.
+
+        // for LocationListener
         public void onProviderDisabled(String provider) {
             // Disabled시
             Log.d("test", "onProviderDisabled, provider:" + provider);
@@ -139,11 +202,13 @@ public class UserActivity extends AppCompatActivity {
     };
 
 
-    // by ckddn
+    /* LocationListener에서 위치가 바뀔때 마다 사용자의 현재위치에 대한 정보를 서버에 전송하는 작업 수행 */
     public class SendLocTask extends AsyncTask<String, String, String> {
         String TAG = "SendLocTask>>>";
+
         @Override
         protected String doInBackground(String... strings) {
+            Log.d(TAG, "doInBackground: start!");
             try {   //  json accumulate
                 JSONObject locationInfo = new JSONObject();
                 locationInfo.accumulate("uno", uno);
@@ -176,7 +241,7 @@ public class UserActivity extends AppCompatActivity {
                     reader = new BufferedReader(new InputStreamReader(stream));
                     StringBuffer buffer = new StringBuffer();
                     String line = "";
-                    while((line = reader.readLine()) != null) {
+                    while ((line = reader.readLine()) != null) {
                         //  readLine : string or null(if end of data...)
                         buffer.append(line);
                         Log.d(TAG, "doInBackground: readLine, " + line);
@@ -198,13 +263,403 @@ public class UserActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             if (!result.equals("ok")) {
-                try {
+                try {   //  새로운 목적지 정보가 도착한다면...
                     JSONObject jsonObject = new JSONObject(result);
-                    TMapPoint destPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude"));
+                    destPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")); //  도착 포인트
                     Toast.makeText(getApplicationContext(), destPoint.toString(), Toast.LENGTH_SHORT).show();
+                    /*  경로 탐색 시작 */
+                    new FindPathData().execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+    }
+
+    /*  curPoint와 destPoint로 경로 탐색 후, turnType과 위치 array에 저장과 맵에 경로 표시해주는 작업 수행*/
+    public class FindPathData extends AsyncTask<String, Void, Document> {
+        String TAG = "FindPathData>>>";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pathlist = new ArrayList<PathItem>();
+            tMapView.setCenterPoint(curPoint.getLongitude(), curPoint.getLatitude());
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    /*  Arduino Setups...   */
+                    mConnectionStatus = (TextView)findViewById(R.id.connection_status_textview); // 연결 확인
+                    mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    if (mBluetoothAdapter == null) {
+                        showErrorDialog("This device is not implement Bluetooth.");
+                        return;
+                    }
+                    if (!mBluetoothAdapter.isEnabled()) {
+                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(intent, REQUEST_BLUETOOTH_ENABLE);
+                    }
+                    else {
+                        Log.d("Arduino>>>", "Initialisation successful.");
+                        showPairedDevicesListDialog();
+                    }
+                }
+            }.start();
+
+        }
+
+        @Override
+        protected Document doInBackground(String... strings) {
+            Log.d(TAG, "doInBackground: start!");
+            Document document = null;
+            try {
+                document = new TMapData().findPathDataAllType(TMapData.TMapPathType.PEDESTRIAN_PATH, curPoint, destPoint);  //  send find query to TMapServer..
+                return document;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            }
+            Toast.makeText(getApplicationContext(), "경로탐색에 실패 하였습니다.", Toast.LENGTH_LONG).show();
+            return null;    //  if failed...
+        }
+
+        @Override
+        protected void onPostExecute(Document doc) {
+            if (doc != null) {
+                /*  Parse by turntype and point information */
+                XPathFactory xPathFactory = XPathFactory.newInstance();
+                XPath xPath = xPathFactory.newXPath();
+                try {
+                    XPathExpression expr = xPath.compile("//Placemark");
+                    NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                    for (int i = 0; i < nodeList.getLength(); i++) {
+                        NodeList child = nodeList.item(i).getChildNodes();
+                        int turnType = -1;
+                        TMapPoint point;
+
+                        for (int j = 0; j < child.getLength(); j++) {
+                            Node node = child.item(j);
+                            if (node.getNodeName().equals("tmap:turnType")) {
+                                turnType = Integer.parseInt(node.getTextContent());
+                            }
+                            if (node.getNodeName().equals("Point")) {
+                                String[] str = node.getTextContent().split(",");
+                                point = new TMapPoint(Double.parseDouble(str[1]), Double.parseDouble(str[0]));
+                                PathItem pathItem = new PathItem(turnType, point);
+                                pathlist.add(pathItem);
+                            }
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                pathPoint = new StringBuilder();
+                for (int i = 0; i < pathlist.size(); i++) {
+                    pathPoint.append(pathlist.get(i).toString() + "\n");
+                }
+                pathtext.setText(pathPoint.toString());
+
+                /*  Parse and draw PloyLine on TMapView*/
+                NodeList list = doc.getElementsByTagName("LineString");
+//                Log.d("if문통과>>>>>", "run: ");
+                for (int i = 0; i < list.getLength(); i++) {
+//                    Log.d("for문>>>>>", "run: ");
+
+                    Element item = (Element) list.item(i);
+                    String str = HttpConnect.getContentFromNode(item, "coordinates");
+                    if (str != null) {
+                        String[] str2 = str.split(" ");
+//                        Log.d("포인트로 나눔>>>>>", "run: ");
+                        for (int k = 0; k  < str2.length; k++) {
+                            try {
+                                String[] str3 = str2[k].split(",");
+                                TMapPoint point = new TMapPoint(Double.parseDouble(str3[1]), Double.parseDouble(str3[0]));
+//                                pathPoint.append("(" + i + ", "+ k + ")" + point.toString() + "\n");
+                                polyLine.addLinePoint(point);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        tMapView.addTMapPolyLine("path", polyLine);
+                    }
+                }
+            }
+            pathlistIdx = 0;
+            linearLayoutTmap.addView(tMapView);
+        }
+    }
+
+    /*  블루투스 연결 함수  */
+    public void showPairedDevicesListDialog()
+    {
+        Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
+        final BluetoothDevice[] pairedDevices = devices.toArray(new BluetoothDevice[0]);
+
+        if ( pairedDevices.length == 0 ){
+            showQuitDialog( "No devices have been paired.\n"
+                    +"You must pair it with another device.");
+            return;
+        }
+
+        String[] items;
+        items = new String[pairedDevices.length];
+        for (int i=0;i<pairedDevices.length;i++) {
+            if(pairedDevices[i].getName().equals("HC-06")) {
+                ConnectTask task = new ConnectTask(pairedDevices[i]);
+                task.execute();
+            }
+        }
+    }
+    public void showErrorDialog(String message)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Quit");
+        builder.setCancelable(false);
+        builder.setMessage(message);
+        builder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                if ( isConnectionError  ) {
+                    isConnectionError = false;
+                    finish();
+                }
+            }
+        });
+        builder.create().show();
+    }
+
+    public void showQuitDialog(String message)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Quit");
+        builder.setCancelable(false);
+        builder.setMessage(message);
+        builder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        builder.create().show();
+    }
+
+    /* 블루투스 연결 Task */
+    private class ConnectTask extends AsyncTask<Void, Void, Boolean> {
+        String TAG = "ConnectTask";
+        private BluetoothSocket mBluetoothSocket = null;
+        private BluetoothDevice mBluetoothDevice = null;
+
+        ConnectTask(BluetoothDevice bluetoothDevice) {
+            mBluetoothDevice = bluetoothDevice;
+            mConnectedDeviceName = bluetoothDevice.getName();
+
+            //SPP
+            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+
+            try {
+                mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(uuid);
+                Log.d( TAG, "create socket for "+mConnectedDeviceName);
+
+            } catch (IOException e) {
+                Log.e( TAG, "socket create failed " + e.getMessage());
+            }
+
+            mConnectionStatus.setText("connecting...");
+        }
+
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Log.d(TAG, "doInBackground: start!");
+            // Always cancel discovery because it will slow down a connection
+            mBluetoothAdapter.cancelDiscovery();
+
+            // Make a connection to the BluetoothSocket
+            try {
+                // This is a blocking call and will only return on a
+                // successful connection or an exception
+                mBluetoothSocket.connect();
+            } catch (IOException e) {
+                // Close the socket
+                try {
+                    mBluetoothSocket.close();
+                } catch (IOException e2) {
+                    Log.e(TAG, "unable to close() " +
+                            " socket during connection failure", e2);
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean isSucess) {
+
+            if ( isSucess ) {
+                connected(mBluetoothSocket);
+            }
+            else{
+
+                isConnectionError = true;
+                Log.d( TAG,  "Unable to connect device");
+                showErrorDialog("Unable to connect device");
+            }
+        }
+    }
+
+    /*  Connected Task*/
+    private class ConnectedTask extends AsyncTask<Void, String, Boolean> {
+
+        private InputStream mInputStream = null;
+        private OutputStream mOutputStream = null;
+        private BluetoothSocket mBluetoothSocket = null;
+        private String TAG = "ConnectedTask";
+        
+        ConnectedTask(BluetoothSocket socket){
+
+            mBluetoothSocket = socket;
+            try {
+                mInputStream = mBluetoothSocket.getInputStream();
+                mOutputStream = mBluetoothSocket.getOutputStream();
+            } catch (IOException e) {
+                Log.e(TAG, "socket not created", e );
+            }
+
+            Log.d( TAG, "connected to "+mConnectedDeviceName);
+            mConnectionStatus.setText( "connected to "+mConnectedDeviceName);
+        }
+
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Log.d(TAG, "doInBackground: start!");
+            byte [] readBuffer = new byte[1024];
+            int readBufferPosition = 0;
+
+
+            while (true) {
+
+                if ( isCancelled() ) return false;
+
+                try {
+
+                    int bytesAvailable = mInputStream.available();
+
+                    if(bytesAvailable > 0) {
+
+                        byte[] packetBytes = new byte[bytesAvailable];
+
+                        mInputStream.read(packetBytes);
+
+                        for(int i=0;i<bytesAvailable;i++) {
+
+                            byte b = packetBytes[i];
+                            if(b == '\n')
+                            {
+                                byte[] encodedBytes = new byte[readBufferPosition];
+                                System.arraycopy(readBuffer, 0, encodedBytes, 0,
+                                        encodedBytes.length);
+                                String recvMessage = new String(encodedBytes, "UTF-8");
+
+                                readBufferPosition = 0;
+
+                                Log.d(TAG, "recv message: " + recvMessage);
+                                publishProgress(recvMessage);
+                            }
+                            else
+                            {
+                                readBuffer[readBufferPosition++] = b;
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+
+                    Log.e(TAG, "disconnected", e);
+                    return false;
+                }
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isSucess) {
+            super.onPostExecute(isSucess);
+
+            if ( !isSucess ) {
+
+
+                closeSocket();
+                Log.d(TAG, "Device connection was lost");
+                isConnectionError = true;
+                showErrorDialog("Device connection was lost");
+            }
+        }
+
+        @Override
+        protected void onCancelled(Boolean aBoolean) {
+            super.onCancelled(aBoolean);
+
+            closeSocket();
+        }
+
+        void closeSocket(){
+
+            try {
+
+                mBluetoothSocket.close();
+                Log.d(TAG, "close socket()");
+
+            } catch (IOException e2) {
+
+                Log.e(TAG, "unable to close() " +
+                        " socket during connection failure", e2);
+            }
+        }
+
+        void write(String msg){
+
+            msg += "\n";
+
+            try {
+                mOutputStream.write(msg.getBytes());
+                mOutputStream.flush();
+            } catch (IOException e) {
+                Log.e(TAG, "Exception during send", e );
+            }
+        }
+    }
+
+    public void connected( BluetoothSocket socket ) {
+        mConnectedTask = new ConnectedTask(socket);
+        mConnectedTask.execute();
+    }
+
+    void sendMessage(String msg){
+        if ( mConnectedTask != null ) {
+            mConnectedTask.write(msg);
+            Log.d(TAG, "send message: " + msg);
+        }
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == REQUEST_BLUETOOTH_ENABLE){
+            if (resultCode == RESULT_OK){
+                //BlueTooth is now Enabled
+                showPairedDevicesListDialog();
+            }
+            if(resultCode == RESULT_CANCELED){
+                showQuitDialog( "You need to enable bluetooth");
             }
         }
     }

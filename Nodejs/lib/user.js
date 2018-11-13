@@ -25,13 +25,13 @@ exports.send = function (req, res) {
                     res.send('서버의 에러로 데이터베이스 참조에 실패 하였습니다.')
                 } else if (data[0] == null) {
                     console.log('no destination information in DB');
-                    res.send('설정된 목적지 정보가 존재하지 않습니다.');
+                    res.send('ok'); //  설정된 목적지 정보가 존재하지 않을 때
                 } else {
                     var type = data[0].type;
                     switch (type) {
                         case 'Y':
-                            console.log('이미 보내진 목적지 정보');
-                            res.send('ok');
+                            console.log('destination data is already sent.');
+                            res.send('ok'); //  목적지 정보가 존재 하나 이미 사용자에게 전달된 정보 일때
                             break;
                         case 'N':
                             console.log('send data and update type to Y');

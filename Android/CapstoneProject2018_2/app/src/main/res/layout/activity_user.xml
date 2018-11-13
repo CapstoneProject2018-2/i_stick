@@ -8,22 +8,33 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="GPS에 수신된 현재 위치"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:id="@+id/user_location_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:text="결과창"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-    <ToggleButton
-        android:id="@+id/getLoc"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/connection_status_textview"
+        android:layout_width="258dp"
         android:layout_height="wrap_content"
-        android:textOff="위치정보수신시작"
-        android:textOn="위치정보수신종료"/>
+        android:text="" />
+
+    <TextView
+        android:id="@+id/path_text"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:text="경로 정보" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutTmap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"/>
 </LinearLayout>
