@@ -10,7 +10,10 @@ Android Code Repository
 
 <h1>2018-11-13</h1>
 <ul>
-  <li>SetPathActivity: POIItem 검색 기능과 검색POI로 목적지 지정, 서버연결 기능 추가</li>
+  <h2>SetPathActivity</h2>
+  <ul>
+    <li>POIItem 검색 기능과 검색POI로 목적지 지정, 서버연결 기능 추가</li>
+  </ul>
   <h2>UserActivity</h2>
   <ul>
     <li>목적지 위치 정보 가져오기, 현재위치 기준으로 목적지까지의 경로 탐색 기능 추가</li>
