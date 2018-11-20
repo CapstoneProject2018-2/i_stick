@@ -12,6 +12,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.ckddn.capstoneproject2018_2.Oblu.DeviceScanActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -141,7 +143,8 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(result);  //  get json file from server(res.json(data))
                 Intent signInIntent = new Intent();
                 if (user_radio.isChecked()){
-                    signInIntent.setClass(getApplicationContext(), UserActivity.class);
+//                    signInIntent.setClass(getApplicationContext(), UserActivity.class);
+                    signInIntent.setClass(getApplicationContext(), DeviceScanActivity.class);
                 }
                 else if (parent_radio.isChecked()) {
                     signInIntent.setClass(getApplicationContext(), ParentActivity.class);
