@@ -12,6 +12,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -85,6 +87,9 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject signInInfo = new JSONObject();
                 signInInfo.accumulate("id", strings[1].toString());
                 signInInfo.accumulate("pw", strings[2].toString());
+                /*  for FCM messaging   */
+                signInInfo.accumulate("token", FirebaseInstanceId.getInstance().getToken());
+
                 if (user_radio.isChecked())   //  user 0
                     signInInfo.accumulate("type", 0);
                 else if (parent_radio.isChecked()) //  parent 1

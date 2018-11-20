@@ -84,12 +84,12 @@ public class UserActivity extends AppCompatActivity {
     private int pathlistIdx = 0;
 
     /*  Arduino */
-    private TextView mConnectionStatus;
-    private final int REQUEST_BLUETOOTH_ENABLE = 100;
-    private ConnectedTask mConnectedTask = null;
-    private String mConnectedDeviceName = null;
-    static BluetoothAdapter mBluetoothAdapter;
-    static boolean isConnectionError = false;
+    private TextView mConnectionStatus;                 /*  연결 상태 출력 텍스트    */
+    private final int REQUEST_BLUETOOTH_ENABLE = 100;   /*  블루투스를 키도록 하는 Dialog intent 전달 값 */
+    private ConnectedTask mConnectedTask = null;        /*  */
+    private String mConnectedDeviceName = null;         /*  HC-06   */
+    static BluetoothAdapter mBluetoothAdapter;          /**/
+    static boolean isConnectionError = false;           /**/
     private static final String TAG = "BluetoothClient";
 
 
@@ -98,13 +98,14 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        // get user info from login page
+        /* get user info from login page    */
         uno = getIntent().getStringExtra("no");
         userId = getIntent().getStringExtra("id");
 
         textView = (TextView) findViewById(R.id.user_location_result);
         textView.setText(userId + ": 위치정보 미수신중"); //DEFAULT
 
+        /*  init TMap variables */
         linearLayoutTmap = (LinearLayout) findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(getApplicationContext());
         tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
@@ -115,7 +116,7 @@ public class UserActivity extends AppCompatActivity {
         polyLine.setLineColor(Color.BLUE);
 
 
-        /*  Location Manager    */
+        /*  Initialize Location Manager    */
         final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         ActivityCompat.requestPermissions(this, ServerInfo.permissions, PackageManager.PERMISSION_GRANTED);
 
@@ -132,8 +133,8 @@ public class UserActivity extends AppCompatActivity {
                     100, // 0.1초
                     1, // 1m 이상 움직이면 갱신
                     mLocationListener);
-
         } catch (SecurityException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -143,7 +144,7 @@ public class UserActivity extends AppCompatActivity {
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         lm.removeUpdates(mLocationListener);
         /*  Arduino */
-        if ( mConnectedTask != null ) {
+        if (mConnectedTask != null) {
             mConnectedTask.cancel(true);
         }
     }
@@ -160,17 +161,16 @@ public class UserActivity extends AppCompatActivity {
             /* 이곳에 네트워크에 위치 보내는 코드 작성 */
             new SendLocTask().execute("http://" + ServerInfo.ipAddress + "/user", longitude + "", latitude + "");
 
-
             /* implement algorithm...  */
-            if (pathlist != null) {
+            if (pathlist != null) {                 //  when pathlist is initialized by FindPathData
                 if (pathlistIdx < pathlist.size()) {
                     double distance = MapUtils.getDistance(pathlist.get(pathlistIdx).getPoint(), curPoint);
 //                    Toast.makeText(getApplicationContext(), "distance: " + distance + "  idx: " + pathlistIdx, Toast.LENGTH_LONG).show();
                     if (distance < 10) { //  10m 이내면
                         Toast.makeText(getApplicationContext(), pathlist.get(pathlistIdx).getTurnType() + "", Toast.LENGTH_LONG).show();
                         /*  send turnType to Arduino    */
-                        String sendMessage = pathlist.get(pathlistIdx).getTurnType() + "";//보낼 택스트
-                        if ( sendMessage.length() > 0 ) {
+                        String sendMessage = pathlist.get(pathlistIdx).getTurnType() + "";  //  turnType을 String 형으로 아두이노에 전송
+                        if (sendMessage.length() > 0) {
                             sendMessage(sendMessage);
                         }
                         pathlistIdx++;
@@ -267,8 +267,10 @@ public class UserActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(result);
                     destPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")); //  도착 포인트
                     Toast.makeText(getApplicationContext(), destPoint.toString(), Toast.LENGTH_SHORT).show();
+
                     /*  경로 탐색 시작 */
-                    new FindPathData().execute();
+//                    new FindPathData().execute();
+                    /*  Replacing with using FCM  */
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
@@ -286,28 +288,28 @@ public class UserActivity extends AppCompatActivity {
             super.onPreExecute();
             pathlist = new ArrayList<PathItem>();
             tMapView.setCenterPoint(curPoint.getLongitude(), curPoint.getLatitude());
+
+            /*  Arduino Setups...   */
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
-                    /*  Arduino Setups...   */
-                    mConnectionStatus = (TextView)findViewById(R.id.connection_status_textview); // 연결 확인
+                    mConnectionStatus = (TextView) findViewById(R.id.connection_status_textview); // 연결 확인
                     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    if (mBluetoothAdapter == null) {
-                        showErrorDialog("This device is not implement Bluetooth.");
+                    if (mBluetoothAdapter == null) {    //  블루투스 기능이 존재하지 않는 장치일 때
+                        showErrorDialog("블루트스가 지원되지 않는 장치 입니다.");
                         return;
                     }
-                    if (!mBluetoothAdapter.isEnabled()) {
-                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    if (!mBluetoothAdapter.isEnabled()) {   //  블루투스 기능이 켜져 있지 않다면
+                        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE); //  블루투스를 허용할 것인지 물어보는 dialog생성
                         startActivityForResult(intent, REQUEST_BLUETOOTH_ENABLE);
-                    }
-                    else {
+                    } else {
                         Log.d("Arduino>>>", "Initialisation successful.");
                         showPairedDevicesListDialog();
                     }
                 }
             }.start();
-
+            /*  나중에 새로운 경로가 지정될 때 이 쓰레드를 종료하고 새로운 연결을 생성해주어야 한다 */
         }
 
         @Override
@@ -376,7 +378,7 @@ public class UserActivity extends AppCompatActivity {
                     if (str != null) {
                         String[] str2 = str.split(" ");
 //                        Log.d("포인트로 나눔>>>>>", "run: ");
-                        for (int k = 0; k  < str2.length; k++) {
+                        for (int k = 0; k < str2.length; k++) {
                             try {
                                 String[] str3 = str2[k].split(",");
                                 TMapPoint point = new TMapPoint(Double.parseDouble(str3[1]), Double.parseDouble(str3[0]));
@@ -395,38 +397,36 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-    /*  블루투스 연결 함수  */
-    public void showPairedDevicesListDialog()
-    {
+    /*  블루투스 연결 가능한 리스트 생성 함수  */
+    public void showPairedDevicesListDialog() {
         Set<BluetoothDevice> devices = mBluetoothAdapter.getBondedDevices();
         final BluetoothDevice[] pairedDevices = devices.toArray(new BluetoothDevice[0]);
 
-        if ( pairedDevices.length == 0 ){
-            showQuitDialog( "No devices have been paired.\n"
-                    +"You must pair it with another device.");
+        if (pairedDevices.length == 0) {   // 등록된 블루투스가 존재하지 않으면 종료
+            showQuitDialog("No devices have been paired.\n"
+                    + "You must pair it with another device.");
             return;
         }
 
-        String[] items;
-        items = new String[pairedDevices.length];
-        for (int i=0;i<pairedDevices.length;i++) {
-            if(pairedDevices[i].getName().equals("HC-06")) {
+        String[] items = new String[pairedDevices.length];
+        for (int i = 0; i < pairedDevices.length; i++) {
+            if (pairedDevices[i].getName().equals("HC-06")) {   //  HC-06(아두이노 블루투스 디바이스)가 등록되어 있다면
                 ConnectTask task = new ConnectTask(pairedDevices[i]);
-                task.execute();
+                task.execute(); //  연결
             }
         }
     }
-    public void showErrorDialog(String message)
-    {
+
+    public void showErrorDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Quit");
         builder.setCancelable(false);
         builder.setMessage(message);
-        builder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                if ( isConnectionError  ) {
+                if (isConnectionError) {
                     isConnectionError = false;
                     finish();
                 }
@@ -435,13 +435,14 @@ public class UserActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    public void showQuitDialog(String message)
-    {
+
+    /*  블루투스 연결이 되지 않았을 때   */
+    public void showQuitDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Quit");
         builder.setCancelable(false);
         builder.setMessage(message);
-        builder.setPositiveButton("OK",  new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -459,19 +460,16 @@ public class UserActivity extends AppCompatActivity {
 
         ConnectTask(BluetoothDevice bluetoothDevice) {
             mBluetoothDevice = bluetoothDevice;
-            mConnectedDeviceName = bluetoothDevice.getName();
+            mConnectedDeviceName = bluetoothDevice.getName();   //  아두이노 블루투스 디바이스 HC-06
 
-            //SPP
-            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");    //  범용 SPP 모듈
 
             try {
                 mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(uuid);
-                Log.d( TAG, "create socket for "+mConnectedDeviceName);
-
+                Log.d(TAG, "create socket for " + mConnectedDeviceName);
             } catch (IOException e) {
-                Log.e( TAG, "socket create failed " + e.getMessage());
+                Log.e(TAG, "socket create failed " + e.getMessage());
             }
-
             mConnectionStatus.setText("connecting...");
         }
 
@@ -506,13 +504,12 @@ public class UserActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean isSucess) {
 
-            if ( isSucess ) {
+            if (isSucess) {
                 connected(mBluetoothSocket);
-            }
-            else{
+            } else {
 
                 isConnectionError = true;
-                Log.d( TAG,  "Unable to connect device");
+                Log.d(TAG, "Unable to connect device");
                 showErrorDialog("Unable to connect device");
             }
         }
@@ -525,48 +522,47 @@ public class UserActivity extends AppCompatActivity {
         private OutputStream mOutputStream = null;
         private BluetoothSocket mBluetoothSocket = null;
         private String TAG = "ConnectedTask";
-        
-        ConnectedTask(BluetoothSocket socket){
+
+        ConnectedTask(BluetoothSocket socket) {
 
             mBluetoothSocket = socket;
             try {
                 mInputStream = mBluetoothSocket.getInputStream();
                 mOutputStream = mBluetoothSocket.getOutputStream();
             } catch (IOException e) {
-                Log.e(TAG, "socket not created", e );
+                Log.e(TAG, "socket not created", e);
             }
 
-            Log.d( TAG, "connected to "+mConnectedDeviceName);
-            mConnectionStatus.setText( "connected to "+mConnectedDeviceName);
+            Log.d(TAG, "connected to " + mConnectedDeviceName);
+            mConnectionStatus.setText("connected to " + mConnectedDeviceName);
         }
 
 
         @Override
         protected Boolean doInBackground(Void... params) {
             Log.d(TAG, "doInBackground: start!");
-            byte [] readBuffer = new byte[1024];
+            byte[] readBuffer = new byte[1024];
             int readBufferPosition = 0;
 
 
             while (true) {
 
-                if ( isCancelled() ) return false;
+                if (isCancelled()) return false;
 
                 try {
 
                     int bytesAvailable = mInputStream.available();
 
-                    if(bytesAvailable > 0) {
+                    if (bytesAvailable > 0) {
 
                         byte[] packetBytes = new byte[bytesAvailable];
 
                         mInputStream.read(packetBytes);
 
-                        for(int i=0;i<bytesAvailable;i++) {
+                        for (int i = 0; i < bytesAvailable; i++) {
 
                             byte b = packetBytes[i];
-                            if(b == '\n')
-                            {
+                            if (b == '\n') {
                                 byte[] encodedBytes = new byte[readBufferPosition];
                                 System.arraycopy(readBuffer, 0, encodedBytes, 0,
                                         encodedBytes.length);
@@ -576,9 +572,7 @@ public class UserActivity extends AppCompatActivity {
 
                                 Log.d(TAG, "recv message: " + recvMessage);
                                 publishProgress(recvMessage);
-                            }
-                            else
-                            {
+                            } else {
                                 readBuffer[readBufferPosition++] = b;
                             }
                         }
@@ -596,7 +590,7 @@ public class UserActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean isSucess) {
             super.onPostExecute(isSucess);
 
-            if ( !isSucess ) {
+            if (!isSucess) {
 
 
                 closeSocket();
@@ -613,7 +607,7 @@ public class UserActivity extends AppCompatActivity {
             closeSocket();
         }
 
-        void closeSocket(){
+        void closeSocket() {
 
             try {
 
@@ -627,7 +621,7 @@ public class UserActivity extends AppCompatActivity {
             }
         }
 
-        void write(String msg){
+        void write(String msg) {
 
             msg += "\n";
 
@@ -635,32 +629,54 @@ public class UserActivity extends AppCompatActivity {
                 mOutputStream.write(msg.getBytes());
                 mOutputStream.flush();
             } catch (IOException e) {
-                Log.e(TAG, "Exception during send", e );
+                Log.e(TAG, "Exception during send", e);
             }
         }
     }
 
-    public void connected( BluetoothSocket socket ) {
+    public void connected(BluetoothSocket socket) {
         mConnectedTask = new ConnectedTask(socket);
         mConnectedTask.execute();
     }
 
-    void sendMessage(String msg){
-        if ( mConnectedTask != null ) {
+    /*  Send Message(turnType) to ino   */
+    void sendMessage(String msg) {
+        if (mConnectedTask != null) {
             mConnectedTask.write(msg);
             Log.d(TAG, "send message: " + msg);
         }
     }
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode == REQUEST_BLUETOOTH_ENABLE){
-            if (resultCode == RESULT_OK){
+    /*   onActivityResult   */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_BLUETOOTH_ENABLE) {    /* dialog: 블루투스를 허용 하시겠습니까? */
+            if (resultCode == RESULT_OK) {   //  예
                 //BlueTooth is now Enabled
                 showPairedDevicesListDialog();
             }
-            if(resultCode == RESULT_CANCELED){
-                showQuitDialog( "You need to enable bluetooth");
+            if (resultCode == RESULT_CANCELED) {  //  아니오
+                showQuitDialog("You need to enable bluetooth");
             }
         }
+    }
+
+
+    /*  When message received from FCM
+    * newIntent from LocFirebaseMessagingService
+    * get destination and FindPath
+    * */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent != null) {
+            String longitude = intent.getStringExtra("longitude");
+            String latitude = intent.getStringExtra("latitude");
+            if (longitude.isEmpty() || latitude.isEmpty()) {    //  도착지점의 정보가 오지 않는 경우
+                Toast.makeText(getApplicationContext(), "not destination data", Toast.LENGTH_LONG).show();
+                return;
+            }
+            destPoint = new TMapPoint(Double.parseDouble(latitude), Double.parseDouble(longitude));
+            new FindPathData().execute();
+        }
+        super.onNewIntent(intent);
     }
 }

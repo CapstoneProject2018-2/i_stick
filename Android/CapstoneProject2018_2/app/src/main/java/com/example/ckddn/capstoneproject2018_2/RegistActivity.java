@@ -12,6 +12,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -191,6 +193,10 @@ public class RegistActivity extends AppCompatActivity {
                 else if (parent_radio.isChecked()) //  parent 1
                     regInfo.accumulate("type", 1);
                 Log.d(TAG, "doInBackground: create json" + regInfo.toString());
+
+                /*  for FCM messaging... put token data */
+                regInfo.accumulate("token", FirebaseInstanceId.getInstance().getToken());
+
                 HttpURLConnection conn = null;
                 BufferedReader reader = null;
                 try {

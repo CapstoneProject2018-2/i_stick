@@ -17,11 +17,10 @@ import org.w3c.dom.Text;
 //implemented by 양인수
 
 public class ParentMenu extends AppCompatActivity implements View.OnClickListener {
-    private String pno, uno, name, mobile; // parent no and managed user no
+    private String pno, uno, name, mobile;    //  parent no and managed user no
     private CardView setPath, hisLoc;
     private TextView nameText, mobileText;
 
-    // REQUEST_CODE = 1
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,13 +36,13 @@ public class ParentMenu extends AppCompatActivity implements View.OnClickListene
         mobileText = (TextView) findViewById(R.id.mobileText);
         mobileText.setText(mobile);
 
-        // Toast.makeText(getApplicationContext(),"manage uno: " +
-        // uno,Toast.LENGTH_LONG).show();
-        setPath = (CardView) findViewById(R.id.set_path);
-        hisLoc = (CardView) findViewById(R.id.his_loc);
+//        Toast.makeText(getApplicationContext(),"manage uno: " + uno,Toast.LENGTH_LONG).show();
+        setPath = (CardView)findViewById(R.id.set_path);
+        hisLoc = (CardView)findViewById(R.id.his_loc);
 
         setPath.setOnClickListener(this);
         hisLoc.setOnClickListener(this);
+
 
         /* implements by ckddn */
         Button deleteBtn = (Button) findViewById(R.id.c_delete);
@@ -62,23 +61,20 @@ public class ParentMenu extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         Intent intent;
 
-        switch (v.getId()) {
-        case R.id.set_path:
-            intent = new Intent(this, SetPathActivity.class);
-            intent.putExtra("uno", uno);
-            intent.putExtra("pno", pno);
-            startActivity(intent);
-            break;
-        case R.id.his_loc:
-            intent = new Intent(this, HisLocActivity.class);
-            intent.putExtra("uno", uno);
-            intent.putExtra("pno", pno);
-            intent.putExtra("userName", name);
-            intent.putExtra("userMobile", mobile);
-            startActivity(intent);
-            break;
-        default:
-            break;
+        switch (v.getId()){
+            case R.id.set_path : intent = new Intent(this,SetPathActivity.class);
+                intent.putExtra("uno", uno);
+                intent.putExtra("pno", pno);
+                startActivity(intent);
+                break;
+            case R.id.his_loc : intent = new Intent(this, HisLocActivity.class);
+                intent.putExtra("uno", uno);
+                intent.putExtra("pno", pno);
+                intent.putExtra("userName", name);
+                intent.putExtra("userMobile", mobile);
+                startActivity(intent);
+                break;
+            default: break;
         }
 
     }
