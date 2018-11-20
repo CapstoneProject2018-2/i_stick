@@ -39,7 +39,6 @@ comments:
 * */
 
 
-
 package com.example.ckddn.capstoneproject2018_2.Oblu;
 
 import android.Manifest;
@@ -117,36 +116,36 @@ public class DeviceControlActivity extends Activity {
     double speednow = 0;
     private long timeprint;
 
-    int bytes,i,j,step_counter,package_number,package_number_1,package_number_2,package_number_old=0;
-    int[] header= {0,0,0,0};
-    byte [] ack = new byte[5];
+    int bytes, i, j, step_counter, package_number, package_number_1, package_number_2, package_number_old = 0;
+    int[] header = {0, 0, 0, 0};
+    byte[] ack = new byte[5];
 
     double sin_phi, cos_phi;
-    float [] payload= new float[14];
-    double[] final_data=new double[3];
+    float[] payload = new float[14];
+    double[] final_data = new double[3];
 
-    double[] dx =new double [4];
+    double[] dx = new double[4];
 
-    double[] x_sw=new double[4];
+    double[] x_sw = new double[4];
 
-    byte[] temp=new byte[4];
+    byte[] temp = new byte[4];
     Vibrator vib;
-    double []delta= {0.0,0.0,0.0};
-    double distance=0.0;
-    double distance1=0.0;
+    double[] delta = {0.0, 0.0, 0.0};
+    double distance = 0.0;
+    double distance1 = 0.0;
     private String TXDATA;
     long timeSec1 = 0;
     long timeSec2 = 0;
     double avg = 0;
     //variables for processing
     long timeSec6 = 0;
-    DecimalFormat df1 =new DecimalFormat("0.00");
-    Calendar c,filenameDate;
+    DecimalFormat df1 = new DecimalFormat("0.00");
+    Calendar c, filenameDate;
     SimpleDateFormat sdf;
     byte[] received_data;
     private String mDeviceName;
     private String mDeviceAddress;
-   // private String mDeviceName_1;
+    // private String mDeviceName_1;
     //private String mDeviceAddress_1;
     private BluetoothLeService mBluetoothLeService;
     private static BluetoothGattService mService;
@@ -182,7 +181,7 @@ public class DeviceControlActivity extends Activity {
     };
     BluetoothLeService mtu = new BluetoothLeService();
 
-     // Handles various events fired by the Service.
+    // Handles various events fired by the Service.
     // ACTION_GATT_CONNECTED: connected to a GATT server.
     // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
     // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
@@ -204,83 +203,79 @@ public class DeviceControlActivity extends Activity {
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     mtu.exchangeGattMtu(512);
 
                 }
                 // BEGIN - Added by GT Silicon - BEGIN //
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-           //  displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                //  displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
                 received_data = intent.getByteArrayExtra(BluetoothLeService.EXTRA_TX_VALUE);
                 if (received_data != null && received_data.length > 0) {
                     final StringBuilder stringBuilder = new StringBuilder(received_data.length);
                     for (byte byteChar : received_data)
                         stringBuilder.append(String.format("%02X ", byteChar));
                     TXDATA = String.valueOf(stringBuilder.toString().trim());
-                    System.out.print("swdr "+TXDATA);
-                   // displayData(TXDATA);
+                    System.out.print("swdr " + TXDATA);
+                    // displayData(TXDATA);
                 }
-                 byte[] buffer = received_data;
+                byte[] buffer = received_data;
                 //STEP WISE DATA HERE Receive in Buffer
-                Log.e(TAG,"UART-data- " + TXDATA);
+                Log.e(TAG, "UART-data- " + TXDATA);
                 int i = 0;
                 int j;
                 // writetofile( bytestring,byte2HexStr(buffer,64)+"\n" );
-                Log.e(TAG,"b2h-data- " + byte2HexStr(buffer, buffer.length));
+                Log.e(TAG, "b2h-data- " + byte2HexStr(buffer, buffer.length));
                 for (j = 0; j < 4; j++) {
                     header[j] = buffer[i++] & 0xFF;          //HEADER ASSIGNED
-                    Log.e(TAG,"h- " + header[j]);
+                    Log.e(TAG, "h- " + header[j]);
                 }
-                for(j=0;j<4;j++)
-                {
-                    for(int k=0;k<4;k++)
-                        temp[k]=buffer[i++];
-                    payload[j]= ByteBuffer.wrap(temp).getFloat();				//PAYLOAD ASSIGNED //
+                for (j = 0; j < 4; j++) {
+                    for (int k = 0; k < 4; k++)
+                        temp[k] = buffer[i++];
+                    payload[j] = ByteBuffer.wrap(temp).getFloat();                //PAYLOAD ASSIGNED //
                 }
                 //Log.i(TAG, ""+ payload[0]+ "  "+ payload[2]);
 
-               // ++i;++i;                                                // FOR SKIPPING CHECKSUM
+                // ++i;++i;                                                // FOR SKIPPING CHECKSUM
                 package_number_1 = header[1];
                 package_number_2 = header[2];
                 ack = createAck(ack, package_number_1, package_number_2);
                 writeack(ack);
-                package_number = package_number_1*256 + package_number_2;		//PACKAGE NUMBER ASSIGNED
-                if(package_number_old != package_number)
-                {
-                    for(j=0;j<4;j++)
-                        dx[j]=(double)payload[j];
+                package_number = package_number_1 * 256 + package_number_2;        //PACKAGE NUMBER ASSIGNED
+                if (package_number_old != package_number) {
+                    for (j = 0; j < 4; j++)
+                        dx[j] = (double) payload[j];
                     stepwise_dr_tu();
                     // Log.e(TAG, "final data sent" + final_data[0] + " " + final_data[1] + " "+final_data[2]);
                     c = Calendar.getInstance();
                     sdf = new SimpleDateFormat("HHmmss");
                     // long timeSec= (c.getTimeInMillis()-filenameDate.getTimeInMillis());
-                    if(timeSec != timeSec1)
-                    {
-                        timeSec1= timeSec;
+                    if (timeSec != timeSec1) {
+                        timeSec1 = timeSec;
                     }
-                    if(distance1 >= 0.05)
-                    {
-                        timeSec3 = timeSec1-timeSec2;
+                    if (distance1 >= 0.05) {
+                        timeSec3 = timeSec1 - timeSec2;
                         timeSec6 = timeSec6 + timeSec3;
-                        timeSec2 =timeSec1;
+                        timeSec2 = timeSec1;
                         //  long timeSec5= (c.getTimeInMillis()-filenameDate.getTimeInMillis());
                         step_counter++;
-                        DecimalFormat df1 =new DecimalFormat("0.00");
-                        DecimalFormat df2 =new DecimalFormat("000");
-                        avg = distance/step_counter;
-                        speednow = (distance1*3.6)/(timeSec3/1000);
-                        Avgspeed = distance*3.6/(timeSec6/1000);
-                        StepD = timeSec6/step_counter; //stepDuration
+                        DecimalFormat df1 = new DecimalFormat("0.00");
+                        DecimalFormat df2 = new DecimalFormat("000");
+                        avg = distance / step_counter;
+                        speednow = (distance1 * 3.6) / (timeSec3 / 1000);
+                        Avgspeed = distance * 3.6 / (timeSec6 / 1000);
+                        StepD = timeSec6 / step_counter; //stepDuration
 
-                        StepData stepData= new StepData(final_data[0],final_data[1],final_data[2],distance,step_counter);
+                        StepData stepData = new StepData(final_data[0], final_data[1], final_data[2], distance, step_counter);
                         stepData.setHeading(x_sw[3]);
-                        Utilities.writeDataToLog(getApplicationContext(),stepData);
+                        Utilities.writeDataToLog(getApplicationContext(), stepData);
 
                     }
-                    package_number_old=package_number;
+                    package_number_old = package_number;
                 }
-                mstepcount.setText(" "+step_counter);
-                mdis.setText(" "+df1.format(distance));
+                mstepcount.setText(" " + step_counter);
+                mdis.setText(" " + df1.format(distance));
                 x.setText(" " + df1.format(final_data[0]));///////////x
                 y.setText(" " + df1.format(final_data[1]));///////////y
                 z.setText(" " + df1.format(final_data[2]));/////////Z
@@ -299,30 +294,33 @@ public class DeviceControlActivity extends Activity {
     // BEGIN - Added by GT Silicon - BEGIN //
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); setContentView(R.layout.bluetooth_chat);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.bluetooth_chat);
         final Intent intent = getIntent();
         checkAndRequestWriteLog();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
-//        mstepcount = (TextView) findViewById(R.id.stepcount);
-//        mdis = (TextView) findViewById(R.id.dis);
-//       // mDataField = (EditText) findViewById(R.id.connection_state);
-//        timerValue = (TextView) findViewById(R.id.timer);
-//        x= (TextView) findViewById(R.id.X);
-//        y= (TextView) findViewById(R.id.Y);
-//        z= (TextView) findViewById(R.id.Z);
-//        mStartStopBtn = (Button) findViewById(R.id.start_stop_btn);
-//
-//        /* initialize location attributes*/
-//        longiText = (TextView) findViewById(R.id.longitude_text);
-//        latiText = (TextView) findViewById(R.id.latitude_text);
+        mstepcount = (TextView) findViewById(R.id.stepcount);
+        mdis = (TextView) findViewById(R.id.dis);
+        // mDataField = (EditText) findViewById(R.id.connection_state);
+        timerValue = (TextView) findViewById(R.id.timer);
+        x = (TextView) findViewById(R.id.X);
+        y = (TextView) findViewById(R.id.Y);
+        z = (TextView) findViewById(R.id.Z);
+        mStartStopBtn = (Button) findViewById(R.id.start_stop_btn);
+
+        /* initialize location attributes*/
+        longiText = (TextView) findViewById(R.id.longitude_text);
+        latiText = (TextView) findViewById(R.id.latitude_text);
 
 
         final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
         ActivityCompat.requestPermissions(this, permissions, PackageManager.PERMISSION_GRANTED);
 
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) { return; }
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, new LocationListener() {
                 @Override
@@ -330,7 +328,7 @@ public class DeviceControlActivity extends Activity {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
                     longiText.setText("longitude: " + longitude);
-                    latiText.setText("latitude: "+latitude);
+                    latiText.setText("latitude: " + latitude);
                     locationManager.removeUpdates(this);
                 }
 
@@ -401,29 +399,30 @@ public class DeviceControlActivity extends Activity {
         Log.e(TAG, "UART RESUME");
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
     }
-/*
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.e(TAG, "UART PAUSE");
-        unregisterReceiver(mGattUpdateReceiver);
-    }
-*/
+
+    /*
+        @Override
+        protected void onPause() {
+            super.onPause();
+            Log.e(TAG, "UART PAUSE");
+            unregisterReceiver(mGattUpdateReceiver);
+        }
+    */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "UART DESTROY");
         unbindService(mServiceConnection);
         stopBroadcastDataNotify(mReadCharacteristic);
-        try{
-            if(mGattUpdateReceiver!=null)
+        try {
+            if (mGattUpdateReceiver != null)
                 unregisterReceiver(mGattUpdateReceiver);
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
 
         }
         mBluetoothLeService = null;
     }
+
     // END - Added by GT Silicon - END //
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -440,7 +439,7 @@ public class DeviceControlActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.menu_connect:
                 mBluetoothLeService.connect(mDeviceAddress);
                 return true;
@@ -455,24 +454,25 @@ public class DeviceControlActivity extends Activity {
     }
     // BEGIN - Added by GT Silicon - BEGIN //
 
- /**
+    /**
      * Preparing Broadcast receiver to broadcast notify characteristics
      *
      * @param gattCharacteristic
      */
     void prepareBroadcastDataNotify(    //  onCreate
-            BluetoothGattCharacteristic gattCharacteristic) {
+                                        BluetoothGattCharacteristic gattCharacteristic) {
         if ((gattCharacteristic.getProperties() | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-            BluetoothLeService.setCharacteristicNotification(gattCharacteristic,true);
-      }
+            BluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
+        }
     }
+
     void stopBroadcastDataNotify(
             BluetoothGattCharacteristic gattCharacteristic) {
         final int charaProp = gattCharacteristic.getProperties();
 
         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
             if (gattCharacteristic != null) {
-                Log.d(TAG,"Stopped notification");
+                Log.d(TAG, "Stopped notification");
                 BluetoothLeService.setCharacteristicNotification(
                         gattCharacteristic, false);
                 mNotifyCharacteristic = null;
@@ -500,7 +500,7 @@ public class DeviceControlActivity extends Activity {
         for (BluetoothGattService gattService : gattServices) {
             HashMap<String, String> currentServiceData = new HashMap<String, String>();
             uuid = gattService.getUuid().toString();
-            currentServiceData.put(LIST_NAME,SampleGattAttributes.lookup(uuid, unknownServiceString));
+            currentServiceData.put(LIST_NAME, SampleGattAttributes.lookup(uuid, unknownServiceString));
             currentServiceData.put(LIST_UUID, uuid);
             gattServiceData.add(currentServiceData);
 
@@ -514,12 +514,12 @@ public class DeviceControlActivity extends Activity {
             if (uuid.equals(SampleGattAttributes.SERVER_UART)) {
                 for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
                     String uuidchara = gattCharacteristic.getUuid().toString();
-                       mReadCharacteristic = gattCharacteristic;
+                    mReadCharacteristic = gattCharacteristic;
                     if (uuidchara.equalsIgnoreCase(SampleGattAttributes.SERVER_UART_tx)) {
-                        Log.e(TAG,"gatt- "+gattCharacteristic);
+                        Log.e(TAG, "gatt- " + gattCharacteristic);
                         mNotifyCharacteristic = gattCharacteristic;
-                     prepareBroadcastDataNotify(mNotifyCharacteristic);
-                  }
+                        prepareBroadcastDataNotify(mNotifyCharacteristic);
+                    }
                 }
             }
 
@@ -549,6 +549,7 @@ public class DeviceControlActivity extends Activity {
         return intentFilter;
     }
 // BEGIN - Added by GT Silicon - BEGIN //
+
     /**
      * Method to convert hex to byteArray
      */
@@ -565,6 +566,7 @@ public class DeviceControlActivity extends Activity {
         return valueByte;
 
     }
+
     /**
      * Convert the string to byte
      *
@@ -575,73 +577,72 @@ public class DeviceControlActivity extends Activity {
     private int convertstringtobyte(String string) {
         return Integer.parseInt(string, 16);
     }
-    public byte[] createAck(byte[] ack, int package_number_1, int package_number_2)
-    {
-        ack[0]=0x01;
-        ack[1]=(byte)package_number_1;
-        ack[2]=	(byte)package_number_2;
-        ack[3]=	(byte)((1+package_number_1+package_number_2-(1+package_number_1+package_number_2) % 256)/256);
-        ack[4]=	(byte)((1+package_number_1+package_number_2) % 256);
+
+    public byte[] createAck(byte[] ack, int package_number_1, int package_number_2) {
+        ack[0] = 0x01;
+        ack[1] = (byte) package_number_1;
+        ack[2] = (byte) package_number_2;
+        ack[3] = (byte) ((1 + package_number_1 + package_number_2 - (1 + package_number_1 + package_number_2) % 256) / 256);
+        ack[4] = (byte) ((1 + package_number_1 + package_number_2) % 256);
         return ack;
     }
 
-    public void stepwise_dr_tu()
-    {
+    public void stepwise_dr_tu() {
 
-        sin_phi=(float) Math.sin(x_sw[3]);
-        cos_phi=(float) Math.cos(x_sw[3]);
+        sin_phi = (float) Math.sin(x_sw[3]);
+        cos_phi = (float) Math.cos(x_sw[3]);
         //Log.i(TAG, "Sin_phi and cos_phi created");
-        delta[0]=cos_phi*dx[0]-sin_phi*dx[1];
-        delta[1]=sin_phi*dx[0]+cos_phi*dx[1];
-        delta[2]=dx[2];
-        x_sw[0]+=delta[0];
-        x_sw[1]+=delta[1];
-        x_sw[2]+=delta[2];
-        x_sw[3]+=dx[3];
-        final_data[0]=x_sw[0];
-        final_data[1]=x_sw[1];
-        final_data[2]=x_sw[2];
-        distance1=Math.sqrt((delta[0]*delta[0]+delta[1]*delta[1]+delta[2]*delta[2]));
-        distance+=Math.sqrt((delta[0]*delta[0]+delta[1]*delta[1]));
+        delta[0] = cos_phi * dx[0] - sin_phi * dx[1];
+        delta[1] = sin_phi * dx[0] + cos_phi * dx[1];
+        delta[2] = dx[2];
+        x_sw[0] += delta[0];
+        x_sw[1] += delta[1];
+        x_sw[2] += delta[2];
+        x_sw[3] += dx[3];
+        final_data[0] = x_sw[0];
+        final_data[1] = x_sw[1];
+        final_data[2] = x_sw[2];
+        distance1 = Math.sqrt((delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2]));
+        distance += Math.sqrt((delta[0] * delta[0] + delta[1] * delta[1]));
 
         /* longitude, latitude */
 
 
     }
-///WRITE ACK to uc
-    void writeack(byte[] byteArray){
-        Log.e(TAG,"ackdata " + byte2HexStr(byteArray, 4));
-         BluetoothLeService.writeCharacteristicNoresponse(mReadCharacteristic, byteArray);
-    }
-        //STOP watch Running
-        long timeInMilliseconds = 0L;
-        private long startTime = 0L;
-        long updatedTime = 0L;
-        long timeSwapBuff = 0L;
-        private Handler customHandler = new Handler();
-        private TextView timerValue;
-        private Runnable updateTimerThread = new Runnable() {
-            public void run() {
-                timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
-                updatedTime = timeSwapBuff + timeInMilliseconds;
-                int secs = (int) (updatedTime / 1000);
-                int mins = secs / 60;
-                int hr = mins/60;
-                secs = secs % 60;
-                // int milliseconds = (int) (updatedTime % 1000);
-                timerValue.setText(" "+ hr + ":" + mins + ":"+ String.format("%02d", secs));
-                customHandler.postDelayed(this, 0);
 
-            }
+    ///WRITE ACK to uc
+    void writeack(byte[] byteArray) {
+        Log.e(TAG, "ackdata " + byte2HexStr(byteArray, 4));
+        BluetoothLeService.writeCharacteristicNoresponse(mReadCharacteristic, byteArray);
+    }
+
+    //STOP watch Running
+    long timeInMilliseconds = 0L;
+    private long startTime = 0L;
+    long updatedTime = 0L;
+    long timeSwapBuff = 0L;
+    private Handler customHandler = new Handler();
+    private TextView timerValue;
+    private Runnable updateTimerThread = new Runnable() {
+        public void run() {
+            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+            updatedTime = timeSwapBuff + timeInMilliseconds;
+            int secs = (int) (updatedTime / 1000);
+            int mins = secs / 60;
+            int hr = mins / 60;
+            secs = secs % 60;
+            // int milliseconds = (int) (updatedTime % 1000);
+            timerValue.setText(" " + hr + ":" + mins + ":" + String.format("%02d", secs));
+            customHandler.postDelayed(this, 0);
+
+        }
     };
-    public static String byte2HexStr(byte[] paramArrayOfByte, int paramInt)
-    {
+
+    public static String byte2HexStr(byte[] paramArrayOfByte, int paramInt) {
         StringBuilder localStringBuilder1 = new StringBuilder("");
         int i = 0;
-        for (;;)
-        {
-            if (i >= paramInt)
-            {
+        for (; ; ) {
+            if (i >= paramInt) {
                 String str1 = localStringBuilder1.toString().trim();
                 Locale localLocale = Locale.US;
                 return str1.toUpperCase(localLocale);
@@ -655,24 +656,26 @@ public class DeviceControlActivity extends Activity {
             i += 1;
         }
     }
-    private  void checkAndRequestWriteLog(){
-        if(Build.VERSION.SDK_INT>=23){
-            if(ActivityCompat.checkSelfPermission(DeviceControlActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED){
+
+    private void checkAndRequestWriteLog() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (ActivityCompat.checkSelfPermission(DeviceControlActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 Utilities.writeHeaderToLog(getApplicationContext());
-            }else {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSIONS_LOG_STORAGE);
+            } else {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSIONS_LOG_STORAGE);
             }
-        }else{
+        } else {
             Utilities.writeHeaderToLog(getApplication());
         }
     }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-        switch(requestCode){
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
             case REQUEST_PERMISSIONS_LOG_STORAGE:
-                if(grantResults.length>0&& grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Utilities.writeHeaderToLog(getApplicationContext());
-                }else {
+                } else {
                     Toast.makeText(DeviceControlActivity.this, "Required storage permission  are disable.", Toast.LENGTH_SHORT).show();
                 }
                 break;
