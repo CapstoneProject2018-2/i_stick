@@ -7,10 +7,13 @@ exports.signIn = function (req, res) {
     console.log('/login');
     const inputData = req.body;
     console.log(inputData);
+    const type = inputData.type;
+    const token = inputData.token;
+
     var sql = '';
-    if (inputData.type === 0) {  //  user
+    if (type === 0) {  //  user
         sql = 'SELECT * FROM user WHERE id=?';
-    } else if (inputData.type === 1) {  //  parent
+    } else if (type === 1) {  //  parent
         sql = 'SELECT * FROM parent WHERE id=?';
     }
     console.log(sql);
@@ -31,6 +34,8 @@ exports.signIn = function (req, res) {
                         id: datas[0].id
                     }
                     res.send(info);
+                    //  log in information is matching... update token data
+                    updateToken(datas[0].no, type, token)
                 } else {
                     console.log('wrong Password');
                     res.send('비밀번호가 일치하지 않습니다.');
@@ -38,4 +43,20 @@ exports.signIn = function (req, res) {
             });
         }
     });
+}
+
+function updateToken(no, type, token) {
+    var sql = '';
+    if (type === 0) {
+        sql = 'UPDATE user SET token=? WHERE no=?'
+    } else {
+        sql = 'UPDATE parent SET token=? WHERE no=?'
+    }
+    db.query(sql, [token, no], function (err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('token is successfully updated');
+        }
+    })
 }

@@ -22,5 +22,6 @@ app.post('/parent/register', function (req, res) { parent.registUser(req, res) }
 app.post('/parent/delete', function (req, res) { parent.deleteUser(req, res) });
 app.post('/parent/edit', function (req, res) { parent.editInfo(req, res) });
 app.post('/parent', function (req, res) { parent.main(req, res) });
+
 /* listen... */
 app.listen(5555, function () { console.log('I Stick Server is listening on port 5555') })

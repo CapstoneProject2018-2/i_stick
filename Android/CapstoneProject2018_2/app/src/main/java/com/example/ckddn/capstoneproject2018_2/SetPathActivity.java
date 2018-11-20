@@ -2,6 +2,7 @@ package com.example.ckddn.capstoneproject2018_2;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+<<<<<<< HEAD
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -36,11 +37,16 @@ public class SetPathActivity extends AppCompatActivity {
     private String keyword;
     TMapView tMapView;
     PoiListViewAdapter adapter;
+=======
+
+public class SetPathActivity extends AppCompatActivity {
+>>>>>>> c32979d3e865dbe4c250ed476d6e9eb101ed13a4
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_path);
+<<<<<<< HEAD
 
         uno = getIntent().getStringExtra("uno");
         pno = getIntent().getStringExtra("pno");
@@ -163,5 +169,7 @@ public class SetPathActivity extends AppCompatActivity {
             super.onPostExecute(result);
             Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
         }
+=======
+>>>>>>> c32979d3e865dbe4c250ed476d6e9eb101ed13a4
     }
 }

@@ -14,15 +14,64 @@ exports.setDestination = function (req, res) {
     const latitude = inputData.latitude;
     console.log('uno: ', uno, ' pno: ', pno, ' longitude: ', longitude, " latitude: ", latitude);
     // insert in nav_hist table...
-    var sql = "insert into nav_hist(uno, pno, longitude, latitude) values(?,?,?,?)";    //  default type 'N' : not sent to user...
+    var sql = "insert into nav_hist(uno, pno, longitude, latitude) values(?,?,?,?)";
     db.query(sql, [uno, pno, longitude, latitude], function (err, data) {
         if (err) {
-            console.log(err);
+            console.error(err);
             res.send('목적지 설정에 오류가 존재합니다. 잠시 후 다시 설정해 주세요.');
         } else {
-            /* implement 1. when user is already registered... : error  2. when registration succeed*/
-            console.log(data[0]); //  select * from user
-            res.send('목표지설정이 완료되었습니다');
+            /*  success to insert loc infor into nav_hist table */
+            // console.log(data[0]); //  check the succeed
+            var sql = 'SELECT token FROM user WHERE no=?'
+            db.query(sql, uno, function (err, ret) { //  getToken using user no
+                if (err) {
+                    console.error(err);
+                    res.send('사용자의 정보를 불러오는데 문제가 생겼습니다. 잠시 후 다시 설정해 주세요.')
+                } else {
+                    /* send Destination information to User immediately */
+                    sendMessage(ret[0].token, longitude, latitude);
+                    res.send('사용자의 목적지를 설정하였습니다.');
+                }
+            });
+        }
+    });
+}
+
+
+function sendMessage(client_token, longitude, latitude) {
+    console.log('function: sendMessage');
+    const FCM = require('fcm-node')
+    var serverKey = 'AAAAidG1HhQ:APA91bEHmxPexef-q-nt9EdHF3yyTUiTr3Yn7W26yoz_O8yaLKWeN5RYOThy2OTEGaS4AzFR-AUFryf8huA5WXQsXDKTBpyngDPS4qCnG4ID-RSuPdzEZzleFUtp6qn4uLVXhyAM1-i7'
+    var push_data = {
+        to: client_token,
+
+        // notification: {
+        //     title: "I Stick Nav Manager",
+        //     body: "새로운 목적지가 설정되었습니다.",
+        //     sound: "defalut",
+        //     click_action: "FCM_PLUGIN_ACTIVITY",
+        //     icon: "fcm_push_icon"
+        // },
+
+        // priority: "high",
+
+        // restricted_package_name: "com.example.ckddn.capstoneproject2018_2",
+
+        data: {
+            longitude: longitude,
+            latitude: latitude
+        }
+    };
+
+    var fcm = new FCM(serverKey);
+    fcm.send(push_data, function (err, res) {
+        if (err) {
+            console.error('Push메시지 발송에 실패했습니다.');
+            console.error(err);
+            return;
+        } else {
+            console.log('Push메시지가 발송되었습니다.');
+            console.log(res);
         }
     });
 }
@@ -37,7 +86,7 @@ exports.deleteUser = function (req, res) {
     var sql = "delete from rpu where pno=? and uno=?"
     db.query(sql, [pno, uno], function (err, data) {
         if (err) {
-            console.log(err)
+            console.error(err)
             res.send('삭제 과정에서 오류가 발생하였습니다. 잠시후 다시 시도해주세요.')
         } else {
             console.log('delete succeed');
@@ -58,7 +107,7 @@ exports.reqLoc = function (req, res) {
     var sql = 'select * from user_location where no=(select max(no) from user_location where uno=?)'// query
     db.query(sql, uno, function (err, data) {
         if (err) {
-            console.log(err);
+            console.error(err);
             res.send('서버에 에러가 있습니다. 나중에 다시 시도해 주세요.')
         } else if (data[0] == null) {
             console.log('no location data')
@@ -68,7 +117,7 @@ exports.reqLoc = function (req, res) {
             var lastTime = new Date(data[0].time);  // Lastest Date
             var curTime = new Date();               // Current Date
             var gap = (curTime - lastTime)
-            //  When the difference between the current time and the lastest time is 300000 ms...
+            //  When the difference between the current time and the lastest time is 300000 ms...(5minutes)
             if (gap < 3000000) {
                 console.log('send location data');
                 var location = {
@@ -100,7 +149,7 @@ exports.registUser = function (req, res) {
     var sql = 'SELECT * FROM user WHERE id=?'; //  uno, pw(hash), salt
     db.query(sql, id, function (err, info) {
         if (err) {
-            console.log(err);
+            console.error(err);
             res.send(err)
         } else if (info[0] == null) {
             console.log('Wrong ID');
@@ -109,15 +158,14 @@ exports.registUser = function (req, res) {
             var uno = info[0].no;
             hasher({ password: pw, salt: info[0].salt }, function (err, pass, salt, hash) {
                 if (err) {
-                    console.log(err);
+                    console.error(err);
                     res.send(err);;
                 } else if (info[0].pw == hash) {  //  add relation to rpu relation
                     console.log('correct!');
                     var sql = 'INSERT INTO rpu(pno, uno) VALUES(?,?)'
                     db.query(sql, [pno, uno], function (err, results) {
                         if (err) {
-                            // console.log('Error');
-                            console.log(err);
+                            console.error(err);
                             res.send('이미 등록된 사용자 입니다.');
                         } else {
                             /* implement 1. when user is already registered... : error
@@ -157,7 +205,7 @@ exports.editInfo = function (req, res) {
     db.query(sql, inputData.id, function (err, data) {
         console.log(data);
         if (err) {
-            console.log(err);
+            console.error(err);
             res.send(err);
         } else {  //  id 는 무조건 존재한다. query 의 결과는 하나가 나옴
             var opts = { password: oldpw, salt: data[0].salt }
@@ -171,7 +219,7 @@ exports.editInfo = function (req, res) {
                         var sql = 'UPDATE parent SET pw=?, salt=? WHERE id=?'
                         db.query(sql, [hash, salt, id], function (err, results) {
                             if (err) {
-                                console.log(err);
+                                console.error(err);
                                 res.send('데이터 저장에 오류가 생겼습니다. 나중에 다시 시도해 주세요.');
                             } else {
                                 console.log(results);
@@ -191,11 +239,11 @@ exports.main = function (req, res) {
     console.log('/parent');
     const inputData = req.body;  //  pno, id 받아오기
     console.log(inputData);
-    //  ParnetActivity : getUserList(String pid) = 담당하는 user의 목록 불러오기
+    //  ParnetActivity: getUserList(String pid) = 담당하는 user의 목록 불러오기
     var sql = 'SELECT * FROM rpu WHERE pno=?'
     db.query(sql, inputData.pno, function (err, results, fields) {
         if (err) {
-            console.log(err);
+            console.error(err);
             res.send(err);
         } else {  //  results : RowDataPacket형태
             var num = results.length;
@@ -211,7 +259,7 @@ exports.main = function (req, res) {
                 console.log(sql);
                 db.query(sql, function (err, userInfo, fields) {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                         res.send('데이터 검색에 오류가 발생했습니다. 잠시후 다시 시도해주세요.');
                     } else {
                         console.log(userInfo);  //  JSONArray
