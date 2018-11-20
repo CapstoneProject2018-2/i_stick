@@ -1,0 +1,26 @@
+[
+    {
+        "outputFile": "H:\\openxoblu\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-en-rAU\\values-en-rAU.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 100,
+                    "endOffset": 151
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\d17411bd728b4a4cbf8ba2fe929569c2aaf29fce\\output\\res\\values-en-rAU\\values-en-rAU.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 100,
+                        "endOffset": 151
+                    }
+                }
+            }
+        ]
+    }
+]

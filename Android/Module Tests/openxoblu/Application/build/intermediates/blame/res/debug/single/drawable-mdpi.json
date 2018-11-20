@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi\\daelogo.png",
+        "source": "H:\\openxoblu\\Application\\src\\main\\res\\drawable-mdpi\\daelogo.png"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi\\logo.png",
+        "source": "H:\\openxoblu\\Application\\src\\main\\res\\drawable-mdpi\\logo.png"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi\\ic_launcher.png",
+        "source": "H:\\openxoblu\\Application\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
+    }
+]
