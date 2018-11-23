@@ -26,3 +26,15 @@ Android Code Repository
 <ul>
   <li>FCM Messaging 추가 구현(fcm-node)</li>
 </ul>
+
+<h1>2018-11-20</h1>
+<ul>
+  <li>기존 블루투스 코드 수정, BluetoothSPP 이용</li>
+  <li>Oblu 관련 class 병합</li>
+</ul>
+
+<h1>2018-11-21</h1>
+<ul>
+  <li>경위도 <-> 좌표 변환 알고리즘 추가</li>
+  <li>Feedback: 주소검색시 나오는 null값 제거 (PoiListViewAdapter)</li>
+</ul>

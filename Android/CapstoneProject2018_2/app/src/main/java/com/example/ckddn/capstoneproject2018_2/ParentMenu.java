@@ -20,7 +20,7 @@ public class ParentMenu extends AppCompatActivity implements View.OnClickListene
     private String pno, uno, name, mobile;    //  parent no and managed user no
     private CardView setPath, hisLoc;
     private TextView nameText, mobileText;
-
+    // REQUEST_CODE = 1
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,0 +1,70 @@
+[
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_media_action.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\\output\\res\\layout\\notification_media_action.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_big_media.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\\output\\res\\layout\\notification_template_big_media.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_media.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\\output\\res\\layout\\notification_template_media.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_action_tombstone.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\d17411bd728b4a4cbf8ba2fe929569c2aaf29fce\\output\\res\\layout\\notification_action_tombstone.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_icon_group.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\d17411bd728b4a4cbf8ba2fe929569c2aaf29fce\\output\\res\\layout\\notification_template_icon_group.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\listitem_device.xml",
+        "source": "H:\\openxoblu\\Application\\src\\main\\res\\layout\\listitem_device.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_part_chronometer.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\d17411bd728b4a4cbf8ba2fe929569c2aaf29fce\\output\\res\\layout\\notification_template_part_chronometer.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_action.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\d17411bd728b4a4cbf8ba2fe929569c2aaf29fce\\output\\res\\layout\\notification_action.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_big_media_custom.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\\output\\res\\layout\\notification_template_big_media_custom.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_part_time.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\d17411bd728b4a4cbf8ba2fe929569c2aaf29fce\\output\\res\\layout\\notification_template_part_time.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\actionbar_indeterminate_progress.xml",
+        "source": "H:\\openxoblu\\Application\\src\\main\\res\\layout\\actionbar_indeterminate_progress.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_big_media_narrow_custom.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\\output\\res\\layout\\notification_template_big_media_narrow_custom.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_big_media_narrow.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\\output\\res\\layout\\notification_template_big_media_narrow.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_lines_media.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\\output\\res\\layout\\notification_template_lines_media.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\bluetooth_chat.xml",
+        "source": "H:\\openxoblu\\Application\\src\\main\\res\\layout\\bluetooth_chat.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_media_custom.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\\output\\res\\layout\\notification_template_media_custom.xml"
+    },
+    {
+        "merged": "H:\\openxoblu\\Application\\build\\intermediates\\res\\merged\\debug\\layout\\notification_media_cancel_action.xml",
+        "source": "C:\\Users\\insu0\\.android\\build-cache\\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\\output\\res\\layout\\notification_media_cancel_action.xml"
+    }
+]

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\c8b4d4e03d5fa5f62290c83bb46ef2d0de4d10ec\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="ac2ce6027755bcf49442e70597bec0feb9064f68">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_581c4658914299f14bd0dadaca11ae0958e9db43.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.gradle\caches\modules-2\files-2.1\android.arch.lifecycle\common\1.0.3\7d7f60c4783872861222166f6164215f8951c7b1\common-1.0.3.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="7d7f60c4783872861222166f6164215f8951c7b1">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\common-1.0.3_ab3337d7460dfefbab771eab26c78a1882faa11e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\cf9b96eaa95dc66f77832817b80225c45fdabcff\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="bcd0bcdef85b31a656af76e39c0c95ce70800772">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_8542804b3c37ef1428aad5af90be83c0d9b42c74.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\a6cb1cbe2e5eac9a931592d6aae932d24ee88611\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="5ad3911825107d8dd4b017fdecebfd23c08048dd">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_1abfdc3f74e53bc87605e4448518fd67f08e5de2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\09510d5ed1643a99ba3e12179b7899d73e8ce9ad\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="d7cc5473b9cf4ea159a263cd477fb3ecb2987b96">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_197087bd891da215467c51b6b561871fce7abd9c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="25c8cb628374f9a2d59ff9e1172753751e9a9f84">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_532f53170c22b06120afd022f143fdf7e58ce332.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\b3905f545549621fbb7fa041b0ecf54156b4d73c\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="e66b741299db855d094ffafb2b783258f24fc010">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_d7eeb223778f75c443381508083ba984f2b85f97.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.gradle\caches\modules-2\files-2.1\com.android.support\support-annotations\27.0.2\b9ef4342c934a1a8b107506273dc8061662a322\support-annotations-27.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="0b9ef4342c934a1a8b107506273dc8061662a322">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\support-annotations-27.0.2_c68f399f811ca7118520dc4947d4f781fcc6495e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\8398cdc5e6d29f446b3614235af65817dc032b89\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="14bfdbf5594d4d7c320de20831849050788ab1e3">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_600681bc0204b64f024de5539ec9be3e690c3357.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\9148ee083cfae84954e0e3f20363a1ae1ca495cb\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="618f75fe11febf263e3234c7da7dc892232a5608">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_2ad75a5cadf40993388ad3053640a983ccc0f33b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\d17411bd728b4a4cbf8ba2fe929569c2aaf29fce\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="b432e82447a3af781e927b9ba0bbb9fe2a496d4a">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_5511375cb98eb6869a15d432034eec444efa17ea.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.gradle\caches\modules-2\files-2.1\android.arch.core\common\1.0.0\a2d487452376193fc8c103dd2b9bd5f2b1b44563\common-1.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="a2d487452376193fc8c103dd2b9bd5f2b1b44563">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\common-1.0.0_cafa5d220c2244ede6baf165ce398e04c950f036.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\b5db051b11b66f70c3edeae0df706d013d20ac28\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="ed6560f31a6a40b5965f5879d8f2eab1f68def05">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_a7d6eeabeef83d921e2c1c9548a14de9ec1b140d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="24cb9bae5fbe94df0f55d87452a291b69a2f22bf">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_0d3caf31ea8cf401502666f45dc457b4fff90266.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\92abe36e7e9f6e6acc6f984c26b8fcd5858aef92\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="a7760a45a6c9f425aaa43ef391a8cf28a8bcb4a1">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_0be0e59b8ce3cb574c2c2aad89221d9be9efe680.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\insu0\.android\build-cache\72f866e8f821462f6394c9974041a14a85ce7260\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="27.0.2"
+        sha1="aeca0a0ab86831ec59a54723205ce9341ac22d1b">
+        <dex dex="H:\openxoblu\Application\build\intermediates\pre-dexed\debug\classes_6660f16a68bb0632eedd7c0039d1a9f932453274.jar" />
+    </item>
+
+</items>

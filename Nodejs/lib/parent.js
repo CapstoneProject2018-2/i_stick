@@ -42,20 +42,13 @@ function sendMessage(client_token, longitude, latitude) {
     console.log('function: sendMessage');
     const FCM = require('fcm-node')
     var serverKey = 'AAAAidG1HhQ:APA91bEHmxPexef-q-nt9EdHF3yyTUiTr3Yn7W26yoz_O8yaLKWeN5RYOThy2OTEGaS4AzFR-AUFryf8huA5WXQsXDKTBpyngDPS4qCnG4ID-RSuPdzEZzleFUtp6qn4uLVXhyAM1-i7'
-    var push_data = {
+    var message = {
         to: client_token,
 
-        // notification: {
-        //     title: "I Stick Nav Manager",
-        //     body: "새로운 목적지가 설정되었습니다.",
-        //     sound: "defalut",
-        //     click_action: "FCM_PLUGIN_ACTIVITY",
-        //     icon: "fcm_push_icon"
-        // },
-
-        // priority: "high",
-
-        // restricted_package_name: "com.example.ckddn.capstoneproject2018_2",
+        notification: {
+            title: 'title data',
+            body: 'body data'
+        },
 
         data: {
             longitude: longitude,
@@ -64,7 +57,7 @@ function sendMessage(client_token, longitude, latitude) {
     };
 
     var fcm = new FCM(serverKey);
-    fcm.send(push_data, function (err, res) {
+    fcm.send(message, function (err, res) {
         if (err) {
             console.error('Push메시지 발송에 실패했습니다.');
             console.error(err);

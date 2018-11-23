@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.ckddn.capstoneproject2018_2.Oblu.DeviceScanActivity;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
@@ -56,18 +57,8 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "로그인을 위한 정보를 적어주세요.", Toast.LENGTH_LONG).show();
                 else
                     new SignInTask().execute("http://" + ServerInfo.ipAddress +"/login", id.getText().toString(), password.getText().toString());
-
-                //intended for off-line coding
-                //does not request for correctness to server (free pass)
             }
         });
-//        signInBut.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent = new Intent(LoginActivity.this, ParentActivity.class);
-//                        startActivity(intent);
-//                    }
-//        });
 
         Button regBut = (Button) findViewById(R.id.register_button);
         regBut.setOnClickListener(new View.OnClickListener() {
@@ -87,14 +78,12 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject signInInfo = new JSONObject();
                 signInInfo.accumulate("id", strings[1].toString());
                 signInInfo.accumulate("pw", strings[2].toString());
-                /*  for FCM messaging   */
-                signInInfo.accumulate("token", FirebaseInstanceId.getInstance().getToken());
-
                 if (user_radio.isChecked())   //  user 0
                     signInInfo.accumulate("type", 0);
                 else if (parent_radio.isChecked()) //  parent 1
                     signInInfo.accumulate("type", 1);
-
+                /* for FCM messaging*/
+                signInInfo.accumulate("token", FirebaseInstanceId.getInstance().getToken());
                 Log.d(TAG, "doInBackground: create json");
                 HttpURLConnection conn = null;
                 BufferedReader reader = null;
@@ -147,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent signInIntent = new Intent();
                 if (user_radio.isChecked()){
                     signInIntent.setClass(getApplicationContext(), UserActivity.class);
+//                    signInIntent.setClass(getApplicationContext(), DeviceScanActivity.class);
                 }
                 else if (parent_radio.isChecked()) {
                     signInIntent.setClass(getApplicationContext(), ParentActivity.class);

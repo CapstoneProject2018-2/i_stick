@@ -1,0 +1,178 @@
+[
+    {
+        "outputFile": "H:\\openxoblu\\Application\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-af\\values-af.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 105,
+                    "endColumn": 201,
+                    "endOffset": 302
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\a6cb1cbe2e5eac9a931592d6aae932d24ee88611\\output\\res\\values-af\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 0,
+                        "startOffset": 283,
+                        "endColumn": 201,
+                        "endOffset": 484
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 307,
+                    "endColumn": 71,
+                    "endOffset": 374
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\72f866e8f821462f6394c9974041a14a85ce7260\\output\\res\\values-af\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 0,
+                        "startOffset": 235,
+                        "endColumn": 67,
+                        "endOffset": 302
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 379,
+                    "endColumn": 115,
+                    "endOffset": 490
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\72f866e8f821462f6394c9974041a14a85ce7260\\output\\res\\values-af\\values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 0,
+                        "startOffset": 303,
+                        "endColumn": 111,
+                        "endOffset": 414
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 495,
+                    "endColumn": 68,
+                    "endOffset": 559
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\72f866e8f821462f6394c9974041a14a85ce7260\\output\\res\\values-af\\values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 0,
+                        "startOffset": 415,
+                        "endColumn": 64,
+                        "endOffset": 479
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 564,
+                    "endColumn": 67,
+                    "endOffset": 627
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\72f866e8f821462f6394c9974041a14a85ce7260\\output\\res\\values-af\\values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 0,
+                        "startOffset": 480,
+                        "endColumn": 63,
+                        "endOffset": 543
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 632,
+                    "endColumn": 85,
+                    "endOffset": 713
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\72f866e8f821462f6394c9974041a14a85ce7260\\output\\res\\values-af\\values.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 0,
+                        "startOffset": 544,
+                        "endColumn": 81,
+                        "endOffset": 625
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 718,
+                    "endColumn": 117,
+                    "endOffset": 831
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\72f866e8f821462f6394c9974041a14a85ce7260\\output\\res\\values-af\\values.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 0,
+                        "startOffset": 626,
+                        "endColumn": 113,
+                        "endOffset": 739
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 836,
+                    "endColumn": 77,
+                    "endOffset": 909
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\72f866e8f821462f6394c9974041a14a85ce7260\\output\\res\\values-af\\values.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 0,
+                        "startOffset": 740,
+                        "endColumn": 73,
+                        "endOffset": 813
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 914,
+                    "endColumn": 100,
+                    "endOffset": 1010
+                },
+                "from": {
+                    "file": "C:\\Users\\insu0\\.android\\build-cache\\d17411bd728b4a4cbf8ba2fe929569c2aaf29fce\\output\\res\\values-af\\values-af.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 100,
+                        "endOffset": 151
+                    }
+                }
+            }
+        ]
+    }
+]

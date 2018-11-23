@@ -44,10 +44,13 @@ exports.checkId = function (req, res) {
   }
   db.query(sql, inputData.id, function (err, data) {
     if (err) {
-      console.log(err);
+      console.error(err);
+    } else if (data[0] == null) {
+      console.log('사용가능한 ID');
+      res.send('ok');
     } else {
-      console.log(data[0]);
-      res.send(data[0]);
+      console.log('이미 존재하는 ID');
+      res.send('이미 존재하는 ID입니다.');
     }
   });
-} // select * from 에서 *수정하기 (pw, salt 암호화가 되어야함)
+}

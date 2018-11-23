@@ -44,21 +44,5 @@ public class LocFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("latitude", latitude);
         getApplicationContext().startActivity(intent);
 
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-//                PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_dialog_info))
-//                .setSmallIcon(R.mipmap.ic_launcher)
-//                .setContentTitle("FCM message")
-//                .setContentText("새로운 목적지가 설정됨")
-//                .setAutoCancel(true)
-//                .setSound(defaultSoundUri)
-//                .setContentIntent(pendingIntent);
-//
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-
     }
 }

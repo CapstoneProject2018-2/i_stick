@@ -48,7 +48,15 @@ public class PoiListViewAdapter extends BaseAdapter {
         PoiListViewItem poiListViewItem = poiListViewItemList.get(position);
 
         poiNameTextView.setText(poiListViewItem.getPoiName());
-        addressTextView.setText(poiListViewItem.getAddress());
+
+        // null 해결
+//        addressTextView.setText(poiListViewItem.getAddress());
+        String[] address = poiListViewItem.getAddress().split(" ");
+        String upperAddrName = address[0];
+        String middleAddrName = address[1];
+        String lowerAddrName = address[2];
+//        String detailAddrName = address[3];   //  null값의 원인
+        addressTextView.setText(upperAddrName +" "+ middleAddrName +" "+ lowerAddrName);
 
         return convertView;
     }
