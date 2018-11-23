@@ -288,8 +288,10 @@ public class DeviceControlActivity extends Activity {
     /*  location attributes */
     private TextView longiText;
     private TextView latiText;
+    private TextView altiText;
     private double longitude;
     private double latitude;
+    private double altitude;
 
     // BEGIN - Added by GT Silicon - BEGIN //
     @Override
@@ -312,6 +314,7 @@ public class DeviceControlActivity extends Activity {
         /* initialize location attributes*/
         longiText = (TextView) findViewById(R.id.longitude_text);
         latiText = (TextView) findViewById(R.id.latitude_text);
+        altiText = (TextView) findViewById(R.id.altitude_text);
 
 
         final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -327,8 +330,11 @@ public class DeviceControlActivity extends Activity {
                 public void onLocationChanged(Location location) {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
+                    altitude = location.getAltitude();
                     longiText.setText("longitude: " + longitude);
                     latiText.setText("latitude: " + latitude);
+                    altiText.setText("altitude: " + altitude);
+
                     locationManager.removeUpdates(this);
                 }
 
@@ -386,8 +392,9 @@ public class DeviceControlActivity extends Activity {
 
             }
         });
-        getActionBar().setTitle(mDeviceName);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+//        getActionBar().setTitle(mDeviceName);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 

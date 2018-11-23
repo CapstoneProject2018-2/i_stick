@@ -212,7 +212,7 @@ public class UserActivity extends AppCompatActivity {
                 if (pathlistIdx < pathlist.size()) {
                     double distance = MapUtils.getDistance(pathlist.get(pathlistIdx).getPoint(), curPoint);
 
-                    if (distance < 5) { //  5m 이내면
+                    if (distance < 7) { //  7m 이내면
                         Toast.makeText(getApplicationContext(), pathlist.get(pathlistIdx).getTurnType() + "", Toast.LENGTH_LONG).show();
                         /*  send turnType to Arduino    */
                         String sendMessage = pathlist.get(pathlistIdx).getTurnType() + "";//보낼 택스트

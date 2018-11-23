@@ -87,8 +87,6 @@ public class SetPathActivity extends AppCompatActivity {
                                     new SendDestTask().execute(
                                             "http://" + ServerInfo.ipAddress + "/parent/setDestination",
                                             poiPoint.getLongitude() + "", poiPoint.getLatitude() + "");
-                                    // Toast.makeText(SetPathActivity.this,
-                                    // arrayList.get(position).getPOIPoint().toString(), Toast.LENGTH_LONG).show();
                                     finish();
                                 }
                             });
@@ -100,7 +98,6 @@ public class SetPathActivity extends AppCompatActivity {
 
         tMapView = new TMapView(this);
         tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
-
     }
 
     public class SendDestTask extends AsyncTask<String, String, String> {
