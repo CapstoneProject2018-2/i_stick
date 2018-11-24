@@ -228,6 +228,10 @@ exports.editInfo = function (req, res) {
 };
 
 
+
+/**parent mode
+ * after sign in, get all managed client infor to make a list in client's monitor
+ */
 exports.main = function (req, res) {
     console.log('/parent');
     const inputData = req.body;  //  pno, id 받아오기
@@ -240,6 +244,7 @@ exports.main = function (req, res) {
             res.send(err);
         } else {  //  results : RowDataPacket형태
             var num = results.length;
+            console.log('관리하는 사용자의 수 : ', num, '명');
             if (num === 0) {
                 res.send('등록된 사용자가 존재하지 않습니다.');  //  맡고있는 user가 없을때
             } else {  //  있을 때

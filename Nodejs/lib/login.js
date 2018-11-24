@@ -1,14 +1,17 @@
 var db = require('./db')
 const bkfd2Password = require('pbkdf2-password'); //  for hash the passwd
 var hasher = bkfd2Password();                     //  hash func
+
 //   from login page
 // {id,pw,type}
 exports.signIn = function (req, res) {
     console.log('/login');
     const inputData = req.body;
-    console.log(inputData);
+    const id = inputData.id;
+    const pw = inputData.pw;
     const type = inputData.type;
     const token = inputData.token;
+    console.log('User ID: ', id, ' type: ', type);
 
     var sql = '';
     if (type === 0) {  //  user
@@ -16,27 +19,26 @@ exports.signIn = function (req, res) {
     } else if (type === 1) {  //  parent
         sql = 'SELECT * FROM parent WHERE id=?';
     }
-    console.log(sql);
-    db.query(sql, inputData.id, function (err, datas, fields) {
-        console.log(datas);
+    db.query(sql, id, function (err, datas, fields) {
+        // console.log(datas);
         if (err) {
-            console.log('Error!');
+            console.error('Error!');
             res.send('에러로 인하여 로그인에 실패하였습니다. 잠시후 다시 시도해주세요.');
-        } else if (datas[0] == null) {
+        } else if (datas[0] == null) {  //  일치하는 ID를 찾지 못하였을 때
             console.log('unknown ID');
             res.send('등록되지 않은 아이디 입니다.');
-        } else {
-            var opts = { password: inputData.pw, salt: datas[0].salt }  //  login pw, db salt
+        } else {    //  일치하는 ID를 찾았을 경우
+            var opts = { password: pw, salt: datas[0].salt }  //  login pw, db salt
             hasher(opts, function (err, pass, salt, hash) {
-                if (hash == datas[0].pw) {
+                if (hash == datas[0].pw) {  //  confirm password
                     var info = {
                         no: datas[0].no,
                         id: datas[0].id
                     }
-                    res.send(info);
-                    //  log in information is matching... update token data
+                    res.send(info); //  send client it's no and ID
+                    //  Log-in information matched. update token data
                     updateToken(datas[0].no, type, token)
-                } else {
+                } else {    // password is not correct
                     console.log('wrong Password');
                     res.send('비밀번호가 일치하지 않습니다.');
                 }
@@ -45,6 +47,7 @@ exports.signIn = function (req, res) {
     });
 }
 
+/* update user token */
 function updateToken(no, type, token) {
     var sql = '';
     if (type === 0) {
@@ -54,7 +57,7 @@ function updateToken(no, type, token) {
     }
     db.query(sql, [token, no], function (err, result) {
         if (err) {
-            console.log(err);
+            console.error(err);
         } else {
             console.log('token is successfully updated');
         }

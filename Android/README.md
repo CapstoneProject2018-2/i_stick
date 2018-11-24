@@ -38,3 +38,9 @@ Android Code Repository
   <li>경위도 <-> 좌표 변환 알고리즘 추가</li>
   <li>Feedback: 주소검색시 나오는 null값 제거 (PoiListViewAdapter)</li>
 </ul>
+
+<h1>2018-11-24</h1>
+<ul>
+  <li>FCM 기능 추가, Service 클래스들의 추가와 FindPathTask의 위치 변경(Gradle추가)</li>
+  <li>Debug: 이미 User의 목적지로 가능 경로가 있을 때, 보호자가 새로운 목적지 지정시 프로그램이 종료되던 에러 수정 - UserActivity</li>
+</ul>

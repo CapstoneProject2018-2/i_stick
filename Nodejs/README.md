@@ -54,8 +54,17 @@ I Stick Server Notification using Nodejs
 <ul>
   <li>보호자 사용자의 목적지 지정 기능 테스트 서버 추가 ./lib/parent/setDestination</li>
 </ul>
+
 <h1>2018-11-12</h1>
 <ul>
   <li>./lib/parent/setDestination 기능 구현 완료</li>
   <li>./lib/user.user: 보호자가 지정해준 목적지 위치정보 수신기능 구현 - DB수정</li>
 </ul>
+
+<h1>2018-11-24</h1>
+<ul>
+  <li>FCM 기능 추가</li>
+  <li>user.js 와 parent.js FCM추가</li>
+  <li>register.js login.js의 수정</li>
+</ul>
+
