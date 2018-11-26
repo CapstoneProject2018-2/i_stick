@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.GnssStatus;
 import android.location.GpsSatellite;
 import android.location.Location;
 import android.location.LocationListener;
@@ -120,7 +121,7 @@ public class UserActivity extends AppCompatActivity {
 
         /*  Location Manager    */
         final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        ActivityCompat.requestPermissions(this, ServerInfo.permissions, PackageManager.PERMISSION_GRANTED);
+        ActivityCompat.requestPermissions(this, ServerInfo.user_permissions, PackageManager.PERMISSION_GRANTED);
 
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -168,6 +169,16 @@ public class UserActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), DeviceList.class);
             startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
         }
+
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//            GnssStatus.Callback gnssStatus = new GnssStatus.Callback() {
+//                @Override
+//                public void onSatelliteStatusChanged(GnssStatus status) {
+////                        super.onSatelliteStatusChanged(status);
+//                    int numOfSatellite = status.getSatelliteCount();
+//                }
+//            };
+//        }
     }
 
     @Override
@@ -200,7 +211,6 @@ public class UserActivity extends AppCompatActivity {
             Log.d("test", "onLocationChanged, location:" + location);
             double longitude = location.getLongitude(); //  경도
             double latitude = location.getLatitude();   //  위도
-
 
             String provider = location.getProvider();   //위치제공자
 
@@ -313,7 +323,7 @@ public class UserActivity extends AppCompatActivity {
                     destPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")); //  도착 포인트
                     Toast.makeText(getApplicationContext(), destPoint.toString(), Toast.LENGTH_SHORT).show();
                     /*  경로 탐색 시작 */
-                    new FindPathData().execute();
+//                    new FindPathData().execute(); //  FCM에게 위임한다.
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
@@ -330,8 +340,19 @@ public class UserActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pathlist = new ArrayList<PathItem>();
+
+            /*  새로운 PloyLine을 위해 기존의 view제거*/
+            linearLayoutTmap.removeView(tMapView);
+
+            tMapView = new TMapView(getApplicationContext());
+            tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
             tMapView.setCenterPoint(curPoint.getLongitude(), curPoint.getLatitude());
 
+            /*  기존의 polyLine제거*/
+            tMapView.removeAllTMapPolyLine();
+            polyLine = new TMapPolyLine();
+            polyLine.setLineWidth(2);
+            polyLine.setLineColor(Color.BLUE);
         }
 
         @Override
@@ -411,6 +432,7 @@ public class UserActivity extends AppCompatActivity {
                 }
             }
             pathlistIdx = 0;
+
             linearLayoutTmap.addView(tMapView);
         }
     }
@@ -431,5 +453,22 @@ public class UserActivity extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+    /* FCM message */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d("FCM_MESSAGE_RECEIVED", "onNewIntent: ");
+        if (intent != null) {
+            String longitude = intent.getStringExtra("longitude");
+            String latitude = intent.getStringExtra("latitude");
+            if (longitude.isEmpty() || latitude.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "목적지 설정 오류...", Toast.LENGTH_LONG).show();
+                return;
+            }
+            destPoint = new TMapPoint(Double.parseDouble(latitude), Double.parseDouble(longitude));
+            new FindPathData().execute();
+        }
+        super.onNewIntent(intent);
     }
 }

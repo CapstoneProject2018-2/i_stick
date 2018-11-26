@@ -1,11 +1,13 @@
 package com.example.ckddn.capstoneproject2018_2;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -40,16 +43,13 @@ import java.util.TimerTask;
 
 
 //내 담당 관리대상의 위치 보기
-//implememnted by 양인수
-//server implemented by 손창우
+//implememnted by 양인수, 손창우
 
-public class HisLocActivity extends AppCompatActivity {
+public class HisLocActivity extends AppCompatActivity implements View.OnClickListener {
     private String pno, uno, userName, userMobile;    //  parent no and managed user no
     double gap, longitude, latitude; //  user's lastest locInfo
 
     TMapView tMapView = null;
-    TMapGpsManager tmapgps = null;
-    Button currentLocBtn;
     LinearLayout linearLayoutTmap;
 
     @Override
@@ -57,22 +57,59 @@ public class HisLocActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_his_loc);
 
-
+        /* get Extras */
         pno = getIntent().getStringExtra("pno");
         uno = getIntent().getStringExtra("uno");
         userName = getIntent().getStringExtra("userName");
         userMobile = getIntent().getStringExtra("userMobile");
 
+        /* give and check permission(CALL_PHONE) */
+        ActivityCompat.requestPermissions(this, ServerInfo.parent_permissions, PackageManager.PERMISSION_GRANTED);
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        /* set Click Listener */
+        findViewById(R.id.call_user).setOnClickListener(this);
+        findViewById(R.id.call_emergency).setOnClickListener(this);
+        findViewById(R.id.currentLocBtn).setOnClickListener(this);
+
+        // Display User location at First page
         linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
         tMapView.setSKTMapApiKey( "85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n" );
-
         new ReqLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
     }
 
+    @Override
+    public void onClick(View v) {   //  Button EventHandler
+        String tel = "tel:" + userMobile;
+        switch (v.getId()) {
+            case R.id.call_user:    //  전화걸기
+                startActivity(new Intent("android.intent.action.CALL", Uri.parse(tel)));    //  사용자의 핸드폰에 전화
+                break;
+            case R.id.call_emergency:   //  응급전화
+                startActivity(new Intent("android.intent.action.CALL", Uri.parse("112")));  //  112에 신고
+                break;
+            case R.id.currentLocBtn:    //  현재위치
+                new ReqLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
+                break;
+        }
+    }
 
+    /* Request User Location */
     public class ReqLocTask extends AsyncTask<String, String, String> {
         String TAG = "ReqLocTask>>>";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            linearLayoutTmap.removeView(tMapView);
+            tMapView = new TMapView(getApplicationContext());
+            tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
+
+        }
+
         @Override
         protected String doInBackground(String... strings) {
             try {   //  json accumulate
@@ -126,14 +163,13 @@ public class HisLocActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-//            Toast.makeText(getApplicationContext(),result.toString(), Toast.LENGTH_LONG).show();
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 gap = jsonObject.getDouble("gap");
                 longitude = jsonObject.getDouble("longitude");
                 latitude = jsonObject.getDouble("latitude");
-                Toast.makeText(getApplicationContext(),  userName + "님의 위치 정보\n시간: " + jsonObject.getString("gap") +
-                                "\n위도: " + jsonObject.getString("latitude") + "\n경도: " + jsonObject.getString("longitude"), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),  userName + "님의 위치 정보\n시간: " + jsonObject.getInt("gap")/1000 +
+                                "초 전 위치\n위도: " + jsonObject.getString("latitude") + "\n경도: " + jsonObject.getString("longitude"), Toast.LENGTH_LONG).show();
 
                 tMapView.setLocationPoint(longitude,latitude);
                 tMapView.setCenterPoint(longitude,latitude);
@@ -145,7 +181,6 @@ public class HisLocActivity extends AppCompatActivity {
                 tMapView.setTrackingMode(false);
                 tMapView.setSightVisible(false);
                 linearLayoutTmap.addView(tMapView);
-
             } catch (JSONException e) {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
             }

@@ -210,7 +210,7 @@ public class DeviceControlActivity extends Activity {
                 // BEGIN - Added by GT Silicon - BEGIN //
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 //  displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
-                received_data = intent.getByteArrayExtra(BluetoothLeService.EXTRA_TX_VALUE);
+                received_data = intent.getByteArrayExtra(BluetoothLeService.EXTRA_TX_VALUE);    //   Oblu데이터 받기
                 if (received_data != null && received_data.length > 0) {
                     final StringBuilder stringBuilder = new StringBuilder(received_data.length);
                     for (byte byteChar : received_data)
@@ -246,7 +246,7 @@ public class DeviceControlActivity extends Activity {
                 if (package_number_old != package_number) {
                     for (j = 0; j < 4; j++)
                         dx[j] = (double) payload[j];
-                    stepwise_dr_tu();
+                    stepwise_dr_tu();   //  x, y, z계산
                     // Log.e(TAG, "final data sent" + final_data[0] + " " + final_data[1] + " "+final_data[2]);
                     c = Calendar.getInstance();
                     sdf = new SimpleDateFormat("HHmmss");
@@ -594,6 +594,7 @@ public class DeviceControlActivity extends Activity {
         return ack;
     }
 
+    /* x, y, z 계산 */
     public void stepwise_dr_tu() {
 
         sin_phi = (float) Math.sin(x_sw[3]);

@@ -1,6 +1,5 @@
 package com.example.ckddn.capstoneproject2018_2;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +10,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -165,8 +166,8 @@ public class RegistActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (result.equals("")) { //  가능!    undefined == ""
+//            super.onPostExecute(result);
+            if (result.equals("ok")) { //  가능!    undefined == ""
                 Log.d(TAG, "onPostExecute: available!");
                 tempId = id.getText().toString();
                 alertToast("사용가능한 아이디 입니다.");
@@ -190,7 +191,11 @@ public class RegistActivity extends AppCompatActivity {
                     regInfo.accumulate("type", 0);
                 else if (parent_radio.isChecked()) //  parent 1
                     regInfo.accumulate("type", 1);
+                /*  for FCM Messaging */
+                Log.d(TAG, "token: " + FirebaseInstanceId.getInstance().getToken());
+                regInfo.accumulate("token", FirebaseInstanceId.getInstance().getToken());
                 Log.d(TAG, "doInBackground: create json" + regInfo.toString());
+
                 HttpURLConnection conn = null;
                 BufferedReader reader = null;
                 try {
@@ -240,6 +245,8 @@ public class RegistActivity extends AppCompatActivity {
             Log.d(TAG, "onPostExecute: result = " + result);
             if (result.equals(id.getText().toString())) //  성공
                 finish();
+            else
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
         }
     }
 

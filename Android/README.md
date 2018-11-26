@@ -39,3 +39,9 @@ Android Code Repository
   <li>FCM 기능 추가, Service 클래스들의 추가와 FindPathTask의 위치 변경(Gradle추가)</li>
   <li>Debug: 이미 User의 목적지로 가능 경로가 있을 때, 보호자가 새로운 목적지 지정시 프로그램이 종료되던 에러 수정 - UserActivity</li>
 </ul>
+
+<h1>2018-11-26</h1>
+<ul>
+  <li>ServerInfo Interface에 permissions 추가, user_permissions(위치), parent_permissions(전화)</li>
+  <li>HisLocActivity 버튼 implements</li>
+</ul>

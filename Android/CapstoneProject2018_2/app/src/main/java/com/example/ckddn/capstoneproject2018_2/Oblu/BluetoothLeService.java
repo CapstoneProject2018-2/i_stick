@@ -163,6 +163,7 @@ public class BluetoothLeService extends Service {
         sendBroadcast(intent);
     }
 
+
     private void broadcastUpdate(final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(ACTION_DATA_AVAILABLE);
         Bundle bundle = new Bundle();
@@ -171,7 +172,7 @@ public class BluetoothLeService extends Service {
             // DATA Parsing Hare
             byte[] tx_value = UARTParser.getsensorsdata(characteristic);
             Log.d(TAG, "UART TX-"+tx_value);
-            /**/
+            /* DeviceControlActivity 의 BroadCast가 받아서 사용한다. */
             intent.putExtra(EXTRA_TX_VALUE, tx_value);
         }
         // END - Added by GT Silicon - END //

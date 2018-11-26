@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.ckddn.capstoneproject2018_2.Oblu.DeviceScanActivity;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,18 +57,8 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "로그인을 위한 정보를 적어주세요.", Toast.LENGTH_LONG).show();
                 else
                     new SignInTask().execute("http://" + ServerInfo.ipAddress +"/login", id.getText().toString(), password.getText().toString());
-
-                //intended for off-line coding
-                //does not request for correctness to server (free pass)
             }
         });
-//        signInBut.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent = new Intent(LoginActivity.this, ParentActivity.class);
-//                        startActivity(intent);
-//                    }
-//        });
 
         Button regBut = (Button) findViewById(R.id.register_button);
         regBut.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +82,8 @@ public class LoginActivity extends AppCompatActivity {
                     signInInfo.accumulate("type", 0);
                 else if (parent_radio.isChecked()) //  parent 1
                     signInInfo.accumulate("type", 1);
-
+                /* for FCM messaging*/
+                signInInfo.accumulate("token", FirebaseInstanceId.getInstance().getToken());
                 Log.d(TAG, "doInBackground: create json");
                 HttpURLConnection conn = null;
                 BufferedReader reader = null;
