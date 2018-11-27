@@ -52,6 +52,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -64,7 +65,6 @@ import java.util.UUID;
  * given Bluetooth LE device.
  */
 public class BluetoothLeService extends Service {
-
     private final static String TAG = BluetoothLeService.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
@@ -375,7 +375,9 @@ public class BluetoothLeService extends Service {
             }catch (InterruptedException ex){
                 Thread.currentThread().interrupt();
             }
-            status = mBluetoothGatt.requestMtu(mtu);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                status = mBluetoothGatt.requestMtu(mtu);
+            }
             retry--;
             Log.w(TAG,"Amtusize-"+mtu);
         }

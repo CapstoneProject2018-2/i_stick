@@ -1,0 +1,4 @@
+#Tue Nov 27 19:22:27 KST 2018
+base.0=H\:\\Personal Projects\\openxoblu\\Application\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+path.0=classes.dex
+renamed.0=classes.dex

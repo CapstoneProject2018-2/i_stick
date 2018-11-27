@@ -1,141 +1,142 @@
 -- Merging decision tree log ---
 manifest
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:20:1-54:12
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:20:1-54:12
+INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:20:1-54:12
+INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:20:1-54:12
+MERGED from [com.android.support:support-v13:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-v13-27.1.1.aar\df4383354d2a000c2e195fca23125fa6\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-v4:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-v4-27.1.1.aar\6753b65cd5374a85a25cac8bd6a1467b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:cardview-v7:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\cardview-v7-27.1.1.aar\18ca14e25c9a0e275c90d7d042bd8a44\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:appcompat-v7:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.1.1.aar\0039d0a7312545abd54628714366401b\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.1.1.aar\f7f4b6724ac82cde2eadb52b73fa8729\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-fragment-27.1.1.aar\657863efa9c16bf60d54c2a1a8c5edc6\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.1.1.aar\7a19a274c94a98a62d053d25294648a1\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.1.1.aar\37bc87dd0a739225fadc67387dbf1095\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\5afcb7c64ab96475d3bab468e52dd3f9\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\3a7419fc2205b67c594841bad6e54b4c\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\29985af87169b5deaf4ebaf5add3eb89\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\45515a5fd774104553a169941c513861\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\301dd3bff1d7514d3afa288375aff5dd\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\c92ea8f56b72ca2b0845c61dced74392\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\fb6a2c4f290b3fc42d5b6fdd745815ff\AndroidManifest.xml:17:1-22:12
+INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:20:1-54:12
+INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:20:1-54:12
 	package
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:21:5-44
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:21:5-44
 	android:versionName
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:23:5-30
-		INJECTED from H:\openxoblu\Application\src\main\AndroidManifest.xml
-		INJECTED from H:\openxoblu\Application\src\main\AndroidManifest.xml
-	android:versionCode
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:22:5-28
-		INJECTED from H:\openxoblu\Application\src\main\AndroidManifest.xml
-		INJECTED from H:\openxoblu\Application\src\main\AndroidManifest.xml
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:23:5-30
+		INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
+		INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:20:11-69
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:20:11-69
+	android:versionCode
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:22:5-28
+		INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
+		INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
 uses-feature#android.hardware.bluetooth_le
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:31:5-89
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:31:5-89
 	android:required
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:31:64-87
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:31:64-87
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:31:19-63
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:31:19-63
 uses-permission#android.permission.BLUETOOTH
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:33:5-67
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:33:5-67
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:33:22-65
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:33:22-65
 uses-permission#android.permission.BLUETOOTH_ADMIN
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:34:5-73
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:34:5-73
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:34:22-71
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:34:22-71
 uses-permission#android.permission.ACCESS_FINE_LOCATION
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:35:5-78
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:35:5-78
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:35:22-76
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:35:22-76
 uses-permission#android.permission.ACCESS_COARSE_LOCATION
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:36:5-80
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:36:5-80
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:36:22-78
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:36:22-78
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:37:5-79
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:37:5-79
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:37:22-77
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:37:22-77
 uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:38:5-80
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:38:5-80
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:38:22-78
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:38:22-78
 application
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:39:5-52:19
-MERGED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:26:5-34:19
-MERGED from [com.google.android.gms:play-services-ads-lite-license:11.8.0] C:\Users\insu0\.android\build-cache\3efb15cec3756754efe022d45b79ed189bf547c1\output\AndroidManifest.xml:5:5-20
-MERGED from [com.google.android.gms:play-services-gass:11.8.0] C:\Users\insu0\.android\build-cache\92abe36e7e9f6e6acc6f984c26b8fcd5858aef92\output\AndroidManifest.xml:7:5-20
-MERGED from [com.google.android.gms:play-services-basement:11.8.0] C:\Users\insu0\.android\build-cache\a6cb1cbe2e5eac9a931592d6aae932d24ee88611\output\AndroidManifest.xml:22:5-26:19
-MERGED from [com.google.android.gms:play-services-basement-license:11.8.0] C:\Users\insu0\.android\build-cache\af2a513e4101fcba8550edc52c16ad99eb329779\output\AndroidManifest.xml:5:5-20
-MERGED from [com.google.android.gms:play-services-gass-license:11.8.0] C:\Users\insu0\.android\build-cache\938efbaef3efd39adecd88240a45ad422e808af1\output\AndroidManifest.xml:5:5-20
-MERGED from [com.google.android.gms:play-services-ads-license:11.8.0] C:\Users\insu0\.android\build-cache\4c77cad5dee8128abeffc8d848c09116080565be\output\AndroidManifest.xml:5:5-20
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:40:5-52:19
 	android:label
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:39:18-50
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:40:18-50
 	android:icon
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:40:9-41
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:41:9-41
 	android:theme
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:41:9-70
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:42:9-70
 activity#com.example.android.openxoblu.DeviceScanActivity
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:42:9-48:20
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:43:9-49:20
 	android:label
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:43:13-45
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:44:13-45
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:42:19-53
-intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:44:13-47:29
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:43:19-53
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:45:13-48:29
 action#android.intent.action.MAIN
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:45:17-68
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:46:17-68
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:45:25-66
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:46:25-66
 category#android.intent.category.LAUNCHER
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:46:17-76
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:47:17-76
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:46:27-74
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:47:27-74
 activity#com.example.android.openxoblu.DeviceControlActivity
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:49:9-58
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:50:9-58
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:49:19-56
-activity#com.example.android.openxoblu.Sever_UART
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:50:9-47
-	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:50:19-45
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:50:19-56
 service#com.example.android.openxoblu.BluetoothLeService
-ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:51:9-77
+ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:51:9-77
 	android:enabled
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:51:53-75
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:51:53-75
 	android:name
-		ADDED from H:\openxoblu\Application\src\main\AndroidManifest.xml:51:18-52
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml:51:18-52
 uses-sdk
-INJECTED from H:\openxoblu\Application\src\main\AndroidManifest.xml reason: use-sdk injection requested
-MERGED from [com.android.support:support-v13:27.0.2] C:\Users\insu0\.android\build-cache\b3905f545549621fbb7fa041b0ecf54156b4d73c\output\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:cardview-v7:27.0.2] C:\Users\insu0\.android\build-cache\8398cdc5e6d29f446b3614235af65817dc032b89\output\AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-ads:11.8.0] C:\Users\insu0\.android\build-cache\72f866e8f821462f6394c9974041a14a85ce7260\output\AndroidManifest.xml:21:5-23:62
-MERGED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:20:5-44
-MERGED from [com.google.android.gms:play-services-ads-lite-license:11.8.0] C:\Users\insu0\.android\build-cache\3efb15cec3756754efe022d45b79ed189bf547c1\output\AndroidManifest.xml:4:5-43
-MERGED from [com.google.android.gms:play-services-gass:11.8.0] C:\Users\insu0\.android\build-cache\92abe36e7e9f6e6acc6f984c26b8fcd5858aef92\output\AndroidManifest.xml:5:5-44
-MERGED from [com.google.android.gms:play-services-basement:11.8.0] C:\Users\insu0\.android\build-cache\a6cb1cbe2e5eac9a931592d6aae932d24ee88611\output\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-v4:27.0.2] C:\Users\insu0\.android\build-cache\cf9b96eaa95dc66f77832817b80225c45fdabcff\output\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-media-compat:27.0.2] C:\Users\insu0\.android\build-cache\b86caa57da639480dd5d6bf2a0a7822d7d5754a3\output\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-fragment:27.0.2] C:\Users\insu0\.android\build-cache\9148ee083cfae84954e0e3f20363a1ae1ca495cb\output\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-ui:27.0.2] C:\Users\insu0\.android\build-cache\b5db051b11b66f70c3edeae0df706d013d20ac28\output\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-core-utils:27.0.2] C:\Users\insu0\.android\build-cache\c8b4d4e03d5fa5f62290c83bb46ef2d0de4d10ec\output\AndroidManifest.xml:20:5-44
-MERGED from [com.android.support:support-compat:27.0.2] C:\Users\insu0\.android\build-cache\d17411bd728b4a4cbf8ba2fe929569c2aaf29fce\output\AndroidManifest.xml:20:5-44
-MERGED from [android.arch.lifecycle:runtime:1.0.3] C:\Users\insu0\.android\build-cache\09510d5ed1643a99ba3e12179b7899d73e8ce9ad\output\AndroidManifest.xml:20:5-22:41
-MERGED from [com.google.android.gms:play-services-basement-license:11.8.0] C:\Users\insu0\.android\build-cache\af2a513e4101fcba8550edc52c16ad99eb329779\output\AndroidManifest.xml:4:5-43
-MERGED from [com.google.android.gms:play-services-gass-license:11.8.0] C:\Users\insu0\.android\build-cache\938efbaef3efd39adecd88240a45ad422e808af1\output\AndroidManifest.xml:4:5-43
-MERGED from [com.google.android.gms:play-services-ads-license:11.8.0] C:\Users\insu0\.android\build-cache\4c77cad5dee8128abeffc8d848c09116080565be\output\AndroidManifest.xml:4:5-43
-	tools:overrideLibrary
-		ADDED from [com.google.android.gms:play-services-ads:11.8.0] C:\Users\insu0\.android\build-cache\72f866e8f821462f6394c9974041a14a85ce7260\output\AndroidManifest.xml:23:9-59
+INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
+INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
+MERGED from [com.android.support:support-v13:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-v13-27.1.1.aar\df4383354d2a000c2e195fca23125fa6\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v13:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-v13-27.1.1.aar\df4383354d2a000c2e195fca23125fa6\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-v4-27.1.1.aar\6753b65cd5374a85a25cac8bd6a1467b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-v4-27.1.1.aar\6753b65cd5374a85a25cac8bd6a1467b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\cardview-v7-27.1.1.aar\18ca14e25c9a0e275c90d7d042bd8a44\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cardview-v7:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\cardview-v7-27.1.1.aar\18ca14e25c9a0e275c90d7d042bd8a44\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.1.1.aar\0039d0a7312545abd54628714366401b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.1.1.aar\0039d0a7312545abd54628714366401b\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.1.1.aar\f7f4b6724ac82cde2eadb52b73fa8729\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-media-compat-27.1.1.aar\f7f4b6724ac82cde2eadb52b73fa8729\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-fragment-27.1.1.aar\657863efa9c16bf60d54c2a1a8c5edc6\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-fragment-27.1.1.aar\657863efa9c16bf60d54c2a1a8c5edc6\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.1.1.aar\7a19a274c94a98a62d053d25294648a1\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.1.1.aar\7a19a274c94a98a62d053d25294648a1\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.1.1.aar\37bc87dd0a739225fadc67387dbf1095\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.1.1.aar\37bc87dd0a739225fadc67387dbf1095\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\5afcb7c64ab96475d3bab468e52dd3f9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\5afcb7c64ab96475d3bab468e52dd3f9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\3a7419fc2205b67c594841bad6e54b4c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\3a7419fc2205b67c594841bad6e54b4c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\29985af87169b5deaf4ebaf5add3eb89\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\29985af87169b5deaf4ebaf5add3eb89\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\45515a5fd774104553a169941c513861\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\45515a5fd774104553a169941c513861\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\301dd3bff1d7514d3afa288375aff5dd\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\301dd3bff1d7514d3afa288375aff5dd\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\c92ea8f56b72ca2b0845c61dced74392\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\c92ea8f56b72ca2b0845c61dced74392\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\fb6a2c4f290b3fc42d5b6fdd745815ff\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] C:\Users\insu0\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\fb6a2c4f290b3fc42d5b6fdd745815ff\AndroidManifest.xml:20:5-44
+INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
+INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from H:\openxoblu\Application\src\main\AndroidManifest.xml
-		INJECTED from H:\openxoblu\Application\src\main\AndroidManifest.xml
+		INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
+		INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from H:\openxoblu\Application\src\main\AndroidManifest.xml
-		INJECTED from H:\openxoblu\Application\src\main\AndroidManifest.xml
-uses-permission#android.permission.INTERNET
-ADDED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:23:5-67
-	android:name
-		ADDED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:23:22-64
-uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:24:5-79
-	android:name
-		ADDED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:24:22-76
-activity#com.google.android.gms.ads.AdActivity
-ADDED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:29:9-33:64
-	android:exported
-		ADDED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:32:13-37
-	android:configChanges
-		ADDED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:31:13-122
-	android:theme
-		ADDED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:33:13-61
-	android:name
-		ADDED from [com.google.android.gms:play-services-ads-lite:11.8.0] C:\Users\insu0\.android\build-cache\4047bef17aa5bda0e923d5ae6712ac8fdbe82b7e\output\AndroidManifest.xml:30:13-65
-meta-data#com.google.android.gms.version
-ADDED from [com.google.android.gms:play-services-basement:11.8.0] C:\Users\insu0\.android\build-cache\a6cb1cbe2e5eac9a931592d6aae932d24ee88611\output\AndroidManifest.xml:23:9-25:69
-	android:value
-		ADDED from [com.google.android.gms:play-services-basement:11.8.0] C:\Users\insu0\.android\build-cache\a6cb1cbe2e5eac9a931592d6aae932d24ee88611\output\AndroidManifest.xml:25:13-66
-	android:name
-		ADDED from [com.google.android.gms:play-services-basement:11.8.0] C:\Users\insu0\.android\build-cache\a6cb1cbe2e5eac9a931592d6aae932d24ee88611\output\AndroidManifest.xml:24:13-58
+		INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
+		ADDED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
+		INJECTED from H:\Personal Projects\openxoblu\Application\src\main\AndroidManifest.xml
