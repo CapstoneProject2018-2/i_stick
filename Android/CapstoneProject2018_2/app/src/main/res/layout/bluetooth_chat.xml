@@ -127,11 +127,11 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="X"
+                android:text="DR_LATITUDE: "
                 android:textColor="#ffffff" />
 
             <TextView
-                android:id="@+id/X"
+                android:id="@+id/dr_lat"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -152,11 +152,11 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Y"
+                android:text="DR_LONGITUDE: "
                 android:textColor="#ffffff" />
 
             <TextView
-                android:id="@+id/Y"
+                android:id="@+id/dr_long"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -226,8 +226,8 @@
             android:id="@+id/path_text"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:textColor="#ffffff"
-            android:text="경로 정보" />
+            android:text="경로 정보"
+            android:textColor="#ffffff" />
         <LinearLayout
             android:id="@+id/linearLayoutTmap"
             android:layout_width="match_parent"
@@ -248,7 +248,7 @@
 
         <TextView
             android:id="@+id/longitude_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Longitude"
@@ -256,7 +256,7 @@
 
         <TextView
             android:id="@+id/latitude_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Latitude"
@@ -264,7 +264,7 @@
 
         <TextView
             android:id="@+id/altitude_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Altitude"
