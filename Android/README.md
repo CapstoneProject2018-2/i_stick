@@ -45,3 +45,10 @@ Android Code Repository
   <li>ServerInfo Interface에 permissions 추가, user_permissions(위치), parent_permissions(전화)</li>
   <li>HisLocActivity 버튼 implements</li>
 </ul>
+
+<h1>2018-11-27</h1>
+<ul>
+  <li>navigation 에 DeadReckoning 모듈 추가.</li>
+  <li>UserActivity는 Oblu를 사용하지 않는 I Stick만을 이용한 네비게이션</li>
+  <li>DeviceControlActivity에서 Oblu와 I Stick을 이용한 네비게이션</li>  
+</ul>
