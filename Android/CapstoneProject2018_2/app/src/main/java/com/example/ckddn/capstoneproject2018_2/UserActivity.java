@@ -2,38 +2,39 @@ package com.example.ckddn.capstoneproject2018_2;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.GnssStatus;
-import android.location.GpsSatellite;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
+import com.example.ckddn.capstoneproject2018_2.Oblu.BluetoothLeService;
+import com.example.ckddn.capstoneproject2018_2.Oblu.Compass;
 import com.example.ckddn.capstoneproject2018_2.Oblu.DeviceControlActivity;
+import com.example.ckddn.capstoneproject2018_2.Oblu.SampleGattAttributes;
+import com.example.ckddn.capstoneproject2018_2.Oblu.StepData;
 import com.skt.Tmap.MapUtils;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapPoint;
@@ -59,9 +60,14 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.UUID;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -73,18 +79,16 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 
-//LocationManager & LocationListener를 이용한 실시간 위치 찍기
-//ver 1.0
-//양인수
 
-
+/* does not support deadreckoning */
 public class UserActivity extends AppCompatActivity {
+    /* Extras and layout */
     private String uno;
     private String userId;
     private TMapPoint curPoint, destPoint;    //  curPoint in LocationListener, destPoint in SendLocTask.onPostExecute()
     private TextView textView;
 
-    /*  for FindPath    */
+    /* for FindPath */
     private LinearLayout linearLayoutTmap;
     private TMapView tMapView = null;
     private TextView pathtext;
@@ -93,8 +97,14 @@ public class UserActivity extends AppCompatActivity {
     private TMapPolyLine polyLine;
     private int pathlistIdx = 0;
 
-    /*  Arduino */
+    /* Arduino */
     private BluetoothSPP bt;
+
+
+    /* Compass */
+    private Compass compass;
+    private float currentAzimuth;
+    private TextView azimuthView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +115,9 @@ public class UserActivity extends AppCompatActivity {
         uno = getIntent().getStringExtra("no");
         userId = getIntent().getStringExtra("id");
 
+        /* initialize default layouts */
         textView = (TextView) findViewById(R.id.user_location_result);
         textView.setText(userId + ": 위치정보 미수신중"); //DEFAULT
-
         linearLayoutTmap = (LinearLayout) findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(getApplicationContext());
         tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
@@ -117,9 +127,13 @@ public class UserActivity extends AppCompatActivity {
         polyLine.setLineWidth(2);
         polyLine.setLineColor(Color.BLUE);
 
+        /* initialize compass */
+        azimuthView = (TextView) findViewById(R.id.azimuth_text);
+        setupCompass();
 
 
-        /*  Location Manager    */
+
+        /* Location Manager */
         final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         ActivityCompat.requestPermissions(this, ServerInfo.user_permissions, PackageManager.PERMISSION_GRANTED);
 
@@ -132,16 +146,12 @@ public class UserActivity extends AppCompatActivity {
                     100, // 0.1초
                     1, // 1m 이상 움직이면 갱신한다
                     mLocationListener); //위치가 바뀌면 onLocationChanged로 인해서 갱신된다.
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, // 등록할 위치제공자
-                    100, // 0.1초
-                    1, // 1m 이상 움직이면 갱신
-                    mLocationListener);
+
 
         } catch (SecurityException ex) { ex.printStackTrace();}
 
-        // init Arduino BluetoothSPP
+        /* init Arduino BluetoothSPP */
         bt = new BluetoothSPP(getApplicationContext());
-
         if (!bt.isBluetoothAvailable()) {
             Toast.makeText(getApplicationContext(), "블루투스가 사용 불가능합니다.", Toast.LENGTH_SHORT).show();
             finish();
@@ -166,28 +176,36 @@ public class UserActivity extends AppCompatActivity {
         if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
             bt.disconnect();
         } else {
-            Intent intent = new Intent(getApplicationContext(), DeviceList.class);
-            startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
+            Intent bIntent = new Intent(getApplicationContext(), DeviceList.class);
+            startActivityForResult(bIntent, BluetoothState.REQUEST_CONNECT_DEVICE);
         }
+        /* end of set up Arduino*/
 
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//            GnssStatus.Callback gnssStatus = new GnssStatus.Callback() {
-//                @Override
-//                public void onSatelliteStatusChanged(GnssStatus status) {
-////                        super.onSatelliteStatusChanged(status);
-//                    int numOfSatellite = status.getSatelliteCount();
-//                }
-//            };
-//        }
+
+    }
+    /*  End of onCreate */
+
+    private void setupCompass() {
+        compass = new Compass(this);
+        Compass.CompassListener cl = getCompassListener();
+        compass.setListener(cl);
     }
 
-    @Override
-    protected void onDestroy() {    /*  뒤로 가기로 화면이 꺼지면 LocationManager 서비스 종료*/
-        super.onDestroy();
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.removeUpdates(mLocationListener);
-        bt.stopService();
+    private Compass.CompassListener getCompassListener() {
+        return new Compass.CompassListener() {
+            @Override
+            public void onNewAzimuth(final float azimuth) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        currentAzimuth = azimuth;
+                        azimuthView.setText("azimuth: " + azimuth);
+                    }
+                });
+            }
+        };
     }
+
 
     @Override
     protected void onStart() {
@@ -203,6 +221,55 @@ public class UserActivity extends AppCompatActivity {
                 }
             }
         }
+        compass.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        compass.start();
+    }
+
+    @Override
+    protected void onDestroy() {    /*  뒤로 가기로 화면이 꺼지면 LocationManager 서비스 종료*/
+        super.onDestroy();
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        lm.removeUpdates(mLocationListener);
+        bt.stopService();
+        compass.stop();
+
+    }
+    /*  BluetoothSPP for HC-06  */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) { //  Result for HC-06 I-Stick
+            if (resultCode == Activity.RESULT_OK)
+                bt.connect(data);
+        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
+            if (resultCode == Activity.RESULT_OK) {
+                bt.setupService();
+                bt.startService(BluetoothState.DEVICE_OTHER);
+            } else {
+                Toast.makeText(getApplicationContext(), "Bluetooth was not enabled.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    /* FCM message */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d("FCM_MESSAGE_RECEIVED", "onNewIntent: ");
+        if (intent != null) {
+            String longitude = intent.getStringExtra("longitude");
+            String latitude = intent.getStringExtra("latitude");
+            if (longitude.isEmpty() || latitude.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "목적지 설정 오류...", Toast.LENGTH_LONG).show();
+                return;
+            }
+            destPoint = new TMapPoint(Double.parseDouble(latitude), Double.parseDouble(longitude));
+            new FindPathData().execute();
+        }
     }
 
     private final LocationListener mLocationListener = new LocationListener() {
@@ -211,8 +278,6 @@ public class UserActivity extends AppCompatActivity {
             Log.d("test", "onLocationChanged, location:" + location);
             double longitude = location.getLongitude(); //  경도
             double latitude = location.getLatitude();   //  위도
-
-            String provider = location.getProvider();   //위치제공자
 
             /* save user cur location */
             new SendLocTask().execute("http://" + ServerInfo.ipAddress + "/user", longitude + "", latitude + "");
@@ -236,7 +301,7 @@ public class UserActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "목적지로 도착하였습니다.", Toast.LENGTH_LONG).show();
                 }
             }
-            textView.setText("위치정보 : " + provider + "\n위도 : " + longitude + "\n경도 : " + latitude);
+            textView.setText("위도 : " + longitude + "\n경도 : " + latitude);
         }
 
         // for LocationListener
@@ -256,9 +321,8 @@ public class UserActivity extends AppCompatActivity {
         }
     };
 
-
     /* LocationListener에서 위치가 바뀔때 마다 사용자의 현재위치에 대한 정보를 서버에 전송하는 작업 수행 */
-    public class SendLocTask extends AsyncTask<String, String, String> {
+    private class SendLocTask extends AsyncTask<String, String, String> {
         String TAG = "SendLocTask>>>";
 
         @Override
@@ -333,7 +397,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
     /*  curPoint와 destPoint로 경로 탐색 후, turnType과 위치 array에 저장과 맵에 경로 표시해주는 작업 수행*/
-    public class FindPathData extends AsyncTask<String, Void, Document> {
+    private class FindPathData extends AsyncTask<String, Void, Document> {
         String TAG = "FindPathData>>>";
 
         @Override
@@ -437,38 +501,4 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-    /*  BluetoothSPP for HC-06  */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if (resultCode == Activity.RESULT_OK)
-                bt.connect(data);
-        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
-            if (resultCode == Activity.RESULT_OK) {
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_OTHER);
-            } else {
-                Toast.makeText(getApplicationContext()
-                        , "Bluetooth was not enabled."
-                        , Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
-
-    /* FCM message */
-    @Override
-    protected void onNewIntent(Intent intent) {
-        Log.d("FCM_MESSAGE_RECEIVED", "onNewIntent: ");
-        if (intent != null) {
-            String longitude = intent.getStringExtra("longitude");
-            String latitude = intent.getStringExtra("latitude");
-            if (longitude.isEmpty() || latitude.isEmpty()) {
-                Toast.makeText(getApplicationContext(), "목적지 설정 오류...", Toast.LENGTH_LONG).show();
-                return;
-            }
-            destPoint = new TMapPoint(Double.parseDouble(latitude), Double.parseDouble(longitude));
-            new FindPathData().execute();
-        }
-        super.onNewIntent(intent);
-    }
 }

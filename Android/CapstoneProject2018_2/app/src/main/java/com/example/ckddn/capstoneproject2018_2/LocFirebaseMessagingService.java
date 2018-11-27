@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.ckddn.capstoneproject2018_2.Oblu.DeviceControlActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -37,7 +38,8 @@ public class LocFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendToUserActivity(RemoteMessage.Notification notification, String longitude, String latitude) {
-        Intent intent = new Intent(this, UserActivity.class);
+        Intent intent = new Intent(this, DeviceControlActivity.class);
+//        Intent intent = new Intent(this, UserActivitiy.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         intent.putExtra("longitude", longitude);
