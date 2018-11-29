@@ -18,11 +18,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_search_category_default"/>
+
         <EditText
             android:id="@+id/des_edit_text"
-            android:hint="목적지를 입력하시오"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="목적지를 입력하시오"
+            android:singleLine="true" />
         <Button
             android:id="@+id/searchBtn"
             android:text="검색"

@@ -52,3 +52,9 @@ Android Code Repository
   <li>UserActivity는 Oblu를 사용하지 않는 I Stick만을 이용한 네비게이션</li>
   <li>DeviceControlActivity에서 Oblu와 I Stick을 이용한 네비게이션</li>  
 </ul>
+
+<h1>2018-11-29</h1>
+<ul>
+  <li>MapCalculator 최적화를 위한 테스트 알고리즘 3개 추가 With...</li>
+  <li>currenAltitude추가 MapCalculator에 사용</li>  
+</ul>
