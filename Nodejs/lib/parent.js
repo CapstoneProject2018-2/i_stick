@@ -45,18 +45,6 @@ function sendMessage(client_token, longitude, latitude) {
     var push_data = {
         to: client_token,
 
-        // notification: {
-        //     title: "I Stick Nav Manager",
-        //     body: "새로운 목적지가 설정되었습니다.",
-        //     sound: "defalut",
-        //     click_action: "FCM_PLUGIN_ACTIVITY",
-        //     icon: "fcm_push_icon"
-        // },
-
-        // priority: "high",
-
-        // restricted_package_name: "com.example.ckddn.capstoneproject2018_2",
-
         data: {
             longitude: longitude,
             latitude: latitude
@@ -100,16 +88,16 @@ exports.deleteUser = function (req, res) {
  * res: recent longitude and latitude information of uno
  */
 exports.reqLoc = function (req, res) {
-    console.log('/parent/reqLoc');
+    console.log('\n/parent/reqLoc');
     const inputData = req.body; //  uno
     const uno = inputData.uno;
 
-    var sql = 'select * from user_location where no=(select max(no) from user_location where uno=?)'// query
+    var sql = 'select time, longitude, latitude from user_location where no=(select max(no) from user_location where uno=?)'// query
     db.query(sql, uno, function (err, data) {
         if (err) {
             console.error(err);
             res.send('서버에 에러가 있습니다. 나중에 다시 시도해 주세요.')
-        } else if (data[0] == null) {
+        } else if (data[0] == undefined) {
             console.log('no location data')
             res.send('확인된 사용자의 위치정보가 없습니다.')
         } else {    //  위치 정보가 있을때
@@ -140,18 +128,18 @@ exports.reqLoc = function (req, res) {
  * if not, send error messages
  */
 exports.registUser = function (req, res) {
-    console.log('/parent/register');
+    console.log('\n/parent/register');
     const inputData = req.body; //  id, pw
     const pno = inputData.pno;
     const id = inputData.id;
     const pw = inputData.pw;
     /* id로 pw와 salt일치 여부 확인 */
-    var sql = 'SELECT * FROM user WHERE id=?'; //  uno, pw(hash), salt
+    var sql = 'SELECT no, id, pw, salt, name, mobile FROM user WHERE id=?';
     db.query(sql, id, function (err, info) {
         if (err) {
             console.error(err);
             res.send(err)
-        } else if (info[0] == null) {
+        } else if (info[0] == undefined) {
             console.log('Wrong ID');
             res.send('존재하지 않는 사용자의 ID입니다.');
         } else {  //  id 존재 hasher로 pw비교
@@ -194,7 +182,7 @@ exports.registUser = function (req, res) {
  * ParentActivity에서 '내 정보 수정' 버튼 클릭시 이동, 비밀번호 수정 */
 exports.editInfo = function (req, res) {
     /*  form : id, recent pw, new pw (비밀번호 확인은 android 책임)*/
-    console.log('/parent/edit');
+    console.log('\n/parent/edit');
     const inputData = req.body; //  id, oldpw, newpw
     console.log(inputData); //  data check
     var id = inputData.id;
@@ -240,11 +228,11 @@ exports.editInfo = function (req, res) {
  * after sign in, get all managed client infor to make a list in client's monitor
  */
 exports.main = function (req, res) {
-    console.log('/parent');
+    console.log('\n/parent');
     const inputData = req.body;  //  pno, id 받아오기
     console.log(inputData);
     //  ParnetActivity: getUserList(String pid) = 담당하는 user의 목록 불러오기
-    var sql = 'SELECT * FROM rpu WHERE pno=?'
+    var sql = 'SELECT uno FROM rpu WHERE pno=?'
     db.query(sql, inputData.pno, function (err, results, fields) {
         if (err) {
             console.error(err);

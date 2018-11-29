@@ -68,3 +68,9 @@ I Stick Server Notification using Nodejs
   <li>register.js login.js의 수정</li>
 </ul>
 
+<h1>2018-11-24</h1>
+<ul>
+  <li>./lib내 query최적화 - 이중쿼리 수정, select수정으로 서버에서 이용할 뷰만 가져오게 수정</li>
+  <li>checkId의 버그 수정, 안드로이드 RegistActivity와 함께 수정</li>
+</ul>
+

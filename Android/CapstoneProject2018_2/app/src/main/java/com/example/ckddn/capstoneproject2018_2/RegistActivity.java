@@ -26,7 +26,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-
 public class RegistActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private RadioButton user_radio;
@@ -36,8 +35,9 @@ public class RegistActivity extends AppCompatActivity {
     private EditText password;
     private EditText confirm;
     private EditText mobile;
-    //    private boolean regFlag = false;    //  flag that check the available ID
+    // private boolean regFlag = false; // flag that check the available ID
     private String tempId = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,26 +56,28 @@ public class RegistActivity extends AppCompatActivity {
         sign_up_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isFilled()) {
+                if (isFilled()) {
                     Log.d("Reg Main", "onClick: sign up btn");
                     new SignUpTask().execute("http://" + ServerInfo.ipAddress + "/register");
                 }
             }
         });
 
-        Button check_btn = (Button) findViewById(R.id.check_button);    //  check
+        Button check_btn = (Button) findViewById(R.id.check_button); // check
         check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (radioGroup.getCheckedRadioButtonId() == -1 || id.getText().toString().equals("")) {  //  id 랑 radiobut 클릭 확인
+                if (radioGroup.getCheckedRadioButtonId() == -1 || id.getText().toString().equals("")) { // id 랑 radiobut
+                                                                                                        // 클릭 확인
                     alertToast("사용자/보호자 선택 또는 아이디를 적어주세요");
-                } else if (tempId != id.getText().toString()) {    //  인증받은 id라면 만족하면 중복확인
+                } else {
                     new CheckIDTask().execute("http://" + ServerInfo.ipAddress + "/check/id");
                 }
             }
         });
     }
-    /*  Sign Up area is Filled? */
+
+    /* Sign Up area is Filled? */
     private boolean isFilled() {
         if (radioGroup.getCheckedRadioButtonId() == -1) {
             alertToast("사용자인지 보호자인지 선택해주세요");
@@ -85,8 +87,12 @@ public class RegistActivity extends AppCompatActivity {
             alertToast("이름을 적어주세요");
             return false;
         }
-        if (!(id.getText().toString().equals(tempId)) || tempId == ""){
-            alertToast("아이디를 적어주세요\n사용가능한 아이디 : " + tempId);
+        if ((id.getText().toString().equals(""))) {
+            alertToast("아이디를 적어주세요");
+            return false;
+        }
+        if (!(id.getText().toString().equals(tempId))) {
+            alertToast("아이디 중복검사를 해주세요");
             return false;
         }
         if (password.getText().toString().equals("")) {
@@ -111,14 +117,15 @@ public class RegistActivity extends AppCompatActivity {
 
     public class CheckIDTask extends AsyncTask<String, String, String> {
         String TAG = "CheckIDTask>>>";
+
         @Override
         protected String doInBackground(String... strings) {
             try {
                 JSONObject regInfo = new JSONObject();
                 regInfo.accumulate("id", id.getText().toString());
-                if (user_radio.isChecked())   //  user 0
+                if (user_radio.isChecked()) // user 0
                     regInfo.accumulate("type", 0);
-                else if (parent_radio.isChecked()) //  parent 1
+                else if (parent_radio.isChecked()) // parent 1
                     regInfo.accumulate("type", 1);
                 Log.d(TAG, "doInBackground: create json");
                 HttpURLConnection conn = null;
@@ -127,19 +134,19 @@ public class RegistActivity extends AppCompatActivity {
                     URL url = new URL(strings[0]);
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Cache-Control", "no-cache");        // 컨트롤 캐쉬 설정(?)
+                    conn.setRequestProperty("Cache-Control", "no-cache"); // 컨트롤 캐쉬 설정(?)
                     conn.setRequestProperty("Content-Type", "application/json"); // json형식 전달
-                    conn.setRequestProperty("Accept", "application/text");       // text형식 수신
-                    conn.setRequestProperty("Accept", "application/json");       // json형식 수신
-                    conn.setDoOutput(true); //  OutputStream으로 POST데이터 전송
-                    conn.setDoInput(true);  //  InputStream으로 서버로부터 응답 전달받음
+                    conn.setRequestProperty("Accept", "application/text"); // text형식 수신
+                    conn.setRequestProperty("Accept", "application/json"); // json형식 수신
+                    conn.setDoOutput(true); // OutputStream으로 POST데이터 전송
+                    conn.setDoInput(true); // InputStream으로 서버로부터 응답 전달받음
                     conn.connect();
 
                     OutputStream outputStream = conn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
                     writer.write(regInfo.toString());
                     writer.flush();
-                    writer.close(); //  submit regInfo
+                    writer.close(); // submit regInfo
 
                     InputStream stream = conn.getInputStream();
                     reader = new BufferedReader(new InputStreamReader(stream));
@@ -147,8 +154,8 @@ public class RegistActivity extends AppCompatActivity {
                     String line = "";
                     /* Implement */
                     /* Should set form of json file when register step is finished... */
-                    while((line = reader.readLine()) != null) {
-                        //  readLine : string or null(if end of data...)
+                    while ((line = reader.readLine()) != null) {
+                        // readLine : string or null(if end of data...)
                         buffer.append(line);
                         Log.d(TAG, "doInBackground: readLine, " + line);
                     }
@@ -166,19 +173,19 @@ public class RegistActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-//            super.onPostExecute(result);
-            if (result.equals("ok")) { //  가능!    undefined == ""
+            if (result.equals("ok")) { // 가능! undefined == ""
                 Log.d(TAG, "onPostExecute: available!");
                 tempId = id.getText().toString();
                 alertToast("사용가능한 아이디 입니다.");
-            } else {    //  불가능! : 이미존재
-                alertToast("이미 존재하는 아이디 입니다.");
+            } else { // 불가능! : 이미존재
+                alertToast(result);
             }
         }
     }
 
     public class SignUpTask extends AsyncTask<String, String, String> {
         String TAG = "SignUpTask>>>";
+
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -187,11 +194,11 @@ public class RegistActivity extends AppCompatActivity {
                 regInfo.accumulate("pw", password.getText().toString());
                 regInfo.accumulate("name", name.getText().toString());
                 regInfo.accumulate("mobile", mobile.getText().toString());
-                if (user_radio.isChecked())   //  user 0
+                if (user_radio.isChecked()) // user 0
                     regInfo.accumulate("type", 0);
-                else if (parent_radio.isChecked()) //  parent 1
+                else if (parent_radio.isChecked()) // parent 1
                     regInfo.accumulate("type", 1);
-                /*  for FCM Messaging */
+                /* for FCM Messaging */
                 Log.d(TAG, "token: " + FirebaseInstanceId.getInstance().getToken());
                 regInfo.accumulate("token", FirebaseInstanceId.getInstance().getToken());
                 Log.d(TAG, "doInBackground: create json" + regInfo.toString());
@@ -202,19 +209,19 @@ public class RegistActivity extends AppCompatActivity {
                     URL url = new URL(strings[0]);
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Cache-Control", "no-cache");        // 컨트롤 캐쉬 설정(?)
+                    conn.setRequestProperty("Cache-Control", "no-cache"); // 컨트롤 캐쉬 설정(?)
                     conn.setRequestProperty("Content-Type", "application/json"); // json형식 전달
-                    conn.setRequestProperty("Accept", "application/text");       // text형식 수신
-                    conn.setRequestProperty("Accept", "application/json");       // json형식 수신
-                    conn.setDoOutput(true); //  OutputStream으로 POST데이터 전송
-                    conn.setDoInput(true);  //  InputStream으로 서버로부터 응답 전달받음
+                    conn.setRequestProperty("Accept", "application/text"); // text형식 수신
+                    conn.setRequestProperty("Accept", "application/json"); // json형식 수신
+                    conn.setDoOutput(true); // OutputStream으로 POST데이터 전송
+                    conn.setDoInput(true); // InputStream으로 서버로부터 응답 전달받음
                     conn.connect();
 
                     OutputStream outputStream = conn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
                     writer.write(regInfo.toString());
                     writer.flush();
-                    writer.close(); //  submit regInfo
+                    writer.close(); // submit regInfo
 
                     InputStream stream = conn.getInputStream();
                     reader = new BufferedReader(new InputStreamReader(stream));
@@ -222,8 +229,8 @@ public class RegistActivity extends AppCompatActivity {
                     String line = "";
                     /* Implement */
                     /* Should set form of json file when register step is finished... */
-                    while((line = reader.readLine()) != null) {
-                        //  readLine : string or null(if end of data...)
+                    while ((line = reader.readLine()) != null) {
+                        // readLine : string or null(if end of data...)
                         buffer.append(line);
                         Log.d(TAG, "doInBackground: readLine, " + line);
                     }
@@ -243,7 +250,7 @@ public class RegistActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             Log.d(TAG, "onPostExecute: result = " + result);
-            if (result.equals(id.getText().toString())) //  성공
+            if (result.equals(id.getText().toString())) // 성공
                 finish();
             else
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();

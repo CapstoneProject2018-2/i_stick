@@ -5,7 +5,7 @@ var hasher = bkfd2Password();                     //  hash func
 //   from login page
 // {id,pw,type}
 exports.signIn = function (req, res) {
-    console.log('/login');
+    console.log('\n/login');
     const inputData = req.body;
     const id = inputData.id;
     const pw = inputData.pw;
@@ -15,11 +15,11 @@ exports.signIn = function (req, res) {
 
     var sql = '';
     if (type === 0) {  //  user
-        sql = 'SELECT * FROM user WHERE id=?';
+        sql = 'SELECT no, id, pw, salt FROM user WHERE id=?';
     } else if (type === 1) {  //  parent
-        sql = 'SELECT * FROM parent WHERE id=?';
+        sql = 'SELECT no, id, pw, salt FROM parent WHERE id=?';
     }
-    db.query(sql, id, function (err, datas, fields) {
+    db.query(sql, id, function (err, datas) {
         // console.log(datas);
         if (err) {
             console.error('Error!');
@@ -47,7 +47,7 @@ exports.signIn = function (req, res) {
     });
 }
 
-/* update user token */
+/* update user token for FCM */
 function updateToken(no, type, token) {
     var sql = '';
     if (type === 0) {

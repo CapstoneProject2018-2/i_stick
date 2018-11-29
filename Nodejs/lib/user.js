@@ -4,7 +4,7 @@ var db = require('./db')
  * get location from mobile periodicaly
  * save location to db */
 exports.send = function (req, res) {
-    console.log('/user');
+    console.log('\n/user');
     const inputData = req.body; /*  uno, latitude, longitude */
     var uno = inputData.uno;
     var longitude = inputData.longitude;
