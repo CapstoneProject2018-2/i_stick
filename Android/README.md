@@ -58,3 +58,10 @@ Android Code Repository
   <li>MapCalculator 최적화를 위한 테스트 알고리즘 3개 추가 With...</li>
   <li>currenAltitude추가 MapCalculator에 사용</li>  
 </ul>
+
+<h1>2018-11-30</h1>
+<ul>
+  <li>SetPathActivity Searching Algorithm 수정: 사용자의 이전거리에서 5km반경 지점들만 검색</li>
+  <li>ActionBar Title이름 수정, string.xml에 title name 추가</li>
+  <li>UI 소폭 수정: EditParentInfo 설명과 버튼, LoginActivity 로그인정보 텍스트, ParentActivity 관리 리스트</li>
+</ul>
