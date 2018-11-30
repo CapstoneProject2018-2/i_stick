@@ -52,7 +52,6 @@ public class ParentActivity extends AppCompatActivity {
     /*  implement by ckddn */
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
         // logout 버튼으로만 나갈 수 있다.
     }
 
@@ -61,22 +60,21 @@ public class ParentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parent);
 
-        /*  implement by ckddn*/
+        /*  implement by ckddn */
         pno = getIntent().getStringExtra("no");
         parentId = getIntent().getStringExtra("id");
         TextView welcome = (TextView) findViewById(R.id.id);
-        welcome.setText("welcome " + parentId);
+        welcome.setText(parentId + "님 환영합니다!");
 
         Button logOutBtn = (Button) findViewById(R.id.logout);
         logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-        finish();   //  logout -> finish this activity and go back to login activity
+                finish();   //  logout -> finish this activity and go back to login activity
             }
         });
 
         final ArrayList<ContactListViewItem> items = new ArrayList<ContactListViewItem>();
-
 
         adapter = new ContactListViewAdapter();
         contact_listview = (ListView) findViewById(R.id.clistview);
@@ -108,19 +106,15 @@ public class ParentActivity extends AppCompatActivity {
 
         final EditText editTextFilter = (EditText) findViewById(R.id.editTextFilter);
         editTextFilter.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void afterTextChanged(Editable edit) {
                 String filterText = edit.toString();
                 ((ContactListViewAdapter)contact_listview.getAdapter()).getFilter().filter(filterText);
-
             }
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
@@ -133,9 +127,8 @@ public class ParentActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ParentActivity.this, ParentMenu.class);
-                // pno, uno 추가 181029
                 intent.putExtra("pno", pno);
-                ContactListViewItem item = (ContactListViewItem)adapter.getItem(position);
+                ContactListViewItem item = (ContactListViewItem) adapter.getItem(position);
                 intent.putExtra("uno", item.getUno());
                 intent.putExtra("name", item.getTitle());
                 intent.putExtra("mobile", item.getDesc());
@@ -145,25 +138,26 @@ public class ParentActivity extends AppCompatActivity {
 
 
     }
+
     /*  request user info to Server */
     /*  implement by ckddn  */
     private void getUserInfo() {
         new RequestUserInfoTask(adapter).execute("http://" + ServerInfo.ipAddress +"/parent");
     }
+
+
     /* delete task request from ParentMenu */
     /* implement by ckddn */
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Toast.makeText(getApplicationContext(), "액티비티리절트", Toast.LENGTH_LONG).show();
         if (requestCode == 1 && resultCode == RESULT_OK) {
             String deleteUno = data.getStringExtra("uno");
             new DeleteUserTask(adapter, deleteUno).execute("http://" + ServerInfo.ipAddress + "/parent/delete");
         }
     }
 
-    //  change to private
+    /* change to private */
     private void AddUserDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -188,6 +182,8 @@ public class ParentActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+
+    /* delete user in management listView */
     public class DeleteUserTask extends AsyncTask<String, String, String> {
         private ContactListViewAdapter adapter;
         private String uno;
@@ -259,7 +255,6 @@ public class ParentActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
         }
     }
-
 
     /*  request user info to Server */
     public class RequestUserInfoTask extends AsyncTask<String, String, String> {
@@ -334,8 +329,6 @@ public class ParentActivity extends AppCompatActivity {
         }
 
     }
-
-
 
     /*  check user info to Server */
     public class AddUserTask extends AsyncTask<String, String, String> {

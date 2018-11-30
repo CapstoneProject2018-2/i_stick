@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -27,10 +28,11 @@ import java.net.URL;
 // 내 정보 수정하기 기능 관련 class by ckddn
 //  getStringExtra id
 public class EditParentInfo extends AppCompatActivity {
-    String id;  //  from ParentActivity
-    EditText oldpw;
-    EditText newpw;
-    EditText confirm;
+    private String id;  //  from ParentActivity
+    private TextView parentIdTextView;
+    private EditText oldpw;
+    private EditText newpw;
+    private EditText confirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,9 @@ public class EditParentInfo extends AppCompatActivity {
         setContentView(R.layout.activity_edit_parent_info);
 
         id = getIntent().getStringExtra("id");
+        parentIdTextView = (TextView) findViewById(R.id.p_id);
+        parentIdTextView.setText(id);
+
         oldpw = (EditText) findViewById(R.id.p_pw_now);
         newpw = (EditText) findViewById(R.id.p_pw_new);
         confirm = (EditText) findViewById(R.id.p_pw_confirm);

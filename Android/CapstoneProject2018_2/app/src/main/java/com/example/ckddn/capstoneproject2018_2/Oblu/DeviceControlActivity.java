@@ -795,7 +795,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             scalars[i] = dx[i];
         }
 
-//        //1. 현재 방향을 알아온다
+          //1. 현재 방향을 알아온다
 //        headingVectors = MapCalculator.getHeadingVectors(currentAzimuth); //sensor로 받은 raw Azimuth
 //        //headingVectors = MapCalculator.getHeadingVectors(f_Azimuth); //필터된 Azimuth 기준으로 방향 확인
 //

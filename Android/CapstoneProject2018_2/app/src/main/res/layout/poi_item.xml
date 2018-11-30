@@ -7,14 +7,19 @@
 
     <TextView
         android:id="@+id/poiName_tv"
-        android:textStyle="bold"
-        android:textSize="24dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textColor="@android:color/black"
+        android:textSize="24dp"
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/address_tv"
-        android:textSize="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:textColor="@android:color/black"
+        android:textSize="16dp" />
 
 </LinearLayout>

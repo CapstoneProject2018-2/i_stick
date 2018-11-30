@@ -105,19 +105,14 @@ exports.reqLoc = function (req, res) {
             var lastTime = new Date(data[0].time);  // Lastest Date
             var curTime = new Date();               // Current Date
             var gap = (curTime - lastTime)
-            //  When the difference between the current time and the lastest time is 300000 ms...(5minutes)
-            if (gap < 3000000) {
-                console.log('send location data');
-                var location = {
-                    gap: gap,
-                    longitude: data[0].longitude,
-                    latitude: data[0].latitude
-                };
-                console.log(location);
-                res.send(location);
-            } else {
-                res.send('최신의 사용자의 위치정보가 없습니다.')
-            }
+            console.log('send location data');
+            var location = {
+                gap: gap,
+                longitude: data[0].longitude,
+                latitude: data[0].latitude
+            };
+            console.log(location);
+            res.send(location);
         }
     });
 }

@@ -21,9 +21,12 @@
 
         <TextView
             android:id="@+id/connect"
-            android:text="내 정보 수정"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:text="내 정보 수정"
+            android:textColor="#ff000000"
+            android:textSize="20dp" />
 
     </LinearLayout>
 
@@ -33,25 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:text="보호자 이름: "
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/p_name"
-                android:text="이름이 여기에 들어간다"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-
-        </LinearLayout>
 
 
         <LinearLayout
@@ -63,13 +47,17 @@
             <TextView
                 android:text="사용중인 ID: "
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="#ff000000"
+                />
 
             <TextView
                 android:id="@+id/p_id"
                 android:text="여기 아이디가 들어간다"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="#ff000000"
+                />
         </LinearLayout>
 
 
@@ -84,7 +72,9 @@
                 android:id="@+id/p_pw"
                 android:text="비밀번호 변경하기"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="#ff000000"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -94,11 +84,13 @@
                 <TextView
                     android:text="현재 비밀번호: "
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="#ff000000"
+                    />
 
                 <EditText
                     android:id="@+id/p_pw_now"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="현재 비밀번호를 입력하시오"
                     android:inputType="textPassword"
@@ -113,11 +105,13 @@
                 <TextView
                     android:text="변경 비밀번호: "
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="#ff000000"
+                    />
 
                 <EditText
                     android:id="@+id/p_pw_new"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="새로운 비밀번호를 입력하시오"
                     android:inputType="textPassword"
@@ -132,24 +126,27 @@
                 <TextView
                     android:text="비밀번호 확인: "
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="#ff000000"
+                    />
 
                 <EditText
                     android:id="@+id/p_pw_confirm"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="다시 비밀번호를 입력하시오"
                     android:inputType="textPassword"
                     android:maxLines="1"/>
 
-                <Button
-                    android:id="@+id/cPwBtn"
-                    android:text="변경하기"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+
             </LinearLayout>
 
-
+            <Button
+                android:id="@+id/cPwBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="변경" />
         </LinearLayout>
 
 

@@ -23,7 +23,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login">
+            android:label="@string/title_app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,13 +32,18 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".UserActivity" />
-        <activity android:name=".ParentActivity" />
-        <activity android:name=".RegistActivity" />
-        <activity android:name=".EditParentInfo" />
-        <activity android:name=".ParentMenu" />
-        <activity android:name=".SetPathActivity" />
-        <activity android:name=".HisLocActivity" />
-        <activity android:name=".ConfirmPathActivity"></activity>
+        <activity android:name=".ParentActivity"
+            android:label="@string/title_activity_parent"/>
+        <activity android:name=".RegistActivity"
+            android:label="@string/title_activity_regist"/>
+        <activity android:name=".EditParentInfo"
+            android:label="@string/title_activity_parent_edit"/>
+        <activity android:name=".ParentMenu"
+            android:label="@string/title_activity_parent_menu"/>
+        <activity android:name=".SetPathActivity"
+            android:label="@string/title_activity_set_path"/>
+        <activity android:name=".HisLocActivity"
+            android:label="@string/title_activity_his_loc"/>
         <activity android:name=".Oblu.DeviceScanActivity"
             android:icon="@drawable/daelogo"
             android:theme="@android:style/Theme.Holo.Light.DarkActionBar"/>

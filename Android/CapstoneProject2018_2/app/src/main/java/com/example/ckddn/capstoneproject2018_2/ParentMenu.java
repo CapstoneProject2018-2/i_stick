@@ -36,7 +36,6 @@ public class ParentMenu extends AppCompatActivity implements View.OnClickListene
         mobileText = (TextView) findViewById(R.id.mobileText);
         mobileText.setText(mobile);
 
-//        Toast.makeText(getApplicationContext(),"manage uno: " + uno,Toast.LENGTH_LONG).show();
         setPath = (CardView)findViewById(R.id.set_path);
         hisLoc = (CardView)findViewById(R.id.his_loc);
 

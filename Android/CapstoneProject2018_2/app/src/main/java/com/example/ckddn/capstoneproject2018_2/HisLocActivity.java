@@ -78,7 +78,7 @@ public class HisLocActivity extends AppCompatActivity implements View.OnClickLis
         linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
         tMapView.setSKTMapApiKey( "85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n" );
-        new ReqLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
+        new ShowLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
     }
 
     @Override
@@ -92,13 +92,13 @@ public class HisLocActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(new Intent("android.intent.action.CALL", Uri.parse("112")));  //  112에 신고
                 break;
             case R.id.currentLocBtn:    //  현재위치
-                new ReqLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
+                new ShowLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
                 break;
         }
     }
 
     /* Request User Location */
-    public class ReqLocTask extends AsyncTask<String, String, String> {
+    public class ShowLocTask extends AsyncTask<String, String, String> {
         String TAG = "ReqLocTask>>>";
 
         @Override
@@ -168,8 +168,11 @@ public class HisLocActivity extends AppCompatActivity implements View.OnClickLis
                 gap = jsonObject.getDouble("gap");
                 longitude = jsonObject.getDouble("longitude");
                 latitude = jsonObject.getDouble("latitude");
-                Toast.makeText(getApplicationContext(),  userName + "님의 위치 정보\n시간: " + jsonObject.getInt("gap")/1000 +
-                                "초 전 위치\n위도: " + jsonObject.getString("latitude") + "\n경도: " + jsonObject.getString("longitude"), Toast.LENGTH_LONG).show();
+                if (gap > 300000) { // 5분이 넘은 정보
+                    Toast.makeText(getApplicationContext(), "5분이 넘은 위치입니다. 정확하지 않을 수 있습니다.", Toast.LENGTH_LONG).show();
+                } else {        //  5분 이내의 정보
+                    Toast.makeText(getApplicationContext(),  userName + "님의 위치 정보\n시간: " + jsonObject.getInt("gap")/1000 + "초 전 위치", Toast.LENGTH_LONG).show();
+                }
 
                 tMapView.setLocationPoint(longitude,latitude);
                 tMapView.setCenterPoint(longitude,latitude);
