@@ -26,20 +26,20 @@ void loop()
     toSend = 0;
     toSend = bluetooth.parseInt();
     
-    if(toS end==13) {
+    if(toSend==13) {
       value=0;
       servo.write(value);
-      delay(3000);
+      delay(7000);
       servo.write(90);
     } else if (toSend==12) { //left
       value=180;
       servo.write(value);
-      delay(3000);
+      delay(7000);
       servo.write(90);
     } else if(toSend==11) {
       value=90;
       servo.write(value);
-      delay(3000);
+      delay(7000);
       servo.write(90);
     }
       
