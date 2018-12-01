@@ -190,7 +190,8 @@
             android:id="@+id/sign_up_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign Me Up" />
+            android:text="Sign Me Up"
+            android:textStyle="bold"/>
 
         <ImageView
             android:id="@+id/imageView2"

@@ -381,6 +381,14 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private float currentAzimuth;
     private TextView azimuthView;
 
+    /* add for calibrated azimuth */
+    private float[] rawAzimuths;
+    private float f_Azimuth;
+    private int ra_index = 0;
+    private final static int RA_SIZE = 100;
+    private boolean full = false;
+
+
     /* TMapGPSManager */
     TMapGpsManager gps;
 
@@ -519,11 +527,56 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     @Override
                     public void run() {
                         currentAzimuth = azimuth;
-                        azimuthView.setText(Float.toString(azimuth));
+                        saveAzimuth(azimuth);
+                        f_Azimuth = getFilteredAzimuth();
+                        azimuthView.setText(Float.toString(f_Azimuth));
                     }
                 });
             }
         };
+    }
+
+    private void saveAzimuth(float raw_azimuth) {
+        for(int i = 0; i < RA_SIZE; i++){
+            rawAzimuths[i++] = raw_azimuth;
+        }
+        if(RA_SIZE <= ra_index){
+            ra_index = 0;
+            full = true;
+        }
+    }
+
+    private float getFilteredAzimuth() {
+        if (full) { //  RA_SIZE만큼 data를 받았을때 filter on
+            int i;
+            float min = 1000, max = -1000;
+            int mini = -1, maxi = -1, count = 0;
+            float sum = 0.0f;
+            float arr[] = new float[RA_SIZE];
+
+            for (i = 0; i < RA_SIZE; i++) {
+                arr[i] = rawAzimuths[i];
+            }
+
+            for (i = 0; i < RA_SIZE; i++) {
+                if (arr[i] < min) {
+                    min = arr[i];
+                    mini = i;
+                }
+                if (arr[i] > max) {
+                    max = arr[i];
+                    maxi = i;
+                }
+            }
+
+            for (i = 0; i < RA_SIZE; i++) {
+                if (mini == i || maxi == i) continue;
+                count++;
+                sum += arr[i];
+            }
+            float dir = sum / count;
+            return dir;
+        } else return rawAzimuths[ra_index];
     }
 
     @Override
@@ -809,7 +862,21 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 //        //4. 나중위치 = 델타 좌표 + 현재위치
 //        dr_coordinates = MapCalculator.CalculateMovement(delta_coor, finalPoint.getLatitude(), finalPoint.getLongitude());
 
-        dr_coordinates = MapCalculator.CalculateDRPosition(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
+
+        /* optimistic Algorithm Test*/
+        // altitude 미포함
+        dr_coordinates = MapCalculator.CalculateDRPosition(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude());
+
+//        // altitude 포함
+//        dr_coordinates = MapCalculator.CalculateDRPositionWithPostAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
+//
+//        // altitude, z 포함
+//        dr_coordinates = MapCalculator.CalculateDRPositionWithPreAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
+//
+//        //  altitude, z/2 포함
+//        dr_coordinates = MapCalculator.CalculateDRPositionWithHalfAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
+
+
     }
 
     ///WRITE ACK to uc
@@ -861,7 +928,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
 
 
-    /* FCM message */
+    /* FCM message
+    * when this function*/
     @Override
     protected void onNewIntent(Intent intent) {
         Log.d("FCM_MESSAGE_RECEIVED", "onNewIntent: ");
@@ -883,14 +951,15 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
         /* check num of satellites */
         Toast.makeText(getApplicationContext(), "num of satellites: " + gps.getSatellite(), Toast.LENGTH_LONG).show();
+
         if (gps.getSatellite() < 6) { // GPS 위치를 신뢰할 수 없을 때
             if(finalPoint == null){ //  처음위치에 대한 예외처리
                 return;
             }
-            drPoint = new TMapPoint(dr_coordinates[0],dr_coordinates[1]);
-            finalPoint = drPoint;
-
-
+            if (drPoint != null) {  //  위성개수 6개 미만, gps 돌고있어, start 안누름
+                drPoint = new TMapPoint(dr_coordinates[0],dr_coordinates[1]);
+                finalPoint = drPoint;
+            }
         } else if (gps.getSatellite() >= 6) { // GPS 위치를 신뢰 할 수 있을 때
             curPoint = new TMapPoint(location.getLatitude(), location.getLongitude());
             finalPoint = curPoint;
@@ -898,7 +967,9 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         }
 
         /* save user final location */
-        new SendLocTask().execute("http://" + ServerInfo.ipAddress + "/user", Double.toString(finalPoint.getLongitude()), Double.toString(finalPoint.getLatitude()));
+        if (finalPoint != null) //  처음부터 신뢰도없는 Location 정보가 올때
+            new SendLocTask().execute("http://" + ServerInfo.ipAddress + "/user", Double.toString(finalPoint.getLongitude()), Double.toString(finalPoint.getLatitude()));
+
 
         /* signal making algorithm...  */
         if (pathlist != null) {

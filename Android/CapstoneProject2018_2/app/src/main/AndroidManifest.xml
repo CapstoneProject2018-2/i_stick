@@ -30,7 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
         <activity android:name=".UserActivity" />
         <activity android:name=".ParentActivity"
             android:label="@string/title_activity_parent"/>
@@ -44,9 +43,9 @@
             android:label="@string/title_activity_set_path"/>
         <activity android:name=".HisLocActivity"
             android:label="@string/title_activity_his_loc"/>
+
         <activity android:name=".Oblu.DeviceScanActivity"
-            android:icon="@drawable/daelogo"
-            android:theme="@android:style/Theme.Holo.Light.DarkActionBar"/>
+            android:theme="@style/AppTheme"/>
         <activity android:name=".Oblu.DeviceControlActivity"/>
         <service android:name=".Oblu.BluetoothLeService" android:enabled="true"/>
 

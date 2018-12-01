@@ -26,7 +26,7 @@ public class MapCalculator {
     /* headingVector = sin_phi, cos_phi, scalars = dx, dy
      * calculate vector rotation and return movementVectors that based on long, lat coordination style */
     public static double[] getMovementVectors(double headingVector[], double scalars[]){
-        double[] movementVectors = new double[2];
+        double[] movementVectors = new double[3];
 
         movementVectors[0] = headingVector[1] * scalars[0] - headingVector[0]*scalars[1]; // delta_x
         movementVectors[1] = headingVector[0] * scalars[0] + headingVector[1]*scalars[1]; // delta_y
@@ -125,7 +125,7 @@ public class MapCalculator {
     }
 
     /* calculate estimated current locations using delta thetas */
-    public static double[] CalculateDRPosition(float azimuth, double[] scalars, double longtitude, double latitude, double altitude){
+    public static double[] CalculateDRPosition(float azimuth, double[] scalars, double longtitude, double latitude){
         double[] headingVectors = getHeadingVectors(azimuth);
         double[] movementVectors = getMovementVectors(headingVectors, scalars);
         double[] delta_coor = TranslateCoordinates(movementVectors, latitude);
@@ -133,6 +133,37 @@ public class MapCalculator {
 
         return dr_coordinates;
     }
+
+    /* altitude 추가 z포함 */
+    public static double[] CalculateDRPositionWithPreAlti(float azimuth, double[] scalars, double longtitude, double latitude, double altitude) {
+        double[] headingVectors = getHeadingVectors(azimuth);
+        double[] movementVectors = getMovementVectors(headingVectors, scalars);
+        double[] delta_coor = TranslateCoordinatesWithPreAlti(movementVectors, latitude, altitude);
+        double[] dr_coordinates = CalculateMovement(delta_coor, latitude, longtitude);
+
+        return dr_coordinates;
+    }
+
+    /* altitude 추가 */
+    public static double[] CalculateDRPositionWithPostAlti(float azimuth, double[] scalars, double longtitude, double latitude, double altitude) {
+        double[] headingVectors = getHeadingVectors(azimuth);
+        double[] movementVectors = getMovementVectors(headingVectors, scalars);
+        double[] delta_coor = TranslateCoordinatesWithPostAlti(movementVectors, latitude, altitude);
+        double[] dr_coordinates = CalculateMovement(delta_coor, latitude, longtitude);
+
+        return dr_coordinates;
+    }
+
+    /* altitude 추가 z/2포함 */
+    public static double[] CalculateDRPositionWithHalfAlti(float azimuth, double[] scalars, double longtitude, double latitude, double altitude) {
+        double[] headingVectors = getHeadingVectors(azimuth);
+        double[] movementVectors = getMovementVectors(headingVectors, scalars);
+        double[] delta_coor = TranslateCoordinatesWithHalfAlti(movementVectors, latitude, altitude);
+        double[] dr_coordinates = CalculateMovement(delta_coor, latitude, longtitude);
+
+        return dr_coordinates;
+    }
+
 }
 
 
