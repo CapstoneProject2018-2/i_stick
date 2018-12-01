@@ -26,12 +26,12 @@ void loop()
     toSend = 0;
     toSend = bluetooth.parseInt();
     
-    if(toSend==13) {
+    if(toSend==13||toSend==18||toSend==19||toSend==213||toSend==216||toSend==217) {
       value=0;
       servo.write(value);
       delay(7000);
       servo.write(90);
-    } else if (toSend==12) { //left
+    } else if (toSend==12||toSend==16||toSend==17||toSend==212||toSend==214||toSend==215) { //left
       value=180;
       servo.write(value);
       delay(7000);
