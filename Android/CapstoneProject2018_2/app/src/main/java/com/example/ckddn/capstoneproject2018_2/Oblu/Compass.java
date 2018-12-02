@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+
 public class Compass implements SensorEventListener {
     private static final String TAG = "Compass";
 
@@ -26,7 +27,8 @@ public class Compass implements SensorEventListener {
 
     private float azimuth;
     private float azimuthFix;
-    private float mazimuth;
+
+
 
     public Compass(Context context) {
         sensorManager = (SensorManager) context
@@ -98,12 +100,15 @@ public class Compass implements SensorEventListener {
                 // Log.d(TAG, "azimuth (rad): " + azimuth);
                 azimuth = (float) Math.toDegrees(orientation[0]); // orientation
                 azimuth = (azimuth + azimuthFix + 360) % 360;
+                // Log.d(TAG, "azimuth (deg): " + azimuth);
                 if (listener != null) {
                     listener.onNewAzimuth(azimuth);
                 }
             }
         }
     }
+
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {

@@ -54,6 +54,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -133,6 +134,8 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
  */
 public class DeviceControlActivity extends Activity implements TMapGpsManager.onLocationChangedCallback {
     private final static String TAG = DeviceControlActivity.class.getSimpleName();
+
+    private final static int RELIABLIE_SATELLITE_NUM = 6;
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -215,6 +218,9 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private TMapPolyLine polyLine;
     private int pathlistIdx = 0;
 
+    /* Debuggin */
+    private StringBuilder linePointStr = new StringBuilder();
+
     /* Arduino */
     private BluetoothSPP bt;
 
@@ -234,7 +240,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     /* to optimize finalPoint */
     private double currentAltitude; //  추가
 
-    /*for debug mode dot drawer */
+    /* for debug mode dot drawer */
     private int dotflag = 0;
     private Context context = null;
     private int itemID = 1;
@@ -333,7 +339,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                         dx[j] = (double) payload[j];
 
                     stepwise_dr_tu();   //  default 오블루 => distance계산하는 부분을 모듈화 또는 수정
-                    run_pdr(); //custom pdr
+                    if (finalPoint != null)
+                        run_pdr(); //custom pdr
 
 
                     // Log.e(TAG, "final data sent" + final_data[0] + " " + final_data[1] + " "+final_data[2]);
@@ -369,16 +376,15 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 //                dr_alti.setText(" " + df1.format(final_data[2]));/////////Z
 
                 //여기에 뷰 넣기
-
-                dr_lat.setText("" +  dr_coordinates[0]);
-                dr_long.setText("" + dr_coordinates[1]);
-                dr_alti.setText(" " + currentAltitude);
-
+                if (finalPoint != null) {
+                    dr_lat.setText("" + dr_coordinates[0]);
+                    dr_long.setText("" + dr_coordinates[1]);
+                    dr_alti.setText(" " + currentAltitude);
+                }
             }
             // END - Added by GT Silicon - END //
         }
     };
-
 
 
     /* Compass */
@@ -411,7 +417,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         // mDataField = (EditText) findViewById(R.id.connection_state);
         timerValue = (TextView) findViewById(R.id.timer);
         dr_lat = (TextView) findViewById(R.id.dr_lat);
-        dr_long = (TextView)findViewById(R.id.dr_long);
+        dr_long = (TextView) findViewById(R.id.dr_long);
         dr_alti = (TextView) findViewById(R.id.dr_alti);
         mStartStopBtn = (Button) findViewById(R.id.start_stop_btn);
 
@@ -432,10 +438,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         polyLine.setLineWidth(2);
         polyLine.setLineColor(Color.BLUE);
 
-        /* tmapgpsmanager */
+        /* TMapGpsManager */
         gps = new TMapGpsManager(this);
-        gps.setMinTime(1000);
-        gps.setMinDistance(5);
+        gps.setMinTime(1000);   //  최소시간
+        gps.setMinDistance(2);  //  최소거리
         gps.setProvider(TMapGpsManager.GPS_PROVIDER);
         gps.OpenGps();
 
@@ -447,7 +453,9 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         bt = new BluetoothSPP(getApplicationContext());
         setupBluetoothWithArduino(bt);
         ActivityCompat.requestPermissions(this, ServerInfo.user_permissions, PackageManager.PERMISSION_GRANTED);
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) { return; }
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
 
         mStartStopBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -497,12 +505,12 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             @Override
             public void onDeviceConnected(String name, String address) {
-                Toast.makeText(getApplicationContext(), name +"에 연결" /*+ " 주소: " + address*/ , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), name + "에 연결" /*+ " 주소: " + address*/, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onDeviceDisconnected() {
-                Toast.makeText(getApplicationContext(),"연결이 끊어졌습니다.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "연결이 끊어졌습니다.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -544,10 +552,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     }
 
     private void saveAzimuth(float raw_azimuth) {
-        for(int i = 0; i < RA_SIZE; i++){
+        for (int i = 0; i < RA_SIZE; i++) {
             rawAzimuths[i++] = raw_azimuth;
         }
-        if(RA_SIZE <= ra_index){
+        if (RA_SIZE <= ra_index) {
             ra_index = 0;
             full = true;
         }
@@ -698,6 +706,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         Log.d(TAG, "prepareBroadcastDataNotify: Properties " + gattCharacteristic.getProperties());
 
         if ((gattCharacteristic.getProperties() | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+
             BluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
         }
     }
@@ -844,18 +853,19 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         /* longitude, latitude */
     }
 
-    public void run_pdr(){ //oblu 센서값 ->
+    public void run_pdr() { //oblu 센서값 ->
+        Log.d(TAG, "run_pdr: start");
         headingVectors = new double[2];     //  sin_phi, cos_phi
-        scalars = new double [3];           //  Oblu기준의 dx, dy, dz
+        scalars = new double[3];           //  Oblu기준의 dx, dy, dz
         movementVectors = new double[3];    //  longitude, latitude 방향으로 Rotate 한 delta_x, delta_y, delta_z (scalar)
         delta_coor = new double[2];         //  longitude, latitude 방향으로 Ratate 한 delta (angel)
         dr_coordinates = new double[2];     //  최종으로 계산한 longitude 와 latitude, satellite수가 적을경우 이 값을 finalPoint로 치환
 
-        for(int i = 0; i < 3; i++){        /* z축 고려할시 추가 2 -> 3 */
+        for (int i = 0; i < 3; i++) {        /* z축 고려할시 추가 2 -> 3 */
             scalars[i] = dx[i];
         }
 
-          //1. 현재 방향을 알아온다
+        //1. 현재 방향을 알아온다
 //        headingVectors = MapCalculator.getHeadingVectors(currentAzimuth); //sensor로 받은 raw Azimuth
 //        //headingVectors = MapCalculator.getHeadingVectors(f_Azimuth); //필터된 Azimuth 기준으로 방향 확인
 //
@@ -934,9 +944,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     }
 
 
-
     /* FCM message
-    * when this function*/
+     * when this function*/
     @Override
     protected void onNewIntent(Intent intent) {
         Log.d("FCM_MESSAGE_RECEIVED", "onNewIntent: ");
@@ -954,30 +963,30 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
     @Override
     public void onLocationChange(Location location) {
-        Log.d("test", "onLocationChanged, location:" + location);
+        Log.d("test", "onLocationChanged Called");
 
         /* check num of satellites */
-        Toast.makeText(getApplicationContext(), "num of satellites: " + gps.getSatellite(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "num of satellites: " + gps.getSatellite(), Toast.LENGTH_SHORT).show();
 
-        if (gps.getSatellite() < 15) { // GPS 위치를 신뢰할 수 없을 때
+        if (gps.getSatellite() < RELIABLIE_SATELLITE_NUM) { // GPS 위치를 신뢰할 수 없을 때
             dotflag = 1;
             itemID++;
-            if(finalPoint == null){ //  처음위치에 대한 예외처리
+            if (finalPoint == null) { //  처음위치에 대한 예외처리
                 return;
             }
-            if (drPoint != null) {  //  위성개수 6개 미만, gps 돌고있어, start 안누름 방지
-                drPoint = new TMapPoint(dr_coordinates[0],dr_coordinates[1]);
+            if (drPoint != null) {
+                drPoint = new TMapPoint(dr_coordinates[0], dr_coordinates[1]);
+                Log.d(TAG, "onLocationChange: DRPOINT:" + drPoint.toString());
                 finalPoint = drPoint;
-                PointDrawer.drawPoint(finalPoint,dotflag,context,tMapView,itemID);
+                PointDrawer.drawPoint(finalPoint, dotflag, context,tMapView, itemID);
             }
-        } else if (gps.getSatellite() >= 15) { // GPS 위치를 신뢰 할 수 있을 때
-            dotflag = 0;
-            itemID++;
+        } else if (gps.getSatellite() >= RELIABLIE_SATELLITE_NUM) { // GPS 위치를 신뢰 할 수 있을 때
             curPoint = new TMapPoint(location.getLatitude(), location.getLongitude());
+            Log.d(TAG, "onLocationChange: GPSPOINT: " + curPoint.toString());
             finalPoint = curPoint;
-            currentAltitude = location.getAltitude();
-            PointDrawer.drawPoint(finalPoint,dotflag,context,tMapView,itemID);
-
+            PointDrawer.drawPoint(finalPoint, dotflag, context, tMapView, itemID);
+            if (location.getAltitude() != 0)    //  altitude는 받아올수 있을때만 받아오므로 값이 있을때만 넣어준다
+                currentAltitude = location.getAltitude();
         }
 
         /* save user final location */
@@ -997,7 +1006,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     if (sendMessage.length() > 0) {
                         if (bt != null)
                             bt.send(sendMessage, true); //  send to IStick
-                            Toast.makeText(getApplicationContext(), "IStick에 " + sendMessage + "전송", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "IStick에 " + sendMessage + "전송", Toast.LENGTH_LONG).show();
                     }
                     pathlistIdx++;
                 }
@@ -1149,6 +1158,21 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                                 PathItem pathItem = new PathItem(turnType, point);
                                 pathlist.add(pathItem);
                             }
+                            /* LineString Alg */
+//                            else if (node.getNodeName().equals("Linestring")) {
+//                                Log.d(TAG, "onPostExecute: Linestring");
+//                                ArrayList<TMapPoint> linePoints = new ArrayList<TMapPoint>();
+//                                String[] str1 = node.getTextContent().split(" ");
+//                                linePointStr.append("lineString" + i);
+//                                for (int k = 0; k < str1.length; k++) {
+//                                    String[] str2 = str1[k].split(",");
+//                                    TMapPoint linePoint = new TMapPoint(Double.parseDouble(str2[1]), Double.parseDouble(str2[1]));
+//                                    linePoints.add(linePoint);
+//                                    linePointStr.append(linePoint);
+//                                }
+//
+//
+//                            }
                         }
 
                     }
@@ -1169,7 +1193,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     String str = HttpConnect.getContentFromNode(item, "coordinates");
                     if (str != null) {
                         String[] str2 = str.split(" ");
-                        for (int k = 0; k  < str2.length; k++) {
+                        for (int k = 0; k < str2.length; k++) {
                             try {
                                 String[] str3 = str2[k].split(",");
                                 TMapPoint point = new TMapPoint(Double.parseDouble(str3[1]), Double.parseDouble(str3[0]));
