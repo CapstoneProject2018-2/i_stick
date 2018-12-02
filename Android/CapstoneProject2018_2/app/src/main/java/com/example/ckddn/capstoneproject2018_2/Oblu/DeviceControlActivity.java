@@ -79,6 +79,7 @@ import android.widget.Toast;
 import com.example.ckddn.capstoneproject2018_2.PathItem;
 import com.example.ckddn.capstoneproject2018_2.R;
 import com.example.ckddn.capstoneproject2018_2.ServerInfo;
+import com.google.firebase.messaging.RemoteMessage;
 import com.skt.Tmap.MapUtils;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
@@ -114,6 +115,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimerTask;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -135,7 +137,9 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 public class DeviceControlActivity extends Activity implements TMapGpsManager.onLocationChangedCallback {
     private final static String TAG = DeviceControlActivity.class.getSimpleName();
 
-    private final static int RELIABLIE_SATELLITE_NUM = 6;
+    private final static int RELIABLIE_SATELLITE_NUM = 15;
+    private final static int MINIMUM_LOCATION_GETTING_TIME = 500;
+    private final static int MINIMUN_NAVIGATION_TURNPOINT_DISTANCE = 7;
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -206,7 +210,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     /* Extras and layout */
     private String uno;
     private String userId;
-    private TMapPoint curPoint, destPoint;    //  curPoint in LocationListener, destPoint in SendLocTask.onPostExecute()
+    private TMapPoint destPoint;    //  curPoint in LocationListener, destPoint in SendLocTask.onPostExecute()
     private TextView userLocationTextView;
 
     /* for FindPath */
@@ -235,7 +239,11 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
     private TMapPoint finalPoint;
     private TMapPoint drPoint;
-    private TMapPoint startPoint;
+    //    private TMapPoint savedPoint;
+    private TMapPoint curPoint, prevPoint;  //  curPoint: onLocationChange에서 초기화 되는 MapPoint, prevPoint: locationSelectHandler에서 사용하는 MapPoint, curPoint와 비교하여 onLocationChange의 호출 판단
+    private int sateNum = 0;
+
+
 
     /* to optimize finalPoint */
     private double currentAltitude; //  추가
@@ -377,8 +385,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
                 //여기에 뷰 넣기
                 if (finalPoint != null) {
-                    dr_lat.setText("" + dr_coordinates[0]);
-                    dr_long.setText("" + dr_coordinates[1]);
+                    dr_lat.setText(Double.toString(drPoint.getLatitude()));
+                    dr_long.setText(Double.toString(drPoint.getLongitude()));
                     dr_alti.setText(" " + currentAltitude);
                 }
             }
@@ -440,7 +448,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
         /* TMapGpsManager */
         gps = new TMapGpsManager(this);
-        gps.setMinTime(1000);   //  최소시간
+        gps.setMinTime(MINIMUM_LOCATION_GETTING_TIME);   //  최소시간 1000->500
         gps.setMinDistance(2);  //  최소거리
         gps.setProvider(TMapGpsManager.GPS_PROVIDER);
         gps.OpenGps();
@@ -456,6 +464,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
 
         mStartStopBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -474,6 +483,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     BluetoothLeService.writeCharacteristicNoresponse(mReadCharacteristic, convertedBytes);
                     startTime = SystemClock.uptimeMillis();
                     customHandler.postDelayed(updateTimerThread, 0);
+                    locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                     if (mNotifyCharacteristic != null) {
                         prepareBroadcastDataNotify(mNotifyCharacteristic);
                     }
@@ -487,6 +497,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     stopBroadcastDataNotify(mReadCharacteristic);
                     timeSwapBuff = 0L;
                     customHandler.removeCallbacks(updateTimerThread);
+                    locationSelectHandler.removeCallbacks(locationSelectThread);
                 }
 
             }
@@ -496,6 +507,60 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
     }
+
+
+    private Handler locationSelectHandler = new Handler();
+    private Runnable locationSelectThread = new Runnable() { //  make finalPoint
+        public void run() {
+            if (curPoint == null) return;    //  단 한번도 onLocationChange가 불러지지 않았을 때
+            if (prevPoint == null) {
+                prevPoint = curPoint;
+                return; //
+            }
+            if (sateNum >= RELIABLIE_SATELLITE_NUM) {   //  신뢰할 수 있는 위성 개수일 때, 첫 finalPoint 의 지정은 여기서 부터 시작
+                Toast.makeText(getApplicationContext(),"신뢰가능"+ sateNum, Toast.LENGTH_SHORT).show();
+                dotflag = 0;
+                itemID++;
+                finalPoint = curPoint;
+            } else if (finalPoint == null) {    //  신뢰 할수 있는 location 정보가 없는 경우
+                return;
+            } else { // dr을 진행할 기본 location정보가 있을 때 dr진행
+                dotflag = 1;
+                itemID++;
+                finalPoint = drPoint;
+                Toast.makeText(getApplicationContext(),"DeadRe"+ sateNum, Toast.LENGTH_SHORT).show();
+            }
+            prevPoint = curPoint;   //  prevPoint update
+            PointDrawer.drawPoint(finalPoint, dotflag, context, tMapView, itemID);
+
+            new SendLocTask().execute("http://" + ServerInfo.ipAddress + "/user", Double.toString(finalPoint.getLongitude()), Double.toString(finalPoint.getLatitude()));
+
+
+            /* signal making algorithm...  */
+            if (pathlist != null) {
+                if (pathlistIdx < pathlist.size()) {
+                    double distance = MapUtils.getDistance(pathlist.get(pathlistIdx).getPoint(), finalPoint);
+
+                    if (distance < MINIMUN_NAVIGATION_TURNPOINT_DISTANCE) {
+                        Toast.makeText(getApplicationContext(), Integer.toString(pathlist.get(pathlistIdx).getTurnType()), Toast.LENGTH_LONG).show();
+                        /*  send turnType to Arduino    */
+                        String sendMessage = Integer.toString(pathlist.get(pathlistIdx).getTurnType());//보낼 택스트
+                        if (sendMessage.length() > 0) {
+                            if (bt != null)
+                                bt.send(sendMessage, true); //  send to IStick
+                            Toast.makeText(getApplicationContext(), "IStick에 " + sendMessage + "전송", Toast.LENGTH_LONG).show();
+                        }
+                        pathlistIdx++;
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "목적지로 도착하였습니다.", Toast.LENGTH_LONG).show();
+                }
+            }
+            userLocationTextView.setText("위도 : " + finalPoint.getLatitude() + "\n경도 : " + finalPoint.getLongitude());
+
+            customHandler.postDelayed(this, MINIMUM_LOCATION_GETTING_TIME);
+        }
+    };
 
     private void setupBluetoothWithArduino(BluetoothSPP bt) {
         if (!bt.isBluetoothAvailable()) {
@@ -645,6 +710,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         compass.stop();
         /* HC-06 */
         bt.stopService();
+        locationSelectHandler.removeCallbacks(locationSelectThread);
     }
 
     @Override
@@ -865,24 +931,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             scalars[i] = dx[i];
         }
 
-        //1. 현재 방향을 알아온다
-//        headingVectors = MapCalculator.getHeadingVectors(currentAzimuth); //sensor로 받은 raw Azimuth
-//        //headingVectors = MapCalculator.getHeadingVectors(f_Azimuth); //필터된 Azimuth 기준으로 방향 확인
-//
-//        //2. 나의 움직임의 스칼라*방향
-//        movementVectors = MapCalculator.getMovementVectors(headingVectors, scalars);    // get delta_x, delta_y, and delta_z
-//
-//        //3. 움직임벡터 -> 위도/경도 좌표로 변환 (델타 좌표)
-//        // delta_Coordinates = MapCalculator.TranslateCoordinates();
-//        delta_coor = MapCalculator.TranslateCoordinates(movementVectors, finalPoint.getLatitude());
-//
-//        //4. 나중위치 = 델타 좌표 + 현재위치
-//        dr_coordinates = MapCalculator.CalculateMovement(delta_coor, finalPoint.getLatitude(), finalPoint.getLongitude());
-
-
-        /* optimistic Algorithm Test*/
-        // altitude 미포함
         dr_coordinates = MapCalculator.CalculateDRPosition(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude());
+
 
 //        // altitude 포함
 //        dr_coordinates = MapCalculator.CalculateDRPositionWithPostAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
@@ -892,8 +942,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 //
 //        //  altitude, z/2 포함
 //        dr_coordinates = MapCalculator.CalculateDRPositionWithHalfAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
-
-
+        drPoint = new TMapPoint(dr_coordinates[0], dr_coordinates[1]);
     }
 
     ///WRITE ACK to uc
@@ -965,56 +1014,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     public void onLocationChange(Location location) {
         Log.d("test", "onLocationChanged Called");
 
+        curPoint = new TMapPoint(location.getLatitude(), location.getLongitude());
+        sateNum = gps.getSatellite();
+        if (location.getAltitude() != 0) currentAltitude = location.getAltitude();
         /* check num of satellites */
-        Toast.makeText(getApplicationContext(), "num of satellites: " + gps.getSatellite(), Toast.LENGTH_SHORT).show();
-
-        if (gps.getSatellite() < RELIABLIE_SATELLITE_NUM) { // GPS 위치를 신뢰할 수 없을 때
-            dotflag = 1;
-            itemID++;
-            if (finalPoint == null) { //  처음위치에 대한 예외처리
-                return;
-            }
-            if (drPoint != null) {
-                drPoint = new TMapPoint(dr_coordinates[0], dr_coordinates[1]);
-                Log.d(TAG, "onLocationChange: DRPOINT:" + drPoint.toString());
-                finalPoint = drPoint;
-                PointDrawer.drawPoint(finalPoint, dotflag, context,tMapView, itemID);
-            }
-        } else if (gps.getSatellite() >= RELIABLIE_SATELLITE_NUM) { // GPS 위치를 신뢰 할 수 있을 때
-            curPoint = new TMapPoint(location.getLatitude(), location.getLongitude());
-            Log.d(TAG, "onLocationChange: GPSPOINT: " + curPoint.toString());
-            finalPoint = curPoint;
-            PointDrawer.drawPoint(finalPoint, dotflag, context, tMapView, itemID);
-            if (location.getAltitude() != 0)    //  altitude는 받아올수 있을때만 받아오므로 값이 있을때만 넣어준다
-                currentAltitude = location.getAltitude();
-        }
-
-        /* save user final location */
-        if (finalPoint != null) //  처음부터 신뢰도없는 Location 정보가 올때
-            new SendLocTask().execute("http://" + ServerInfo.ipAddress + "/user", Double.toString(finalPoint.getLongitude()), Double.toString(finalPoint.getLatitude()));
-
-
-        /* signal making algorithm...  */
-        if (pathlist != null) {
-            if (pathlistIdx < pathlist.size()) {
-                double distance = MapUtils.getDistance(pathlist.get(pathlistIdx).getPoint(), finalPoint);
-
-                if (distance < 7) { //  7m 이내면
-                    Toast.makeText(getApplicationContext(), pathlist.get(pathlistIdx).getTurnType() + "", Toast.LENGTH_LONG).show();
-                    /*  send turnType to Arduino    */
-                    String sendMessage = pathlist.get(pathlistIdx).getTurnType() + "";//보낼 택스트
-                    if (sendMessage.length() > 0) {
-                        if (bt != null)
-                            bt.send(sendMessage, true); //  send to IStick
-                        Toast.makeText(getApplicationContext(), "IStick에 " + sendMessage + "전송", Toast.LENGTH_LONG).show();
-                    }
-                    pathlistIdx++;
-                }
-            } else {
-                Toast.makeText(getApplicationContext(), "목적지로 도착하였습니다.", Toast.LENGTH_LONG).show();
-            }
-        }
-        userLocationTextView.setText("위도 : " + finalPoint.getLatitude() + "\n경도 : " + finalPoint.getLongitude());
     }
 
     /* LocationListener에서 위치가 바뀔때 마다 사용자의 현재위치에 대한 정보를 서버에 전송하는 작업 수행 */
@@ -1106,7 +1109,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
             tMapView = new TMapView(getApplicationContext());
             tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
-            tMapView.setCenterPoint(curPoint.getLongitude(), curPoint.getLatitude());
+            tMapView.setCenterPoint(finalPoint.getLongitude(), finalPoint.getLatitude());   //  finalPoint 12/02
 
             /*  기존의 polyLine제거*/
             tMapView.removeAllTMapPolyLine();
@@ -1120,7 +1123,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             Log.d(TAG, "doInBackground: start!");
             Document document = null;
             try {
-                document = new TMapData().findPathDataAllType(TMapData.TMapPathType.PEDESTRIAN_PATH, curPoint, destPoint);  //  send find query to TMapServer..
+                document = new TMapData().findPathDataAllType(TMapData.TMapPathType.PEDESTRIAN_PATH, finalPoint, destPoint);  //  send find query to TMapServer..
                 return document;
             } catch (IOException e) {
                 e.printStackTrace();
