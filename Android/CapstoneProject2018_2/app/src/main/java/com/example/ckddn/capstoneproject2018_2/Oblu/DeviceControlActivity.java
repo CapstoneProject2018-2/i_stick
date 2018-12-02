@@ -379,7 +379,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 }
                 mstepcount.setText(" " + step_counter);
 //                mdis.setText(" " + df1.format(distance));
-//                x.setText(" " + df1.format(final_data[0]));///////////x
+//                x.setText(" " +df1.format(final_data[0]));///////////x
 //                y.setText(" " + df1.format(final_data[1]));///////////y
 //                dr_alti.setText(" " + df1.format(final_data[2]));/////////Z
 
@@ -511,22 +511,40 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
     private Handler locationSelectHandler = new Handler();
     private Runnable locationSelectThread = new Runnable() { //  make finalPoint
-        public void run() {
-            if (curPoint == null) return;    //  단 한번도 onLocationChange가 불러지지 않았을 때
+            public void run() {
+            if (curPoint == null) {
+                locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
+                return;    //  단 한번도 onLocationChange가 불러지지 않았을 때
+            }
             if (prevPoint == null) {
-                prevPoint = curPoint;
+                prevPoint = new TMapPoint(curPoint.getLatitude(), curPoint.getLongitude());
+                locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                 return; //
             }
-            if (sateNum >= RELIABLIE_SATELLITE_NUM) {   //  신뢰할 수 있는 위성 개수일 때, 첫 finalPoint 의 지정은 여기서 부터 시작
+            if (prevPoint == curPoint && finalPoint != null) {    //  onLocationChange가 안됫을 때
+                dotflag = 1;
+                itemID++;
+                if (drPoint == null) {
+                    locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
+                    return;
+                }
+                finalPoint = drPoint;
+                Toast.makeText(getApplicationContext(),"OnLocation안됨", Toast.LENGTH_SHORT).show();
+            } else if (sateNum >= RELIABLIE_SATELLITE_NUM) {   //  신뢰할 수 있는 위성 개수일 때, 첫 finalPoint 의 지정은 여기서 부터 시작
                 Toast.makeText(getApplicationContext(),"신뢰가능"+ sateNum, Toast.LENGTH_SHORT).show();
                 dotflag = 0;
                 itemID++;
                 finalPoint = curPoint;
             } else if (finalPoint == null) {    //  신뢰 할수 있는 location 정보가 없는 경우
+                locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                 return;
             } else { // dr을 진행할 기본 location정보가 있을 때 dr진행
                 dotflag = 1;
                 itemID++;
+                if (drPoint == null) {
+                    locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
+                    return;
+                }
                 finalPoint = drPoint;
                 Toast.makeText(getApplicationContext(),"DeadRe"+ sateNum, Toast.LENGTH_SHORT).show();
             }
@@ -534,7 +552,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             PointDrawer.drawPoint(finalPoint, dotflag, context, tMapView, itemID);
 
             new SendLocTask().execute("http://" + ServerInfo.ipAddress + "/user", Double.toString(finalPoint.getLongitude()), Double.toString(finalPoint.getLatitude()));
-
 
             /* signal making algorithm...  */
             if (pathlist != null) {
@@ -558,7 +575,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             }
             userLocationTextView.setText("위도 : " + finalPoint.getLatitude() + "\n경도 : " + finalPoint.getLongitude());
 
-            customHandler.postDelayed(this, MINIMUM_LOCATION_GETTING_TIME);
+            if (dotflag != -1)
+                locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
         }
     };
 
@@ -710,7 +728,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         compass.stop();
         /* HC-06 */
         bt.stopService();
-        locationSelectHandler.removeCallbacks(locationSelectThread);
+        dotflag = -1;
+//        locationSelectHandler.removeCallbacks(locationSelectThread);
     }
 
     @Override
