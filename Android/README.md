@@ -65,3 +65,24 @@ Android Code Repository
   <li>ActionBar Title이름 수정, string.xml에 title name 추가</li>
   <li>UI 소폭 수정: EditParentInfo 설명과 버튼, LoginActivity 로그인정보 텍스트, ParentActivity 관리 리스트</li>
 </ul>
+
+<h1>2018-12-01</h1>
+<ul>
+  <li>MapCalculator클래스 고도추가로 인한 버그 수정</li>
+  <li>디버깅을 모드 위한 MapDrawer클래스 추가</li>
+</ul>
+
+<h1>2018-12-02</h1>
+<ul>
+  <li>MapCalculator클래스 고도추가로 인한 버그 수정</li>
+  <li>디버깅을 모드 위한 MapDrawer클래스 추가</li>
+  <li>MapDrawer클래서 마커가 잘 뜨지않던 에러 수정</li>
+  <li>Navigation기능을 하기위한 스레드, 핸들러 별도 생성</li>
+</ul>
+
+<h1>2018-12-03</h1>
+<ul>
+  <li>Navigation기능 위한 스레드, 핸들러 에러 수정 완료</li>
+  <li>Point형식이 아닌 LineString형식에 심하게 꺾인길에서 방향제시 Point생성을 위한 LineSeperator클래스 생성</li>
+  <li>NaviDataLogger에 pathlist출력하여 LineSeperator 인자값 최적화 진행</li>
+</ul>
