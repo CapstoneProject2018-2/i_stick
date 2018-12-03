@@ -1,0 +1,428 @@
+2018-12-03 17:29:22.353 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 0
+    nodeType: POINT, turnType: 200
+    Lon: 126.95713587490089
+    Lat: 37.502970021733624
+2018-12-03 17:29:22.353 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 1
+    nodeType: LINESTRING
+    Lon: 126.95713587490089
+    Lat: 37.502970021733624
+2018-12-03 17:29:22.354 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 2
+    nodeType: LINESTRING
+    Lon: 126.95696366836187
+    Lat: 37.50297001865155
+2018-12-03 17:29:22.354 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 3
+    nodeType: LINESTRING
+    Lon: 126.95619429414275
+    Lat: 37.502964449971884
+2018-12-03 17:29:22.354 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 4
+    nodeType: LINESTRING
+    Lon: 126.95608319275833
+    Lat: 37.50297833525864
+2018-12-03 17:29:22.354 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 5
+    nodeType: LINESTRING
+    Lon: 126.95598597860645
+    Lat: 37.503006108069066
+2018-12-03 17:29:22.354 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 6
+    nodeType: LINESTRING
+    Lon: 126.9559165397028
+    Lat: 37.50303388137658
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 7
+    nodeType: LINESTRING
+    Lon: 126.95583876775481
+    Lat: 37.50307831926511
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 8
+    nodeType: LINESTRING
+    Lon: 126.95578877097672
+    Lat: 37.50312553510574
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 9
+    nodeType: LINESTRING
+    Lon: 126.95572766339454
+    Lat: 37.50319774784273
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 10
+    nodeType: LINESTRING
+    Lon: 126.95569988658009
+    Lat: 37.503253296446076
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 11
+    nodeType: LINESTRING
+    Lon: 126.95567488611573
+    Lat: 37.503350506924455
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 12
+    nodeType: LINESTRING
+    Lon: 126.95566932534919
+    Lat: 37.50355326104156
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 13
+    nodeType: LINESTRING
+    Lon: 126.95565821297879
+    Lat: 37.50363380703831
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 14
+    nodeType: LINESTRING
+    Lon: 126.95563043483297
+    Lat: 37.50373657237697
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 15
+    nodeType: POINT, turnType: 12
+    Lon: 126.95563043483297
+    Lat: 37.50373657237697
+2018-12-03 17:29:22.355 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 16
+    nodeType: LINESTRING
+    Lon: 126.95563043483297
+    Lat: 37.50373657237697
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 17
+    nodeType: LINESTRING
+    Lon: 126.95558321487488
+    Lat: 37.50380878536244
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 18
+    nodeType: LINESTRING
+    Lon: 126.95556099412812
+    Lat: 37.503828227149896
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 19
+    nodeType: POINT, turnType: 13
+    Lon: 126.95556099412812
+    Lat: 37.503828227149896
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 20
+    nodeType: LINESTRING
+    Lon: 126.95556099412812
+    Lat: 37.503828227149896
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 21
+    nodeType: LINESTRING
+    Lon: 126.95554431433413
+    Lat: 37.50434761094008
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 22
+    nodeType: POINT, turnType: 12
+    Lon: 126.95554431433413
+    Lat: 37.50434761094008
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 23
+    nodeType: LINESTRING
+    Lon: 126.95554431433413
+    Lat: 37.50434761094008
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 24
+    nodeType: LINESTRING
+    Lon: 126.95449439773715
+    Lat: 37.50478087513284
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 25
+    nodeType: LINESTRING
+    Lon: 126.95415831433728
+    Lat: 37.504883634953806
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 26
+    nodeType: LINESTRING
+    Lon: 126.95394444242076
+    Lat: 37.50497250968682
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 27
+    nodeType: POINT, turnType: 12
+    Lon: 126.95394444242076
+    Lat: 37.50497250968682
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 28
+    nodeType: LINESTRING
+    Lon: 126.95394444242076
+    Lat: 37.50497250968682
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 29
+    nodeType: LINESTRING
+    Lon: 126.95386667313572
+    Lat: 37.50492251410481
+2018-12-03 17:29:22.356 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 30
+    nodeType: LINESTRING
+    Lon: 126.95371946447737
+    Lat: 37.50491695656036
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 31
+    nodeType: LINESTRING
+    Lon: 126.95369168922927
+    Lat: 37.5049169560633
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 32
+    nodeType: POINT, turnType: 211
+    Lon: 126.95369168922927
+    Lat: 37.5049169560633
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 33
+    nodeType: LINESTRING
+    Lon: 126.95369168922927
+    Lat: 37.5049169560633
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 34
+    nodeType: LINESTRING
+    Lon: 126.95355281298876
+    Lat: 37.50491695357802
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 35
+    nodeType: POINT, turnType: 12
+    Lon: 126.95355281298876
+    Lat: 37.50491695357802
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 36
+    nodeType: LINESTRING
+    Lon: 126.95355281298876
+    Lat: 37.50491695357802
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 37
+    nodeType: LINESTRING
+    Lon: 126.95351392912934
+    Lat: 37.50486418123689
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 38
+    nodeType: LINESTRING
+    Lon: 126.95348337753111
+    Lat: 37.504822518864934
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 39
+    nodeType: LINESTRING
+    Lon: 126.95347782506578
+    Lat: 37.50473086275008
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 40
+    nodeType: LINESTRING
+    Lon: 126.95348616218226
+    Lat: 37.50456977050839
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 41
+    nodeType: LINESTRING
+    Lon: 126.95351116452589
+    Lat: 37.50440590110987
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 42
+    nodeType: LINESTRING
+    Lon: 126.95360005127145
+    Lat: 37.50419481611926
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 43
+    nodeType: LINESTRING
+    Lon: 126.9536750476521
+    Lat: 37.50408094180564
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 44
+    nodeType: LINESTRING
+    Lon: 126.95368893621588
+    Lat: 37.504047612593965
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 45
+    nodeType: LINESTRING
+    Lon: 126.95372226878462
+    Lat: 37.50396706699494
+2018-12-03 17:29:22.357 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 46
+    nodeType: LINESTRING
+    Lon: 126.95374171169324
+    Lat: 37.50395873497782
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 47
+    nodeType: LINESTRING
+    Lon: 126.95378893008493
+    Lat: 37.50394207109271
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 48
+    nodeType: LINESTRING
+    Lon: 126.9541722338344
+    Lat: 37.503753211010846
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 49
+    nodeType: LINESTRING
+    Lon: 126.9542833370197
+    Lat: 37.503675444258555
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 50
+    nodeType: LINESTRING
+    Lon: 126.95437499823609
+    Lat: 37.50357268006315
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 51
+    nodeType: LINESTRING
+    Lon: 126.95440277583357
+    Lat: 37.50348935690963
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 52
+    nodeType: LINESTRING
+    Lon: 126.9544138889869
+    Lat: 37.5033810363627
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 53
+    nodeType: LINESTRING
+    Lon: 126.954380561195
+    Lat: 37.50329215720559
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 54
+    nodeType: LINESTRING
+    Lon: 126.95433334538744
+    Lat: 37.50321716507506
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 55
+    nodeType: LINESTRING
+    Lon: 126.95428890639991
+    Lat: 37.50316717008941
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 56
+    nodeType: LINESTRING
+    Lon: 126.95421391573568
+    Lat: 37.50307829018672
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 57
+    nodeType: LINESTRING
+    Lon: 126.95416669922331
+    Lat: 37.50302829515137
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 58
+    nodeType: LINESTRING
+    Lon: 126.9540194930704
+    Lat: 37.502933859046315
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 59
+    nodeType: LINESTRING
+    Lon: 126.95379173995065
+    Lat: 37.50279498221953
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 60
+    nodeType: LINESTRING
+    Lon: 126.95365286605889
+    Lat: 37.50271165608371
+2018-12-03 17:29:22.358 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 61
+    nodeType: LINESTRING
+    Lon: 126.95359176145254
+    Lat: 37.50267832552999
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 62
+    nodeType: LINESTRING
+    Lon: 126.95347510893384
+    Lat: 37.502553337966496
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 63
+    nodeType: LINESTRING
+    Lon: 126.95341678334005
+    Lat: 37.50246723581706
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 64
+    nodeType: LINESTRING
+    Lon: 126.95338901067585
+    Lat: 37.5023755793043
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 65
+    nodeType: LINESTRING
+    Lon: 126.95338623737932
+    Lat: 37.50222559668338
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 66
+    nodeType: LINESTRING
+    Lon: 126.95340290769612
+    Lat: 37.50204228495006
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 67
+    nodeType: LINESTRING
+    Lon: 126.95345846891964
+    Lat: 37.50166177460576
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 68
+    nodeType: POINT, turnType: 13
+    Lon: 126.95345846891964
+    Lat: 37.50166177460576
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 69
+    nodeType: LINESTRING
+    Lon: 126.95345846891964
+    Lat: 37.50166177460576
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 70
+    nodeType: LINESTRING
+    Lon: 126.95321682465173
+    Lat: 37.50164788300661
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 71
+    nodeType: LINESTRING
+    Lon: 126.95311127933492
+    Lat: 37.501625661477775
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 72
+    nodeType: LINESTRING
+    Lon: 126.95311127933492
+    Lat: 37.501625661477775
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 73
+    nodeType: LINESTRING
+    Lon: 126.95279742349317
+    Lat: 37.501467340925196
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 74
+    nodeType: LINESTRING
+    Lon: 126.9526918790376
+    Lat: 37.501414567391116
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 75
+    nodeType: LINESTRING
+    Lon: 126.95246968026208
+    Lat: 37.50130068775913
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 76
+    nodeType: LINESTRING
+    Lon: 126.95221415158014
+    Lat: 37.50117292025566
+2018-12-03 17:29:22.359 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 77
+    nodeType: POINT, turnType: 12
+    Lon: 126.95221415158014
+    Lat: 37.50117292025566
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 78
+    nodeType: LINESTRING
+    Lon: 126.95221415158014
+    Lat: 37.50117292025566
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 79
+    nodeType: LINESTRING
+    Lon: 126.95225026590113
+    Lat: 37.50094239213459
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 80
+    nodeType: LINESTRING
+    Lon: 126.95224749362188
+    Lat: 37.5007563025981
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 81
+    nodeType: LINESTRING
+    Lon: 126.9521975026377
+    Lat: 37.50059798676698
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 82
+    nodeType: LINESTRING
+    Lon: 126.95215306419782
+    Lat: 37.50052854959612
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 83
+    nodeType: LINESTRING
+    Lon: 126.95203919061237
+    Lat: 37.50035356789175
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 84
+    nodeType: LINESTRING
+    Lon: 126.95169200979552
+    Lat: 37.50000637980107
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 85
+    nodeType: LINESTRING
+    Lon: 126.95166423548673
+    Lat: 37.49997304984375
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 86
+    nodeType: LINESTRING
+    Lon: 126.95142259842079
+    Lat: 37.49970363238236
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 87
+    nodeType: LINESTRING
+    Lon: 126.95106430343324
+    Lat: 37.499500871754535
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 88
+    nodeType: POINT, turnType: 12
+    Lon: 126.95106430343324
+    Lat: 37.499500871754535
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 89
+    nodeType: LINESTRING
+    Lon: 126.95106430343324
+    Lat: 37.499500871754535
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 90
+    nodeType: LINESTRING
+    Lon: 126.9515781617305
+    Lat: 37.4989259477564
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 91
+    nodeType: POINT, turnType: 213
+    Lon: 126.9515781617305
+    Lat: 37.4989259477564
+2018-12-03 17:29:22.360 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 92
+    nodeType: LINESTRING
+    Lon: 126.9515781617305
+    Lat: 37.4989259477564
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 93
+    nodeType: LINESTRING
+    Lon: 126.95122264411064
+    Lat: 37.49872874208819
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 94
+    nodeType: POINT, turnType: 11
+    Lon: 126.95122264411064
+    Lat: 37.49872874208819
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 95
+    nodeType: LINESTRING
+    Lon: 126.95122264411064
+    Lat: 37.49872874208819
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 96
+    nodeType: LINESTRING
+    Lon: 126.95127264143626
+    Lat: 37.49866208406186
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 97
+    nodeType: LINESTRING
+    Lon: 126.95127264143626
+    Lat: 37.49866208406186
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 98
+    nodeType: LINESTRING
+    Lon: 126.95123097926836
+    Lat: 37.49863708622115
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 99
+    nodeType: LINESTRING
+    Lon: 126.95113099095784
+    Lat: 37.49854542841607
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 100
+    nodeType: LINESTRING
+    Lon: 126.95093934792875
+    Lat: 37.49832600603954
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 101
+    nodeType: LINESTRING
+    Lon: 126.9509143512229
+    Lat: 37.49828989867686
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 102
+    nodeType: POINT, turnType: 12
+    Lon: 126.9509143512229
+    Lat: 37.49828989867686
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 103
+    nodeType: LINESTRING
+    Lon: 126.9509143512229
+    Lat: 37.49828989867686
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 104
+    nodeType: LINESTRING
+    Lon: 126.95094768238191
+    Lat: 37.49825934726779
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 105
+    nodeType: LINESTRING
+    Lon: 126.95096157055399
+    Lat: 37.498239905331005
+2018-12-03 17:29:22.361 10541-10541/com.example.ckddn.capstoneproject2018_2 D/FindPathData>>>: pathlist pIndex : 106
+    nodeType: POINT, turnType: 201
+    Lon: 126.95096157055399
+    Lat: 37.498239905331005

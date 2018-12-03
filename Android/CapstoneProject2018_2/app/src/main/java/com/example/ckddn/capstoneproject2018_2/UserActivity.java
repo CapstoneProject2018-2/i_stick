@@ -454,7 +454,7 @@ public class UserActivity extends AppCompatActivity implements TMapGpsManager.on
                             if (node.getNodeName().equals("Point")) {
                                 String[] str = node.getTextContent().split(",");
                                 point = new TMapPoint(Double.parseDouble(str[1]), Double.parseDouble(str[0]));
-                                PathItem pathItem = new PathItem(turnType, point);
+                                PathItem pathItem = new PathItem(true, turnType, point);
                                 pathlist.add(pathItem);
                             }
                         }

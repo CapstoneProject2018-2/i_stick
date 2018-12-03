@@ -137,9 +137,9 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 public class DeviceControlActivity extends Activity implements TMapGpsManager.onLocationChangedCallback {
     private final static String TAG = DeviceControlActivity.class.getSimpleName();
 
-    private final static int RELIABLIE_SATELLITE_NUM = 15;
-    private final static int MINIMUM_LOCATION_GETTING_TIME = 500;
-    private final static int MINIMUN_NAVIGATION_TURNPOINT_DISTANCE = 7;
+    private final static int RELIABLIE_SATELLITE_NUM = 6;                   //  신뢰가능한 위성개수 -> 최적화
+    private final static int MINIMUM_LOCATION_GETTING_TIME = 500;           //  TMapGpsManager set minTime
+    private final static int MINIMUN_NAVIGATION_TURNPOINT_DISTANCE = 7;     //  I Stick Navigation min distance for turning points
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -185,6 +185,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     long timeSec1 = 0;
     long timeSec2 = 0;
     double avg = 0;
+
     //variables for processing
     long timeSec6 = 0;
     DecimalFormat df1 = new DecimalFormat("0.00");
@@ -217,13 +218,11 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private LinearLayout linearLayoutTmap;
     private TMapView tMapView = null;
     private TextView pathtext;
-    private StringBuilder pathPoint = new StringBuilder();
+    private StringBuilder pathPointStr = new StringBuilder();
     private ArrayList<PathItem> pathlist = null;
     private TMapPolyLine polyLine;
     private int pathlistIdx = 0;
 
-    /* Debuggin */
-    private StringBuilder linePointStr = new StringBuilder();
 
     /* Arduino */
     private BluetoothSPP bt;
@@ -249,9 +248,9 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private double currentAltitude; //  추가
 
     /* for debug mode dot drawer */
-    private int dotflag = 0;
+    private int dotflag = 0;        // navigation Flag
     private Context context = null;
-    private int itemID = 1;
+    private int itemID = 1;         // for marking
 
 
     // Code to manage Service lifecycle.
@@ -379,11 +378,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 }
                 mstepcount.setText(" " + step_counter);
 //                mdis.setText(" " + df1.format(distance));
-//                x.setText(" " +df1.format(final_data[0]));///////////x
-//                y.setText(" " + df1.format(final_data[1]));///////////y
-//                dr_alti.setText(" " + df1.format(final_data[2]));/////////Z
+//                x.setText(" " +df1.format(final_data[0]));
+//                y.setText(" " + df1.format(final_data[1]));
+//                dr_alti.setText(" " + df1.format(final_data[2]));
 
-                //여기에 뷰 넣기
                 if (finalPoint != null) {
                     dr_lat.setText(Double.toString(drPoint.getLatitude()));
                     dr_long.setText(Double.toString(drPoint.getLongitude()));
@@ -429,7 +427,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         dr_alti = (TextView) findViewById(R.id.dr_alti);
         mStartStopBtn = (Button) findViewById(R.id.start_stop_btn);
 
-        /* UserActivitiy init */
+        /* from UserActivitiy init */
         /* get user info from login page */
         uno = intent.getStringExtra("no");
         userId = intent.getStringExtra("id");
@@ -477,7 +475,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 String stopText = getResources().getString(
                         R.string.UART_STOP);
 
-                if (buttonText.equalsIgnoreCase(startText)) {   //  start중일 때 누르면
+                if (buttonText.equalsIgnoreCase(startText)) {   //  버튼 글자가 start 일 때 누르면
                     btn.setText(stopText);
                     byte[] convertedBytes = convertingTobyteArray(send);
                     BluetoothLeService.writeCharacteristicNoresponse(mReadCharacteristic, convertedBytes);
@@ -498,6 +496,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     timeSwapBuff = 0L;
                     customHandler.removeCallbacks(updateTimerThread);
                     locationSelectHandler.removeCallbacks(locationSelectThread);
+                    dotflag = -1;
                 }
 
             }
@@ -508,24 +507,28 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
     }
 
-
+    /*  Main Navigation Algoritm
+    * start when user click the start button */
     private Handler locationSelectHandler = new Handler();
     private Runnable locationSelectThread = new Runnable() { //  make finalPoint
             public void run() {
             if (curPoint == null) {
-                locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
+                if (dotflag != -1)
+                    locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                 return;    //  단 한번도 onLocationChange가 불러지지 않았을 때
             }
             if (prevPoint == null) {
                 prevPoint = new TMapPoint(curPoint.getLatitude(), curPoint.getLongitude());
-                locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
+                if (dotflag != -1)
+                    locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                 return; //
             }
             if (prevPoint == curPoint && finalPoint != null) {    //  onLocationChange가 안됫을 때
                 dotflag = 1;
                 itemID++;
                 if (drPoint == null) {
-                    locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
+                    if (dotflag != -1)
+                        locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                     return;
                 }
                 finalPoint = drPoint;
@@ -536,13 +539,15 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 itemID++;
                 finalPoint = curPoint;
             } else if (finalPoint == null) {    //  신뢰 할수 있는 location 정보가 없는 경우
-                locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
+                if (dotflag != -1)
+                    locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                 return;
             } else { // dr을 진행할 기본 location정보가 있을 때 dr진행
                 dotflag = 1;
                 itemID++;
                 if (drPoint == null) {
-                    locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
+                    if (dotflag != -1)
+                        locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                     return;
                 }
                 finalPoint = drPoint;
@@ -729,7 +734,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         /* HC-06 */
         bt.stopService();
         dotflag = -1;
-//        locationSelectHandler.removeCallbacks(locationSelectThread);
     }
 
     @Override
@@ -787,9 +791,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
      */
     void prepareBroadcastDataNotify(    //  onCreate
                                         BluetoothGattCharacteristic gattCharacteristic) {
-        Log.d(TAG, "prepareBroadcastDataNotify: UUID " + gattCharacteristic.getUuid());
-        Log.d(TAG, "prepareBroadcastDataNotify: Properties " + gattCharacteristic.getProperties());
-
         if ((gattCharacteristic.getProperties() | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
 
             BluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
@@ -798,9 +799,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
     void stopBroadcastDataNotify(
             BluetoothGattCharacteristic gattCharacteristic) {
-
-        Log.d(TAG, "stopBroadcastDataNotify: UUID " + gattCharacteristic.getUuid());
-        Log.d(TAG, "stopBroadcastDataNotify: Properties " + gattCharacteristic.getProperties());
         final int charaProp = gattCharacteristic.getProperties();
 
         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
@@ -894,7 +892,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 String trimmedByte = splited[i].split("x")[1];
                 valueByte[i] = (byte) convertstringtobyte(trimmedByte);
             }
-
         }
         return valueByte;
 
@@ -950,8 +947,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             scalars[i] = dx[i];
         }
 
+        /* select deadreckoning algorithm */
         dr_coordinates = MapCalculator.CalculateDRPosition(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude());
-
 
 //        // altitude 포함
 //        dr_coordinates = MapCalculator.CalculateDRPositionWithPostAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
@@ -961,6 +958,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 //
 //        //  altitude, z/2 포함
 //        dr_coordinates = MapCalculator.CalculateDRPositionWithHalfAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
+
         drPoint = new TMapPoint(dr_coordinates[0], dr_coordinates[1]);
     }
 
@@ -970,7 +968,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         BluetoothLeService.writeCharacteristicNoresponse(mReadCharacteristic, byteArray);
     }
 
-    //STOP watch Running
+    // STOP watch Running
     long timeInMilliseconds = 0L;
     private long startTime = 0L;
     long updatedTime = 0L;
@@ -1035,6 +1033,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
         curPoint = new TMapPoint(location.getLatitude(), location.getLongitude());
         sateNum = gps.getSatellite();
+
         if (location.getAltitude() != 0) currentAltitude = location.getAltitude();
         /* check num of satellites */
     }
@@ -1104,8 +1103,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     JSONObject jsonObject = new JSONObject(result);
                     destPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")); //  도착 포인트
                     Toast.makeText(getApplicationContext(), destPoint.toString(), Toast.LENGTH_SHORT).show();
-                    /*  경로 탐색 시작 */
-//                    new FindPathData().execute(); //  FCM에게 위임한다.
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
@@ -1114,16 +1111,21 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         }
     }
 
-    /*  curPoint와 destPoint로 경로 탐색 후, turnType과 위치 array에 저장과 맵에 경로 표시해주는 작업 수행*/
+    /*  curPoint와 destPoint로 경로 탐색 후, turnType과 위치 array에 저장과 맵에 경로 표시해주는 작업 수행
+    * FCM이 도착하면 실행된다.*/
     public class FindPathData extends AsyncTask<String, Void, Document> {
+
         String TAG = "FindPathData>>>";
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            /* for navigation */
             pathlist = new ArrayList<PathItem>();
+            pathlistIdx = 0;
+            pathPointStr = new StringBuilder();
 
-            /*  새로운 PloyLine을 위해 기존의 view제거*/
+            /*  새로운 PloyLine을 위해 기존의 view제거 */
             linearLayoutTmap.removeView(tMapView);
 
             tMapView = new TMapView(getApplicationContext());
@@ -1159,55 +1161,51 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         protected void onPostExecute(Document doc) {
             if (doc != null) {
                 /*  Parse by turntype and point information */
-                XPathFactory xPathFactory = XPathFactory.newInstance();
-                XPath xPath = xPathFactory.newXPath();
-                try {
-                    XPathExpression expr = xPath.compile("//Placemark");
-                    NodeList nodeList = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-                    for (int i = 0; i < nodeList.getLength(); i++) {
-                        NodeList child = nodeList.item(i).getChildNodes();
-                        int turnType = -1;
-                        TMapPoint point;
-
-                        for (int j = 0; j < child.getLength(); j++) {
-                            Node node = child.item(j);
-                            if (node.getNodeName().equals("tmap:turnType")) {
-                                turnType = Integer.parseInt(node.getTextContent());
-                            }
-                            if (node.getNodeName().equals("Point")) {
-                                String[] str = node.getTextContent().split(",");
-                                point = new TMapPoint(Double.parseDouble(str[1]), Double.parseDouble(str[0]));
-                                PathItem pathItem = new PathItem(turnType, point);
-                                pathlist.add(pathItem);
-                            }
-                            /* LineString Alg */
-//                            else if (node.getNodeName().equals("Linestring")) {
-//                                Log.d(TAG, "onPostExecute: Linestring");
-//                                ArrayList<TMapPoint> linePoints = new ArrayList<TMapPoint>();
-//                                String[] str1 = node.getTextContent().split(" ");
-//                                linePointStr.append("lineString" + i);
-//                                for (int k = 0; k < str1.length; k++) {
-//                                    String[] str2 = str1[k].split(",");
-//                                    TMapPoint linePoint = new TMapPoint(Double.parseDouble(str2[1]), Double.parseDouble(str2[1]));
-//                                    linePoints.add(linePoint);
-//                                    linePointStr.append(linePoint);
-//                                }
-//
-//
-//                            }
+                NodeList placemarkList = doc.getElementsByTagName("Placemark");
+                for (int i = 0; i < placemarkList.getLength(); i++) {
+                    Element item = (Element) placemarkList.item(i);
+                    String nodeType = HttpConnect.getContentFromNode(item, "tmap:nodeType");
+                    if (nodeType.equals("POINT")) {
+                        String turnType = HttpConnect.getContentFromNode(item, "tmap:turnType");
+                        String coordinate = HttpConnect.getContentFromNode(item, "coordinates");
+                        if (turnType != null && coordinate != null) {
+                            String[] str = coordinate.split(",");
+                            TMapPoint point = new TMapPoint(Double.parseDouble(str[1]), Double.parseDouble(str[0]));
+                            pathlist.add(new PathItem(PathItem.NODETYPE_POINT, Integer.parseInt(turnType), point));
+                            Log.d(TAG, "onPostExecute: add POINT item");
                         }
-
+                    } else if (nodeType.equals("LINE")){
+                        String coordinates = HttpConnect.getContentFromNode(item, "coordinates");
+                        if (coordinates != null) {
+                            String[] str = coordinates.split(" ");
+                            ArrayList<TMapPoint> linePoints = new ArrayList<>();
+                            for (int k = 0; k < str.length; k++) {
+                                try {
+                                    String[] str2 = str[k].split(",");
+                                    TMapPoint point = new TMapPoint(Double.parseDouble(str2[1]), Double.parseDouble(str2[0]));
+                                    linePoints.add(point);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            Log.d(TAG, "onPostExecute: get all LinePoints");
+                            ArrayList<PathItem> pathItems = LineSeperator.getPointIdxs(linePoints);
+                            if (pathItems != null) {
+                                for (int m = 0; m < pathItems.size(); m++) {
+                                    pathlist.add(pathItems.get(m));
+                                }
+                                Log.d(TAG, "onPostExecute: Calculate and add pathItems");
+                            }
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-                pathPoint = new StringBuilder();
                 for (int i = 0; i < pathlist.size(); i++) {
-                    pathPoint.append(pathlist.get(i).toString() + "\n");
+                    pathPointStr.append(pathlist.get(i).toString() + "\n");
+                    Log.d(TAG, "pathlist pIndex : " + i +"\n" + pathlist.get(i).toString());
                 }
-                pathtext.setText(pathPoint.toString());
+                pathtext.setText(pathPointStr.toString());
 
-                /*  Parse and draw PloyLine on TMapView*/
+                /*  Parse and draw PloyLine on TMapView */
                 NodeList list = doc.getElementsByTagName("LineString");
                 for (int i = 0; i < list.getLength(); i++) {
 
@@ -1228,8 +1226,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     }
                 }
             }
-            pathlistIdx = 0;
-
             linearLayoutTmap.addView(tMapView);
         }
     }

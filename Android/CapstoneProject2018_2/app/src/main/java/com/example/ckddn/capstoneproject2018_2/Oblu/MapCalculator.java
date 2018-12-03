@@ -7,7 +7,7 @@ package com.example.ckddn.capstoneproject2018_2.Oblu;
 /*This class deals with Dead Reckoning Coordinate Translation.*/
 /*Receives current position and changed vectors and translates them to later positions in format of lat,long*/
 
-/* 추측항법 계산 함수 클래스*/
+/* 추측항법 계산 함수 클래스 */
 /* 현재위치, 바뀐 벡터값을 통해 추측되는 다음 위치를 위도 경도 형식으로 반환*/
 
 public class MapCalculator {
