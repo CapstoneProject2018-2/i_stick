@@ -77,5 +77,6 @@ I Stick Server Notification using Nodejs
 <h1>2018-12-04</h1>
 <ul>
   <li>setDestination 수정, 사용자에게 길을 지정해준 보호자로 전화하기 위한 parent mobile정보 제공</li>
+  <li>login시 client에게 기본 사용자 정보를 제공해주는 방식으로 변경, 이후 사용자 정보묻는 query제거, intent로 처리</li>
 </ul>
 

@@ -12,6 +12,7 @@ exports.setDestination = function (req, res) {
     const uno = inputData.uno;
     const longitude = inputData.longitude;
     const latitude = inputData.latitude;
+    const mobile = inputData.mobile;
     console.log('uno: ', uno, ' pno: ', pno, ' longitude: ', longitude, " latitude: ", latitude);
     // insert in nav_hist table...
     var sql = "insert into nav_hist(uno, pno, longitude, latitude) values(?,?,?,?)";
@@ -28,17 +29,9 @@ exports.setDestination = function (req, res) {
                     console.error(err);
                     res.send('사용자의 정보를 불러오는데 문제가 생겼습니다. 잠시 후 다시 설정해 주세요.')
                 } else {
-                    var sql = 'select mobile from parent where no=?';
-                    db.query(sql, pno, function(err, mobile) {
-                        if (err) {
-                            console.error(err);
-                            res.send('목적지 지정에 실패하였습니다. 잠시 후 다시 설정해 주세요.');
-                        } else {
-                            /* send Destination information to User immediately */
-                            sendMessage(ret[0].token, longitude, latitude, mobile[0].mobile);
-                            res.send('사용자의 목적지를 설정하였습니다.');
-                        }
-                    })
+                    /* send Destination information to User immediately */
+                    sendMessage(ret[0].token, longitude, latitude, mobile);
+                    res.send('사용자의 목적지를 설정하였습니다.');
                 }
             });
         }

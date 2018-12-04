@@ -15,9 +15,9 @@ exports.signIn = function (req, res) {
 
     var sql = '';
     if (type === 0) {  //  user
-        sql = 'SELECT no, id, pw, salt FROM user WHERE id=?';
+        sql = 'SELECT * FROM user WHERE id=?';
     } else if (type === 1) {  //  parent
-        sql = 'SELECT no, id, pw, salt FROM parent WHERE id=?';
+        sql = 'SELECT * FROM parent WHERE id=?';
     }
     db.query(sql, id, function (err, datas) {
         // console.log(datas);
@@ -33,9 +33,11 @@ exports.signIn = function (req, res) {
                 if (hash == datas[0].pw) {  //  confirm password
                     var info = {
                         no: datas[0].no,
-                        id: datas[0].id
+                        id: datas[0].id,
+                        name: datas[0].name,
+                        mobile: datas[0].mobile
                     }
-                    res.send(info); //  send client it's no and ID
+                    res.send(info); //  send client info
                     //  Log-in information matched. update token data
                     updateToken(datas[0].no, type, token)
                 } else {    // password is not correct
