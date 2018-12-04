@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
+    android:background="@drawable/roundedtop"
     android:orientation="vertical"
     tools:context=".RegistActivity">
 
@@ -15,7 +15,7 @@
         android:layout_margin="10dp"
         android:gravity="center"
         android:text="Register"
-        android:textColor="#ff000000"
+        android:textColor="#FFFF"
         android:textSize="30dp"
         android:textStyle="bold" />
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Are you User? or Parent?"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textStyle="italic" />
 
         <RadioGroup
@@ -45,6 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="#FFFF"
                 android:text="User" />
 
             <RadioButton
@@ -52,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="#FFFF"
                 android:text="Parent" />
         </RadioGroup>
 
@@ -106,10 +108,12 @@
 
             <Button
                 android:id="@+id/check_button"
+                android:background="@drawable/rec_gradient"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="1dp"
+                android:textColor="#FFFF"
                 android:text="check" />
         </LinearLayout>
 
@@ -191,6 +195,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sign Me Up"
+            android:textColor="#FFFF"
+            android:background="@drawable/rec_gradient"
             android:textStyle="bold"/>
 
         <ImageView

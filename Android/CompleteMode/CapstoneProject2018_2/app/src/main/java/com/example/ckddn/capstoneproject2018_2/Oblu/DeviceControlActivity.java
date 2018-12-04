@@ -965,11 +965,13 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 return;
             }
             destPoint = new TMapPoint(Double.parseDouble(latitude), Double.parseDouble(longitude));
-            if (finalPoint == null)
-                Toast.makeText(getApplicationContext(), "finalPoint 설정 미완료", Toast.LENGTH_LONG).show();
-            else
+            if (finalPoint == null){
+                Toast.makeText(getApplicationContext(), "현재위치가 정확히 설정되지 않았습니다. 목적위치를 재수신 받아야 합니다.", Toast.LENGTH_LONG).show();
+            }
+            else {
                 new FindPathData().execute();
-            Toast.makeText(getApplicationContext(), "보호자로 부터 목적지 정보 수신...\n보호자 전화번호: " + pMobile, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "보호자로 부터 목적지 정보 수신...\n보호자 전화번호: " + pMobile, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
