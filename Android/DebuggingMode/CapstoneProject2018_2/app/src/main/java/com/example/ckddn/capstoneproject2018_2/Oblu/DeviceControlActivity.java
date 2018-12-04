@@ -132,7 +132,7 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 public class DeviceControlActivity extends Activity implements TMapGpsManager.onLocationChangedCallback {
     private final static String TAG = DeviceControlActivity.class.getSimpleName();
 
-    private final static int RELIABLIE_SATELLITE_NUM = 5; // 신뢰가능한 위성개수 -> 최적화
+    private final static int RELIABLIE_SATELLITE_NUM = 15; // 신뢰가능한 위성개수 -> 최적화
     private final static int MINIMUM_LOCATION_GETTING_TIME = 500; // TMapGpsManager set minTime
     private final static double MINIMUN_NAVIGATION_TURNPOINT_DISTANCE = 7.5; // I Stick Navigation min distance for
                                                                              // turning points
