@@ -63,12 +63,6 @@ public class HisLocActivity extends AppCompatActivity implements View.OnClickLis
         userName = getIntent().getStringExtra("userName");
         userMobile = getIntent().getStringExtra("userMobile");
 
-        /* give and check permission(CALL_PHONE) */
-        ActivityCompat.requestPermissions(this, IStickInfo.parent_permissions, PackageManager.PERMISSION_GRANTED);
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
         /* set Click Listener */
         findViewById(R.id.call_user).setOnClickListener(this);
         findViewById(R.id.call_emergency).setOnClickListener(this);

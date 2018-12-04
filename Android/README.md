@@ -90,4 +90,6 @@ Android Code Repository
 <h1>2018-12-04</h1>
 <ul>
   <li>실전 데모 테스트</li>
+  <li>CompleteMode: 실제 출시 할 때의 앱<li>
+  <li>DebuggingMode: 개발자용 디버깅 앱<li>
 </ul>

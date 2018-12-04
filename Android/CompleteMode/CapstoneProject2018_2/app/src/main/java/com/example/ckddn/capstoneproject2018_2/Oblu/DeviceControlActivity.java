@@ -58,6 +58,7 @@ import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -73,7 +74,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ckddn.capstoneproject2018_2.IStickInfo;
@@ -147,11 +147,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private static final String send = "0x34 0x00 0x34";
     private static final String sys_off = "0x32 0x00 0x32";
     private static final String pro_off = "0x22 0x00 0x22";
-    private TextView mdis;
-    private TextView dr_lat;
-    private TextView mstepcount;
-    private TextView dr_long;
-    private TextView dr_alti;
     private Button mStartStopBtn;
     long timeSec3 = 0;
     long timeSec;
@@ -203,15 +198,11 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private String uno;
     private String userId;
     private TMapPoint destPoint;    //  curPoint in LocationListener, destPoint in SendLocTask.onPostExecute()
-    private TextView userLocationTextView;
 
     /* for FindPath */
     private LinearLayout linearLayoutTmap;
     private TMapView tMapView = null;
-    private TextView pathtext;
-    private StringBuilder pathPointStr = new StringBuilder();
     private ArrayList<PathItem> pathlist = null;
-    private TMapPolyLine polyLine;
     private int pathlistIdx = 0;
 
 
@@ -362,14 +353,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     }
                     package_number_old = package_number;
                 }
-                mstepcount.setText(" " + step_counter);
-                mdis.setText(" " + df1.format(distance));
-
-                if (finalPoint != null) {
-                    dr_lat.setText(Double.toString(drPoint.getLatitude()));
-                    dr_long.setText(Double.toString(drPoint.getLongitude()));
-                    dr_alti.setText(" " + currentAltitude);
-                }
             }
             // END - Added by GT Silicon - END //
         }
@@ -379,7 +362,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     /* Compass */
     private Compass compass;
     private float currentAzimuth;
-    private TextView azimuthView;
 
     /* add for calibrated azimuth */
     private float[] rawAzimuths;
@@ -394,6 +376,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
     /* 12/04 새로운 보호자에게 전화하기 기능을 위한 mobile 변수 */
     private String pMobile; //  전화하기 버튼에 pMobile 정보 추가
+    private Button pCallBtn;
+    private boolean ready = false;
 
     // BEGIN - Added by GT Silicon - BEGIN //
     @Override
@@ -404,12 +388,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
-        mstepcount = (TextView) findViewById(R.id.stepcount);
-        mdis = (TextView) findViewById(R.id.dis);
-        dr_lat = (TextView) findViewById(R.id.dr_lat);
-        dr_long = (TextView) findViewById(R.id.dr_long);
-        dr_alti = (TextView) findViewById(R.id.dr_alti);
-        mStartStopBtn = (Button) findViewById(R.id.start_stop_btn);
+        mStartStopBtn = (Button) findViewById(R.id.startbtn);
 
         /* from UserActivitiy init */
         /* get user info from login page */
@@ -417,16 +396,9 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         userId = intent.getStringExtra("id");
 
         /* initialize default layouts */
-        userLocationTextView = (TextView) findViewById(R.id.user_location_result);
-        userLocationTextView.setText(userId + ": 위치정보 미수신중"); //DEFAULT
         linearLayoutTmap = (LinearLayout) findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(getApplicationContext());
         tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
-        pathtext = (TextView) findViewById(R.id.path_text); //  경로에 대한 포인트의 정보 출력 뷰
-        pathtext.setMovementMethod(new ScrollingMovementMethod());
-        polyLine = new TMapPolyLine();
-        polyLine.setLineWidth(2);
-        polyLine.setLineColor(Color.BLUE);
 
         /* TMapGpsManager */
         gps = new TMapGpsManager(this);
@@ -435,8 +407,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         gps.setProvider(TMapGpsManager.GPS_PROVIDER);
         gps.OpenGps();
 
+        /* Call Btn */
+        pCallBtn = (Button) findViewById(R.id.callbtn);
+
         /* initialize compass */
-        azimuthView = (TextView) findViewById(R.id.azimuth_text);
         setupCompass();
 
         /* initialize bluetoothSPP for Arduino */
@@ -446,7 +420,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
 
         mStartStopBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -488,10 +461,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     }
 
     /*  Main Navigation Algoritm
-    * start when user click the start button */
+     * start when user click the start button */
     private Handler locationSelectHandler = new Handler();
     private Runnable locationSelectThread = new Runnable() { //  make finalPoint
-            public void run() {
+        public void run() {
             if (curPoint == null) {
                 if (dotflag != -1)
                     locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
@@ -504,7 +477,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 return; //
             }
             if (prevPoint == curPoint && finalPoint != null) {    //  onLocationChange가 안됫을 때
-//                Toast.makeText(getApplicationContext(),"갱신되지 않음", Toast.LENGTH_SHORT).show();
                 dotflag = 1;
                 itemID++;
                 if (drPoint == null) {
@@ -514,7 +486,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 }
                 finalPoint = drPoint;
             } else if (sateNum >= RELIABLIE_SATELLITE_NUM) {   //  신뢰할 수 있는 위성 개수일 때, 첫 finalPoint 의 지정은 여기서 부터 시작
-//                Toast.makeText(getApplicationContext(),"신뢰가능"+ sateNum, Toast.LENGTH_SHORT).show();
                 dotflag = 0;
                 itemID++;
                 finalPoint = curPoint;
@@ -531,10 +502,12 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     return;
                 }
                 finalPoint = drPoint;
-//                Toast.makeText(getApplicationContext(),"DeadRe"+ sateNum, Toast.LENGTH_SHORT).show();
+            }
+            if (!ready) {
+                ready = true;
+                Toast.makeText(getApplicationContext(), "목적지 수신준비 완료", Toast.LENGTH_LONG).show();
             }
             prevPoint = curPoint;   //  prevPoint update
-            PointDrawer.drawPoint(finalPoint, dotflag, context, tMapView, itemID);
 
             new SendLocTask().execute("http://" + IStickInfo.ipAddress + "/user", Double.toString(finalPoint.getLongitude()), Double.toString(finalPoint.getLatitude()));
 
@@ -545,7 +518,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
                     if (distance < MINIMUN_NAVIGATION_TURNPOINT_DISTANCE) {
                         Toast.makeText(getApplicationContext(), "Point Distance: " + distance, Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(), Integer.toString(pathlist.get(pathlistIdx).getTurnType()), Toast.LENGTH_LONG).show();
                         /*  send turnType to Arduino    */
                         String sendMessage = Integer.toString(pathlist.get(pathlistIdx).getTurnType());//보낼 택스트
                         if (sendMessage.length() > 0) {
@@ -561,7 +533,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     Toast.makeText(getApplicationContext(), "목적지로 도착하였습니다.", Toast.LENGTH_LONG).show();
                 }
             }
-            userLocationTextView.setText("위도 : " + finalPoint.getLatitude() + "\n경도 : " + finalPoint.getLongitude());
 
             if (dotflag != -1)
                 locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
@@ -615,7 +586,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                         currentAzimuth = azimuth;
                         saveAzimuth(azimuth);
                         f_Azimuth = getFilteredAzimuth();
-                        azimuthView.setText(Float.toString(f_Azimuth));
                     }
                 });
             }
@@ -983,12 +953,22 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             String longitude = intent.getStringExtra("longitude");
             String latitude = intent.getStringExtra("latitude");
             pMobile = intent.getStringExtra("mobile");
+            pCallBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String tel = "tel:" + pMobile;
+                    startActivity(new Intent("android.intent.action.CALL", Uri.parse(tel)));    //  사용자의 핸드폰에 전화
+                }
+            });
             if (longitude.isEmpty() || latitude.isEmpty()) {
                 Toast.makeText(getApplicationContext(), "목적지 설정 오류...", Toast.LENGTH_LONG).show();
                 return;
             }
             destPoint = new TMapPoint(Double.parseDouble(latitude), Double.parseDouble(longitude));
-            new FindPathData().execute();
+            if (finalPoint == null)
+                Toast.makeText(getApplicationContext(), "finalPoint 설정 미완료", Toast.LENGTH_LONG).show();
+            else
+                new FindPathData().execute();
             Toast.makeText(getApplicationContext(), "보호자로 부터 목적지 정보 수신...\n보호자 전화번호: " + pMobile, Toast.LENGTH_LONG).show();
         }
     }
@@ -1078,7 +1058,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     }
 
     /*  curPoint와 destPoint로 경로 탐색 후, turnType과 위치 array에 저장과 맵에 경로 표시해주는 작업 수행
-    * FCM이 도착하면 실행된다.*/
+     * FCM이 도착하면 실행된다.*/
     public class FindPathData extends AsyncTask<String, Void, Document> {
 
         String TAG = "FindPathData>>>";
@@ -1089,20 +1069,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             /* for navigation */
             pathlist = new ArrayList<PathItem>();
             pathlistIdx = 0;
-            pathPointStr = new StringBuilder();
-
-            /*  새로운 PloyLine을 위해 기존의 view제거 */
-            linearLayoutTmap.removeView(tMapView);
-
-            tMapView = new TMapView(getApplicationContext());
-            tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
-            tMapView.setCenterPoint(finalPoint.getLongitude(), finalPoint.getLatitude());   //  finalPoint 12/02
-
-            /*  기존의 polyLine제거*/
-            tMapView.removeAllTMapPolyLine();
-            polyLine = new TMapPolyLine();
-            polyLine.setLineWidth(2);
-            polyLine.setLineColor(Color.BLUE);
         }
 
         @Override
@@ -1166,33 +1132,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     }
                 }
                 for (int i = 0; i < pathlist.size(); i++) {
-                    pathPointStr.append(pathlist.get(i).toString() + "\n");
                     Log.d(TAG, "pathlist pIndex : " + i +"\n" + pathlist.get(i).toString());
                 }
-                pathtext.setText(pathPointStr.toString());
 
-                /*  Parse and draw PloyLine on TMapView */
-                NodeList list = doc.getElementsByTagName("LineString");
-                for (int i = 0; i < list.getLength(); i++) {
-
-                    Element item = (Element) list.item(i);
-                    String str = HttpConnect.getContentFromNode(item, "coordinates");
-                    if (str != null) {
-                        String[] str2 = str.split(" ");
-                        for (int k = 0; k < str2.length; k++) {
-                            try {
-                                String[] str3 = str2[k].split(",");
-                                TMapPoint point = new TMapPoint(Double.parseDouble(str3[1]), Double.parseDouble(str3[0]));
-                                polyLine.addLinePoint(point);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        tMapView.addTMapPolyLine("path", polyLine);
-                    }
-                }
             }
-            linearLayoutTmap.addView(tMapView);
         }
     }
 }

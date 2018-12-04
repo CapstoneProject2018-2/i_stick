@@ -54,6 +54,7 @@
         <activity android:name=".Oblu.DeviceScanActivity"
             android:theme="@android:style/Theme.Holo"/>
         <activity android:name=".Oblu.DeviceControlActivity"/>
+
         <service android:name=".Oblu.BluetoothLeService" android:enabled="true"/>
 
         <service

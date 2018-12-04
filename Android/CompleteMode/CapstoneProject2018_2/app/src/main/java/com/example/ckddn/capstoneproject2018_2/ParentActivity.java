@@ -124,7 +124,7 @@ public class ParentActivity extends AppCompatActivity {
             }
 
         });
-//        editTextFilter.clearFocus();
+
         //리스트의 아이템 클릭시 핸들러
         contact_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

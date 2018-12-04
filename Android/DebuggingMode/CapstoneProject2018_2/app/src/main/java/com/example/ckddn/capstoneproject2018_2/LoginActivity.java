@@ -1,8 +1,11 @@
 package com.example.ckddn.capstoneproject2018_2;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +41,18 @@ public class LoginActivity extends AppCompatActivity {
     private RadioButton user_radio;
     private RadioButton parent_radio;
     private RadioGroup radioGroup;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /* give and check permission(CALL_PHONE) */
+        ActivityCompat.requestPermissions(this, IStickInfo.common_permissions, PackageManager.PERMISSION_GRANTED);
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
