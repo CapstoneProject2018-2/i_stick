@@ -28,9 +28,17 @@ exports.setDestination = function (req, res) {
                     console.error(err);
                     res.send('사용자의 정보를 불러오는데 문제가 생겼습니다. 잠시 후 다시 설정해 주세요.')
                 } else {
-                    /* send Destination information to User immediately */
-                    sendMessage(ret[0].token, longitude, latitude);
-                    res.send('사용자의 목적지를 설정하였습니다.');
+                    var sql = 'select mobile from parent where no=?';
+                    db.query(sql, pno, function(err, mobile) {
+                        if (err) {
+                            console.error(err);
+                            res.send('목적지 지정에 실패하였습니다. 잠시 후 다시 설정해 주세요.');
+                        } else {
+                            /* send Destination information to User immediately */
+                            sendMessage(ret[0].token, longitude, latitude, mobile[0].mobile);
+                            res.send('사용자의 목적지를 설정하였습니다.');
+                        }
+                    })
                 }
             });
         }
@@ -38,7 +46,7 @@ exports.setDestination = function (req, res) {
 }
 
 
-function sendMessage(client_token, longitude, latitude) {
+function sendMessage(client_token, longitude, latitude, mobile) {
     console.log('function: sendMessage');
     const FCM = require('fcm-node')
     var serverKey = 'AAAAidG1HhQ:APA91bEHmxPexef-q-nt9EdHF3yyTUiTr3Yn7W26yoz_O8yaLKWeN5RYOThy2OTEGaS4AzFR-AUFryf8huA5WXQsXDKTBpyngDPS4qCnG4ID-RSuPdzEZzleFUtp6qn4uLVXhyAM1-i7'
@@ -47,7 +55,8 @@ function sendMessage(client_token, longitude, latitude) {
 
         data: {
             longitude: longitude,
-            latitude: latitude
+            latitude: latitude,
+            mobile: mobile
         }
     };
 

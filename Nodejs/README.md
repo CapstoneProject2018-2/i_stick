@@ -74,3 +74,8 @@ I Stick Server Notification using Nodejs
   <li>checkId의 버그 수정, 안드로이드 RegistActivity와 함께 수정</li>
 </ul>
 
+<h1>2018-12-04</h1>
+<ul>
+  <li>setDestination 수정, 사용자에게 길을 지정해준 보호자로 전화하기 위한 parent mobile정보 제공</li>
+</ul>
+
