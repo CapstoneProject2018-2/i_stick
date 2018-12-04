@@ -1,68 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ParentActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/parent_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/parent_icon"/>
-
-        <TextView
-            android:id="@+id/id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Welcome Parent" />
-
-        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_gradient" />
+        <ImageView
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_below="@+id/buttonlinear"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:id="@+id/layoutInput"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/background_white"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ListView
+            android:id="@+id/clistview"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:choiceMode="singleChoice"
+            android:textFilterEnabled="true"></ListView>
+
+
+        <Button
+            android:id="@+id/c_add"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="연락처 추가"
+            android:textStyle="bold"
+            android:textColor="#FFFF"
+            android:background="@drawable/rec_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageVIew"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/person_ic"
+        android:padding="5dp"/>
+
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageVIew"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-4dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="Welcome Parent"
+        android:textColor="#FFF"
+        android:textSize="15dp" />
+
+
+
+    <LinearLayout
+        android:id="@+id/buttonlinear"
+        android:layout_below="@id/id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:gravity="center">
 
             <Button
                 android:id="@+id/logout"
                 android:text="로그 아웃"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:textSize="11dp"
+                android:textStyle="bold"
+                android:textColor="#0ea3e4"
+                android:background="@drawable/background_white"
+                android:layout_width="60dp"
+                android:layout_height="30dp" />
             <Button
+                android:layout_marginLeft="13dp"
                 android:id="@+id/p_edit"
-                android:text="내 정보 수정"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-
-
+                android:text="정보 수정"
+                android:textStyle="bold"
+                android:textColor="#0ea3e4"
+                android:textSize="11dp"
+                android:background="@drawable/background_white"
+                android:layout_width="60dp"
+                android:layout_height="30dp" />
         </LinearLayout>
 
 
-    </LinearLayout>
+
+
 
     <LinearLayout
+        android:layout_below="@+id/buttonlinear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/setting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="관리담당 목록 " />
-
         <LinearLayout
+            android:background="@drawable/background_white"
+            android:id="@+id/searchlinear"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -72,9 +149,11 @@
                 android:id="@+id/search_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src ="@drawable/ic_search_black_24dp"/>
+                android:src ="@drawable/ic_search"/>
 
             <EditText
+                android:singleLine="true"
+                android:hint="검색하고 싶은 사용자를 검색하세요"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextFilter" />
@@ -83,34 +162,6 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <ListView
-                android:id="@+id/clistview"
-                android:textFilterEnabled="true"
-                android:layout_width="wrap_content"
-                android:choiceMode="singleChoice"
-                android:layout_height="300dp"></ListView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/c_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="추가" />
-
-            </LinearLayout>
-        </LinearLayout>
-
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

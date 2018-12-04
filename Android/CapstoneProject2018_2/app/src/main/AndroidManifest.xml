@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".LoginActivity"
             android:label="@string/title_app_name">
             <intent-filter>
@@ -32,16 +33,22 @@
         </activity>
         <activity android:name=".UserActivity" />
         <activity android:name=".ParentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:label="@string/title_activity_parent"/>
         <activity android:name=".RegistActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:label="@string/title_activity_regist"/>
         <activity android:name=".EditParentInfo"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:label="@string/title_activity_parent_edit"/>
         <activity android:name=".ParentMenu"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:label="@string/title_activity_parent_menu"/>
         <activity android:name=".SetPathActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:label="@string/title_activity_set_path"/>
         <activity android:name=".HisLocActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:label="@string/title_activity_his_loc"/>
 
         <activity android:name=".Oblu.DeviceScanActivity"
