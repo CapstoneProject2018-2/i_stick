@@ -142,7 +142,7 @@ public class ParentActivity extends AppCompatActivity {
     /*  request user info to Server */
     /*  implement by ckddn  */
     private void getUserInfo() {
-        new RequestUserInfoTask(adapter).execute("http://" + ServerInfo.ipAddress +"/parent");
+        new RequestUserInfoTask(adapter).execute("http://" + IStickInfo.ipAddress +"/parent");
     }
 
 
@@ -153,7 +153,7 @@ public class ParentActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
             String deleteUno = data.getStringExtra("uno");
-            new DeleteUserTask(adapter, deleteUno).execute("http://" + ServerInfo.ipAddress + "/parent/delete");
+            new DeleteUserTask(adapter, deleteUno).execute("http://" + IStickInfo.ipAddress + "/parent/delete");
         }
     }
 
@@ -176,7 +176,7 @@ public class ParentActivity extends AppCompatActivity {
                 String id = userId.getText().toString();
                 String pw = userPw.getText().toString();
                 /*  implement by ckddn  */
-                new AddUserTask(adapter).execute("http://" + ServerInfo.ipAddress + "/parent/register", id, pw);
+                new AddUserTask(adapter).execute("http://" + IStickInfo.ipAddress + "/parent/register", id, pw);
                 dialog.dismiss();
             }
         });

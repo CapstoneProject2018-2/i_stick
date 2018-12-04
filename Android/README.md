@@ -86,3 +86,8 @@ Android Code Repository
   <li>Point형식이 아닌 LineString형식에 심하게 꺾인길에서 방향제시 Point생성을 위한 LineSeperator클래스 생성</li>
   <li>NaviDataLogger에 pathlist출력하여 LineSeperator 인자값 최적화 진행</li>
 </ul>
+
+<h1>2018-12-04</h1>
+<ul>
+  <li>실전 데모 테스트</li>
+</ul>

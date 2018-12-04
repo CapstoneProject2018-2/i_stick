@@ -53,7 +53,7 @@ public class EditParentInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (isFilled()) {
-                    new EditTask().execute("http://" + ServerInfo.ipAddress + "/parent/edit");
+                    new EditTask().execute("http://" + IStickInfo.ipAddress + "/parent/edit");
                 }
             }
         });

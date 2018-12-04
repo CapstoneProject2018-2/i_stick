@@ -54,7 +54,7 @@ public class PathItem {
     @Override
     public String toString() {
         if (this.nodeType == true) {
-            return "nodeType: POINT, turnType: " + this.turnType + "\nLon: " + point.getLongitude() + "\nLat: " + point.getLatitude() + "\n";
+            return "nodeType: POINT, turnType: " + this.turnType + "\nLat, Lon: " + point.getLatitude() + ", " + point.getLongitude() + "\n";
         } else {
             return "nodeType: LINESTRING\nLon: " + point.getLongitude() + "\nLat: " + point.getLatitude() + "\n";
         }

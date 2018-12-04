@@ -69,7 +69,7 @@ public class SetPathActivity extends AppCompatActivity {
 
 
         /* get User's lastest position */
-        new ReqLocTask().execute("http://" + ServerInfo.ipAddress + "/parent/reqLoc");
+        new ReqLocTask().execute("http://" + IStickInfo.ipAddress + "/parent/reqLoc");
 
         Button searchBtn = (Button) findViewById(R.id.searchBtn);
         searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +112,7 @@ public class SetPathActivity extends AppCompatActivity {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             TMapPoint poiPoint = array.get(position).getPOIPoint();
                             new SendDestTask().execute(
-                                    "http://" + ServerInfo.ipAddress + "/parent/setDestination",
+                                    "http://" + IStickInfo.ipAddress + "/parent/setDestination",
                                         Double.toString(poiPoint.getLongitude()), Double.toString(poiPoint.getLatitude()));
                             finish();
                         }

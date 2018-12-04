@@ -58,7 +58,7 @@ public class RegistActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(isFilled()) {
                     Log.d("Reg Main", "onClick: sign up btn");
-                    new SignUpTask().execute("http://" + ServerInfo.ipAddress + "/register");
+                    new SignUpTask().execute("http://" + IStickInfo.ipAddress + "/register");
                 }
             }
         });
@@ -70,7 +70,7 @@ public class RegistActivity extends AppCompatActivity {
                 if (radioGroup.getCheckedRadioButtonId() == -1 || id.getText().toString().equals("")) {  //  id 랑 radiobut 클릭 확인
                     alertToast("사용자/보호자 선택 또는 아이디를 적어주세요");
                 } else {
-                    new CheckIDTask().execute("http://" + ServerInfo.ipAddress + "/check/id");
+                    new CheckIDTask().execute("http://" + IStickInfo.ipAddress + "/check/id");
                 }
             }
         });

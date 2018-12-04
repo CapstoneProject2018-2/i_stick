@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 if ((id.getText().toString().equals("") || password.getText().toString().equals("") || radioGroup.getCheckedRadioButtonId() == -1))
                     Toast.makeText(getApplicationContext(), "로그인을 위한 정보를 적어주세요.", Toast.LENGTH_LONG).show();
                 else
-                    new SignInTask().execute("http://" + ServerInfo.ipAddress +"/login", id.getText().toString(), password.getText().toString());
+                    new SignInTask().execute("http://" + IStickInfo.ipAddress +"/login", id.getText().toString(), password.getText().toString());
             }
         });
 

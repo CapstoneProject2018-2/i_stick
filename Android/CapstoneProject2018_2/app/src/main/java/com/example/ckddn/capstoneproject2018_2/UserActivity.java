@@ -138,7 +138,7 @@ public class UserActivity extends AppCompatActivity implements TMapGpsManager.on
 
         /* Location Manager */
 //        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        ActivityCompat.requestPermissions(this, ServerInfo.user_permissions, PackageManager.PERMISSION_GRANTED);
+        ActivityCompat.requestPermissions(this, IStickInfo.user_permissions, PackageManager.PERMISSION_GRANTED);
 
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -292,7 +292,7 @@ public class UserActivity extends AppCompatActivity implements TMapGpsManager.on
         double latitude = location.getLatitude();   //  위도
 
         /* save user cur location */
-        new SendLocTask().execute("http://" + ServerInfo.ipAddress + "/user", longitude + "", latitude + "");
+        new SendLocTask().execute("http://" + IStickInfo.ipAddress + "/user", longitude + "", latitude + "");
         Toast.makeText(getApplicationContext(), "num of satellites: " + gps.getSatellite(), Toast.LENGTH_LONG).show();
         /* signal making algorithm...  */
         if (pathlist != null) {

@@ -64,7 +64,7 @@ public class HisLocActivity extends AppCompatActivity implements View.OnClickLis
         userMobile = getIntent().getStringExtra("userMobile");
 
         /* give and check permission(CALL_PHONE) */
-        ActivityCompat.requestPermissions(this, ServerInfo.parent_permissions, PackageManager.PERMISSION_GRANTED);
+        ActivityCompat.requestPermissions(this, IStickInfo.parent_permissions, PackageManager.PERMISSION_GRANTED);
         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -78,7 +78,7 @@ public class HisLocActivity extends AppCompatActivity implements View.OnClickLis
         linearLayoutTmap = (LinearLayout)findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(this);
         tMapView.setSKTMapApiKey( "85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n" );
-        new ShowLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
+        new ShowLocTask().execute("http://" + IStickInfo.ipAddress +"/parent/reqLoc");
     }
 
     @Override
@@ -92,7 +92,7 @@ public class HisLocActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(new Intent("android.intent.action.CALL", Uri.parse("112")));  //  112에 신고
                 break;
             case R.id.currentLocBtn:    //  현재위치
-                new ShowLocTask().execute("http://" + ServerInfo.ipAddress +"/parent/reqLoc");
+                new ShowLocTask().execute("http://" + IStickInfo.ipAddress +"/parent/reqLoc");
                 break;
         }
     }
