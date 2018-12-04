@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-
-
 /*
 * * Copyright (C) 2015 GT Silicon Pvt Ltd
  *
@@ -37,7 +35,6 @@ comments:
  * // END - Added by GT Silicon - END //
 *
 * */
-
 
 package com.example.ckddn.capstoneproject2018_2.Oblu;
 
@@ -126,20 +123,20 @@ import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 
-
 /**
- * For a given BLE device, this Activity provides the user interface to connect, display data,
- * and display GATT services and characteristics supported by the device.  The Activity
- * communicates with {@code BluetoothLeService}, which in turn interacts with the
- * Bluetooth LE API.
+ * For a given BLE device, this Activity provides the user interface to connect,
+ * display data, and display GATT services and characteristics supported by the
+ * device. The Activity communicates with {@code BluetoothLeService}, which in
+ * turn interacts with the Bluetooth LE API.
  */
 public class DeviceControlActivity extends Activity implements TMapGpsManager.onLocationChangedCallback {
     private final static String TAG = DeviceControlActivity.class.getSimpleName();
 
-    private final static int RELIABLIE_SATELLITE_NUM = 15;                   //  신뢰가능한 위성개수 -> 최적화
-    private final static int MINIMUM_LOCATION_GETTING_TIME = 500;           //  TMapGpsManager set minTime
-    private final static double MINIMUN_NAVIGATION_TURNPOINT_DISTANCE = 7.5;     //  I Stick Navigation min distance for turning points
-    private final static int MAPCAL_ALGORITHM_NUM = 4;     //  MapCalculator Algorithm
+    private final static int RELIABLIE_SATELLITE_NUM = 5; // 신뢰가능한 위성개수 -> 최적화
+    private final static int MINIMUM_LOCATION_GETTING_TIME = 500; // TMapGpsManager set minTime
+    private final static double MINIMUN_NAVIGATION_TURNPOINT_DISTANCE = 7.5; // I Stick Navigation min distance for
+                                                                             // turning points
+    private final static int MAPCAL_ALGORITHM_NUM = 4; // MapCalculator Algorithm
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -158,7 +155,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     double speednow = 0;
 
     int bytes, i, j, step_counter, package_number, package_number_1, package_number_2, package_number_old = 0;
-    int[] header = {0, 0, 0, 0};
+    int[] header = { 0, 0, 0, 0 };
     byte[] ack = new byte[5];
 
     double sin_phi, cos_phi;
@@ -171,7 +168,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
     byte[] temp = new byte[4];
     Vibrator vib;
-    double[] delta = {0.0, 0.0, 0.0};
+    double[] delta = { 0.0, 0.0, 0.0 };
     double distance = 0.0;
     double distance1 = 0.0;
     private String TXDATA;
@@ -179,7 +176,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     long timeSec2 = 0;
     double avg = 0;
 
-    //variables for processing
+    // variables for processing
     long timeSec6 = 0;
     DecimalFormat df1 = new DecimalFormat("0.00");
     Calendar c;
@@ -189,8 +186,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private String mDeviceAddress;
     private BluetoothLeService mBluetoothLeService;
     private static BluetoothGattService mService;
-    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
-            new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     private boolean mConnected = false;
     private static BluetoothGattCharacteristic mNotifyCharacteristic;
     private static BluetoothGattCharacteristic mReadCharacteristic;
@@ -202,7 +198,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     /* Extras and layout */
     private String uno;
     private String userId;
-    private TMapPoint destPoint;    //  curPoint in LocationListener, destPoint in SendLocTask.onPostExecute()
+    private TMapPoint destPoint; // curPoint in LocationListener, destPoint in SendLocTask.onPostExecute()
     private TextView userLocationTextView;
 
     /* for FindPath */
@@ -214,7 +210,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private TMapPolyLine polyLine;
     private int pathlistIdx = 0;
 
-
     /* Arduino */
     private BluetoothSPP bt;
 
@@ -225,23 +220,22 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private double[] delta_coor;
     private double[] dr_coordinates;
 
-    /*MapPoint Variables*/
+    /* MapPoint Variables */
 
     private TMapPoint finalPoint;
     private TMapPoint drPoint;
-    private TMapPoint curPoint, prevPoint;  //  curPoint: onLocationChange에서 초기화 되는 MapPoint, prevPoint: locationSelectHandler에서 사용하는 MapPoint, curPoint와 비교하여 onLocationChange의 호출 판단
+    private TMapPoint curPoint, prevPoint; // curPoint: onLocationChange에서 초기화 되는 MapPoint, prevPoint:
+                                           // locationSelectHandler에서 사용하는 MapPoint, curPoint와 비교하여 onLocationChange의 호출
+                                           // 판단
     private int sateNum = 0;
 
-
-
     /* to optimize finalPoint */
-    private double currentAltitude; //  추가
+    private double currentAltitude; // 추가
 
     /* for debug mode dot drawer */
-    private int dotflag = 0;        // navigation Flag
+    private int dotflag = 0; // navigation Flag
     private Context context = null;
-    private int itemID = 1;         // for marking
-
+    private int itemID = 1; // for marking
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -269,8 +263,9 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     // ACTION_GATT_CONNECTED: connected to a GATT server.
     // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
     // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
-    // ACTION_DATA_AVAILABLE: received data from the device.  This can be a result of read
-    //                        or notification operations.
+    // ACTION_DATA_AVAILABLE: received data from the device. This can be a result of
+    // read
+    // or notification operations.
 
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
 
@@ -297,8 +292,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 // BEGIN - Added by GT Silicon - BEGIN //
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 Log.d(TAG, "onReceive: ACTION_DATA_AVAILABLE");
-                //  displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
-                received_data = intent.getByteArrayExtra(BluetoothLeService.EXTRA_TX_VALUE);    //   Oblu데이터 받기
+                // displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                received_data = intent.getByteArrayExtra(BluetoothLeService.EXTRA_TX_VALUE); // Oblu데이터 받기
                 if (received_data != null && received_data.length > 0) {
                     final StringBuilder stringBuilder = new StringBuilder(received_data.length);
                     for (byte byteChar : received_data)
@@ -308,39 +303,39 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     // displayData(TXDATA);
                 }
                 byte[] buffer = received_data;
-                //STEP WISE DATA HERE Receive in Buffer
+                // STEP WISE DATA HERE Receive in Buffer
                 Log.e(TAG, "UART-data- " + TXDATA);
                 int i = 0;
                 int j;
                 // writetofile( bytestring,byte2HexStr(buffer,64)+"\n" );
                 Log.e(TAG, "b2h-data- " + byte2HexStr(buffer, buffer.length));
                 for (j = 0; j < 4; j++) {
-                    header[j] = buffer[i++] & 0xFF;          //HEADER ASSIGNED
+                    header[j] = buffer[i++] & 0xFF; // HEADER ASSIGNED
                     Log.e(TAG, "h- " + header[j]);
                 }
                 for (j = 0; j < 4; j++) {
                     for (int k = 0; k < 4; k++)
                         temp[k] = buffer[i++];
-                    payload[j] = ByteBuffer.wrap(temp).getFloat();                //PAYLOAD ASSIGNED //
+                    payload[j] = ByteBuffer.wrap(temp).getFloat(); // PAYLOAD ASSIGNED //
                 }
-                //Log.i(TAG, ""+ payload[0]+ "  "+ payload[2]);
+                // Log.i(TAG, ""+ payload[0]+ " "+ payload[2]);
 
-                // ++i;++i;                                                // FOR SKIPPING CHECKSUM
+                // ++i;++i; // FOR SKIPPING CHECKSUM
                 package_number_1 = header[1];
                 package_number_2 = header[2];
                 ack = createAck(ack, package_number_1, package_number_2);
                 writeack(ack);
-                package_number = package_number_1 * 256 + package_number_2;        //PACKAGE NUMBER ASSIGNED
+                package_number = package_number_1 * 256 + package_number_2; // PACKAGE NUMBER ASSIGNED
                 if (package_number_old != package_number) {
                     for (j = 0; j < 4; j++)
                         dx[j] = (double) payload[j];
 
-                    stepwise_dr_tu();   //  default 오블루 => distance계산하는 부분을 모듈화 또는 수정
+                    stepwise_dr_tu(); // default 오블루 => distance계산하는 부분을 모듈화 또는 수정
                     if (finalPoint != null)
-                        run_pdr(); //custom pdr
+                        run_pdr(); // custom pdr
 
-
-                    // Log.e(TAG, "final data sent" + final_data[0] + " " + final_data[1] + " "+final_data[2]);
+                    // Log.e(TAG, "final data sent" + final_data[0] + " " + final_data[1] + "
+                    // "+final_data[2]);
                     c = Calendar.getInstance();
                     sdf = new SimpleDateFormat("HHmmss");
                     if (timeSec != timeSec1) {
@@ -356,7 +351,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                         avg = distance / step_counter;
                         speednow = (distance1 * 3.6) / (timeSec3 / 1000);
 
-                        StepData stepData = new StepData(final_data[0], final_data[1], final_data[2], distance, step_counter);
+                        StepData stepData = new StepData(final_data[0], final_data[1], final_data[2], distance,
+                                step_counter);
                         stepData.setHeading(x_sw[3]);
 
                     }
@@ -375,7 +371,6 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         }
     };
 
-
     /* Compass */
     private Compass compass;
     private float currentAzimuth;
@@ -388,12 +383,11 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     private final static int RA_SIZE = 100;
     private boolean full = false;
 
-
     /* TMapGPSManager */
     private TMapGpsManager gps;
 
     /* 12/04 새로운 보호자에게 전화하기 기능을 위한 mobile 변수 */
-    private String pMobile; //  전화하기 버튼에 pMobile 정보 추가
+    private String pMobile; // 전화하기 버튼에 pMobile 정보 추가
 
     // BEGIN - Added by GT Silicon - BEGIN //
     @Override
@@ -418,11 +412,11 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
         /* initialize default layouts */
         userLocationTextView = (TextView) findViewById(R.id.user_location_result);
-        userLocationTextView.setText(userId + ": 위치정보 미수신중"); //DEFAULT
+        userLocationTextView.setText(userId + ": 위치정보 미수신중"); // DEFAULT
         linearLayoutTmap = (LinearLayout) findViewById(R.id.linearLayoutTmap);
         tMapView = new TMapView(getApplicationContext());
         tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
-        pathtext = (TextView) findViewById(R.id.path_text); //  경로에 대한 포인트의 정보 출력 뷰
+        pathtext = (TextView) findViewById(R.id.path_text); // 경로에 대한 포인트의 정보 출력 뷰
         pathtext.setMovementMethod(new ScrollingMovementMethod());
         polyLine = new TMapPolyLine();
         polyLine.setLineWidth(2);
@@ -430,8 +424,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
         /* TMapGpsManager */
         gps = new TMapGpsManager(this);
-        gps.setMinTime(MINIMUM_LOCATION_GETTING_TIME);   //  최소시간 1000->500
-        gps.setMinDistance(2);  //  최소거리
+        gps.setMinTime(MINIMUM_LOCATION_GETTING_TIME); // 최소시간 1000->500
+        gps.setMinDistance(2); // 최소거리
         gps.setProvider(TMapGpsManager.GPS_PROVIDER);
         gps.OpenGps();
 
@@ -443,10 +437,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         bt = new BluetoothSPP(getApplicationContext());
         setupBluetoothWithArduino(bt);
         ActivityCompat.requestPermissions(this, IStickInfo.user_permissions, PackageManager.PERMISSION_GRANTED);
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
 
         mStartStopBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -454,12 +448,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             public void onClick(View v) {
                 Button btn = (Button) v;
                 String buttonText = btn.getText().toString();
-                String startText = getResources().getString(
-                        R.string.UART_START);
-                String stopText = getResources().getString(
-                        R.string.UART_STOP);
+                String startText = getResources().getString(R.string.UART_START);
+                String stopText = getResources().getString(R.string.UART_STOP);
 
-                if (buttonText.equalsIgnoreCase(startText)) {   //  버튼 글자가 start 일 때 누르면
+                if (buttonText.equalsIgnoreCase(startText)) { // 버튼 글자가 start 일 때 누르면
                     btn.setText(stopText);
                     byte[] convertedBytes = convertingTobyteArray(send);
                     BluetoothLeService.writeCharacteristicNoresponse(mReadCharacteristic, convertedBytes);
@@ -468,7 +460,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                         prepareBroadcastDataNotify(mNotifyCharacteristic);
                     }
 
-                } else {    //  stop 일때 누르면
+                } else { // stop 일때 누르면
                     btn.setText(startText);
                     byte[] pro = convertingTobyteArray(pro_off);
                     byte[] sys = convertingTobyteArray(sys_off);
@@ -476,7 +468,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     BluetoothLeService.writeCharacteristicNoresponse(mReadCharacteristic, sys);
                     stopBroadcastDataNotify(mReadCharacteristic);
                     locationSelectHandler.removeCallbacks(locationSelectThread);
-                    dotflag = -1; //  NaviHandler
+                    dotflag = -1; // NaviHandler
                 }
 
             }
@@ -487,15 +479,16 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
     }
 
-    /*  Main Navigation Algoritm
-    * start when user click the start button */
+    /*
+     * Main Navigation Algoritm start when user click the start button
+     */
     private Handler locationSelectHandler = new Handler();
-    private Runnable locationSelectThread = new Runnable() { //  make finalPoint
-            public void run() {
+    private Runnable locationSelectThread = new Runnable() { // make finalPoint
+        public void run() {
             if (curPoint == null) {
                 if (dotflag != -1)
                     locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
-                return;    //  단 한번도 onLocationChange가 불러지지 않았을 때
+                return; // 단 한번도 onLocationChange가 불러지지 않았을 때
             }
             if (prevPoint == null) {
                 prevPoint = new TMapPoint(curPoint.getLatitude(), curPoint.getLongitude());
@@ -503,8 +496,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                 return; //
             }
-            if (prevPoint == curPoint && finalPoint != null) {    //  onLocationChange가 안됫을 때
-//                Toast.makeText(getApplicationContext(),"갱신되지 않음", Toast.LENGTH_SHORT).show();
+            if (prevPoint == curPoint && finalPoint != null) { // onLocationChange가 안됫을 때
+                // Toast.makeText(getApplicationContext(),"갱신되지 않음", Toast.LENGTH_SHORT).show();
                 dotflag = 1;
                 itemID++;
                 if (drPoint == null) {
@@ -513,12 +506,13 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     return;
                 }
                 finalPoint = drPoint;
-            } else if (sateNum >= RELIABLIE_SATELLITE_NUM) {   //  신뢰할 수 있는 위성 개수일 때, 첫 finalPoint 의 지정은 여기서 부터 시작
-//                Toast.makeText(getApplicationContext(),"신뢰가능"+ sateNum, Toast.LENGTH_SHORT).show();
+            } else if (sateNum >= RELIABLIE_SATELLITE_NUM) { // 신뢰할 수 있는 위성 개수일 때, 첫 finalPoint 의 지정은 여기서 부터 시작
+                // Toast.makeText(getApplicationContext(),"신뢰가능"+ sateNum,
+                // Toast.LENGTH_SHORT).show();
                 dotflag = 0;
                 itemID++;
                 finalPoint = curPoint;
-            } else if (finalPoint == null) {    //  신뢰 할수 있는 location 정보가 없는 경우
+            } else if (finalPoint == null) { // 신뢰 할수 있는 location 정보가 없는 경우
                 if (dotflag != -1)
                     locationSelectHandler.postDelayed(locationSelectThread, MINIMUM_LOCATION_GETTING_TIME);
                 return;
@@ -531,29 +525,34 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                     return;
                 }
                 finalPoint = drPoint;
-//                Toast.makeText(getApplicationContext(),"DeadRe"+ sateNum, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(),"DeadRe"+ sateNum,
+                // Toast.LENGTH_SHORT).show();
             }
-            prevPoint = curPoint;   //  prevPoint update
+            prevPoint = curPoint; // prevPoint update
             PointDrawer.drawPoint(finalPoint, dotflag, context, tMapView, itemID);
 
-            new SendLocTask().execute("http://" + IStickInfo.ipAddress + "/user", Double.toString(finalPoint.getLongitude()), Double.toString(finalPoint.getLatitude()));
+            new SendLocTask().execute("http://" + IStickInfo.ipAddress + "/user",
+                    Double.toString(finalPoint.getLongitude()), Double.toString(finalPoint.getLatitude()));
 
-            /* signal making algorithm...  */
+            /* signal making algorithm... */
             if (pathlist != null) {
                 if (pathlistIdx < pathlist.size()) {
                     double distance = MapUtils.getDistance(pathlist.get(pathlistIdx).getPoint(), finalPoint);
 
                     if (distance < MINIMUN_NAVIGATION_TURNPOINT_DISTANCE) {
-                        Toast.makeText(getApplicationContext(), "Point Distance: " + distance, Toast.LENGTH_LONG).show();
-                        Toast.makeText(getApplicationContext(), Integer.toString(pathlist.get(pathlistIdx).getTurnType()), Toast.LENGTH_LONG).show();
-                        /*  send turnType to Arduino    */
-                        String sendMessage = Integer.toString(pathlist.get(pathlistIdx).getTurnType());//보낼 택스트
+                        Toast.makeText(getApplicationContext(), "Point Distance: " + distance, Toast.LENGTH_LONG)
+                                .show();
+                        Toast.makeText(getApplicationContext(),
+                                Integer.toString(pathlist.get(pathlistIdx).getTurnType()), Toast.LENGTH_LONG).show();
+                        /* send turnType to Arduino */
+                        String sendMessage = Integer.toString(pathlist.get(pathlistIdx).getTurnType());// 보낼 택스트
                         if (sendMessage.length() > 0) {
                             if (bt != null) {
-                                bt.send(sendMessage, true); //  send to IStick
+                                bt.send(sendMessage, true); // send to IStick
                                 // 음성지원
                             }
-                            Toast.makeText(getApplicationContext(), "IStick: " + sendMessage + "전송", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "IStick: " + sendMessage + "전송", Toast.LENGTH_LONG)
+                                    .show();
                         }
                         pathlistIdx++;
                     }
@@ -576,7 +575,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             @Override
             public void onDeviceConnected(String name, String address) {
-                Toast.makeText(getApplicationContext(), name + "에 연결" /*+ " 주소: " + address*/, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), name + "에 연결" /* + " 주소: " + address */, Toast.LENGTH_SHORT)
+                        .show();
             }
 
             @Override
@@ -633,7 +633,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     }
 
     private float getFilteredAzimuth() {
-        if (full) { //  RA_SIZE만큼 data를 받았을때 filter on
+        if (full) { // RA_SIZE만큼 data를 받았을때 filter on
             int i;
             float min = 1000, max = -1000;
             int mini = -1, maxi = -1, count = 0;
@@ -656,13 +656,15 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             }
 
             for (i = 0; i < RA_SIZE; i++) {
-                if (mini == i || maxi == i) continue;
+                if (mini == i || maxi == i)
+                    continue;
                 count++;
                 sum += arr[i];
             }
             float dir = sum / count;
             return dir;
-        } else return rawAzimuths[ra_index];
+        } else
+            return rawAzimuths[ra_index];
     }
 
     @Override
@@ -692,13 +694,9 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     }
 
     /*
-        @Override
-        protected void onPause() {
-            super.onPause();
-            Log.e(TAG, "UART PAUSE");
-            unregisterReceiver(mGattUpdateReceiver);
-        }
-    */
+     * @Override protected void onPause() { super.onPause(); Log.e(TAG,
+     * "UART PAUSE"); unregisterReceiver(mGattUpdateReceiver); }
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -716,13 +714,13 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         compass.stop();
         /* HC-06 */
         bt.stopService();
-        dotflag = -1;   //  NaviHandler
+        dotflag = -1; // NaviHandler
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult: Called... Type: " + data.getType());
-        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) { //  Result for HC-06 I-Stick
+        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) { // Result for HC-06 I-Stick
             if (resultCode == Activity.RESULT_OK)
                 bt.connect(data);
         } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
@@ -753,15 +751,15 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_connect:
-                mBluetoothLeService.connect(mDeviceAddress);
-                return true;
-            case R.id.menu_disconnect:
-                mBluetoothLeService.disconnect();
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        case R.id.menu_connect:
+            mBluetoothLeService.connect(mDeviceAddress);
+            return true;
+        case R.id.menu_disconnect:
+            mBluetoothLeService.disconnect();
+            return true;
+        case android.R.id.home:
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -772,23 +770,21 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
      *
      * @param gattCharacteristic
      */
-    void prepareBroadcastDataNotify(    //  onCreate
-                                        BluetoothGattCharacteristic gattCharacteristic) {
+    void prepareBroadcastDataNotify( // onCreate
+            BluetoothGattCharacteristic gattCharacteristic) {
         if ((gattCharacteristic.getProperties() | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
 
             BluetoothLeService.setCharacteristicNotification(gattCharacteristic, true);
         }
     }
 
-    void stopBroadcastDataNotify(
-            BluetoothGattCharacteristic gattCharacteristic) {
+    void stopBroadcastDataNotify(BluetoothGattCharacteristic gattCharacteristic) {
         final int charaProp = gattCharacteristic.getProperties();
 
         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
             if (gattCharacteristic != null) {
                 Log.d(TAG, "Stopped notification");
-                BluetoothLeService.setCharacteristicNotification(
-                        gattCharacteristic, false);
+                BluetoothLeService.setCharacteristicNotification(gattCharacteristic, false);
                 mNotifyCharacteristic = null;
             }
 
@@ -798,17 +794,16 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
 
     // END - Added by GT Silicon - END //
 
-
-    //  GATT DATA Receive here
-    //  initiate GATT Characterists that UUID equals to OBLU
+    // GATT DATA Receive here
+    // initiate GATT Characterists that UUID equals to OBLU
     private void displayGattServices(List<BluetoothGattService> gattServices) {
-        if (gattServices == null) return;
+        if (gattServices == null)
+            return;
         String uuid = null;
         String unknownServiceString = getResources().getString(R.string.unknown_service);
         String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
         ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<HashMap<String, String>>();
-        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData
-                = new ArrayList<ArrayList<HashMap<String, String>>>();
+        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData = new ArrayList<ArrayList<HashMap<String, String>>>();
         mGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
         // Loops through available GATT Services.
         for (BluetoothGattService gattService : gattServices) {
@@ -818,12 +813,9 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             currentServiceData.put(LIST_UUID, uuid);
             gattServiceData.add(currentServiceData);
 
-            ArrayList<HashMap<String, String>> gattCharacteristicGroupData =
-                    new ArrayList<HashMap<String, String>>();
-            List<BluetoothGattCharacteristic> gattCharacteristics =
-                    gattService.getCharacteristics();
-            ArrayList<BluetoothGattCharacteristic> charas =
-                    new ArrayList<BluetoothGattCharacteristic>();
+            ArrayList<HashMap<String, String>> gattCharacteristicGroupData = new ArrayList<HashMap<String, String>>();
+            List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
+            ArrayList<BluetoothGattCharacteristic> charas = new ArrayList<BluetoothGattCharacteristic>();
             // BEGIN - Added by GT Silicon - BEGIN //
             if (uuid.equals(SampleGattAttributes.SERVER_UART)) {
                 for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
@@ -862,7 +854,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
     }
-// BEGIN - Added by GT Silicon - BEGIN //
+    // BEGIN - Added by GT Silicon - BEGIN //
 
     /**
      * Method to convert hex to byteArray
@@ -891,7 +883,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         ack[0] = 0x01;
         ack[1] = (byte) package_number_1;
         ack[2] = (byte) package_number_2;
-        ack[3] = (byte) ((1 + package_number_1 + package_number_2 - (1 + package_number_1 + package_number_2) % 256) / 256);
+        ack[3] = (byte) ((1 + package_number_1 + package_number_2 - (1 + package_number_1 + package_number_2) % 256)
+                / 256);
         ack[4] = (byte) ((1 + package_number_1 + package_number_2) % 256);
         return ack;
     }
@@ -901,7 +894,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         Log.d(TAG, "stepwise_dr_tu: 걸음 계산 시작");
         sin_phi = (float) Math.sin(x_sw[3]);
         cos_phi = (float) Math.cos(x_sw[3]);
-        //Log.i(TAG, "Sin_phi and cos_phi created");
+        // Log.i(TAG, "Sin_phi and cos_phi created");
         delta[0] = cos_phi * dx[0] - sin_phi * dx[1];
         delta[1] = sin_phi * dx[0] + cos_phi * dx[1];
         delta[2] = dx[2];
@@ -918,37 +911,41 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         /* longitude, latitude */
     }
 
-    public void run_pdr() { //oblu 센서값 ->
+    public void run_pdr() { // oblu 센서값 ->
         Log.d(TAG, "run_pdr: start");
-        headingVectors = new double[2];     //  sin_phi, cos_phi
-        scalars = new double[3];           //  Oblu기준의 dx, dy, dz
-        movementVectors = new double[3];    //  longitude, latitude 방향으로 Rotate 한 delta_x, delta_y, delta_z (scalar)
-        delta_coor = new double[2];         //  longitude, latitude 방향으로 Ratate 한 delta (angel)
-        dr_coordinates = new double[2];     //  최종으로 계산한 longitude 와 latitude, satellite수가 적을경우 이 값을 finalPoint로 치환
+        headingVectors = new double[2]; // sin_phi, cos_phi
+        scalars = new double[3]; // Oblu기준의 dx, dy, dz
+        movementVectors = new double[3]; // longitude, latitude 방향으로 Rotate 한 delta_x, delta_y, delta_z (scalar)
+        delta_coor = new double[2]; // longitude, latitude 방향으로 Ratate 한 delta (angel)
+        dr_coordinates = new double[2]; // 최종으로 계산한 longitude 와 latitude, satellite수가 적을경우 이 값을 finalPoint로 치환
 
-        for (int i = 0; i < 3; i++) {        /* z축 고려할시 추가 2 -> 3 */
+        for (int i = 0; i < 3; i++) { /* z축 고려할시 추가 2 -> 3 */
             scalars[i] = dx[i];
         }
 
-        switch (MAPCAL_ALGORITHM_NUM) {        /* select deadreckoning algorithm */
-            case 1: //  default Alg
-                dr_coordinates = MapCalculator.CalculateDRPosition(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude());
-                break;
-            case 2: // altitude 포함
-                dr_coordinates = MapCalculator.CalculateDRPositionWithPostAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
-                break;
-            case 3: // altitude, z 포함
-                dr_coordinates = MapCalculator.CalculateDRPositionWithPreAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
-                break;
-            case 4: //  altitude, z/2 포함
-                dr_coordinates = MapCalculator.CalculateDRPositionWithHalfAlti(currentAzimuth, scalars, finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
-                break;
+        switch (MAPCAL_ALGORITHM_NUM) { /* select deadreckoning algorithm */
+        case 1: // default Alg
+            dr_coordinates = MapCalculator.CalculateDRPosition(currentAzimuth, scalars, finalPoint.getLongitude(),
+                    finalPoint.getLatitude());
+            break;
+        case 2: // altitude 포함
+            dr_coordinates = MapCalculator.CalculateDRPositionWithPostAlti(currentAzimuth, scalars,
+                    finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
+            break;
+        case 3: // altitude, z 포함
+            dr_coordinates = MapCalculator.CalculateDRPositionWithPreAlti(currentAzimuth, scalars,
+                    finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
+            break;
+        case 4: // altitude, z/2 포함
+            dr_coordinates = MapCalculator.CalculateDRPositionWithHalfAlti(currentAzimuth, scalars,
+                    finalPoint.getLongitude(), finalPoint.getLatitude(), currentAltitude);
+            break;
         }
 
         drPoint = new TMapPoint(dr_coordinates[0], dr_coordinates[1]);
     }
 
-    ///WRITE ACK to uc
+    /// WRITE ACK to uc
     void writeack(byte[] byteArray) {
         Log.e(TAG, "ackdata " + byte2HexStr(byteArray, 4));
         BluetoothLeService.writeCharacteristicNoresponse(mReadCharacteristic, byteArray);
@@ -957,7 +954,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
     public static String byte2HexStr(byte[] paramArrayOfByte, int paramInt) {
         StringBuilder localStringBuilder1 = new StringBuilder("");
         int i = 0;
-        for (; ; ) {
+        for (;;) {
             if (i >= paramInt) {
                 String str1 = localStringBuilder1.toString().trim();
                 Locale localLocale = Locale.US;
@@ -973,9 +970,9 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         }
     }
 
-
-    /* FCM message
-     * when this function*/
+    /*
+     * FCM message when this function
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         Log.d("FCM_MESSAGE_RECEIVED", "onNewIntent: ");
@@ -988,8 +985,14 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 return;
             }
             destPoint = new TMapPoint(Double.parseDouble(latitude), Double.parseDouble(longitude));
-            new FindPathData().execute();
-            Toast.makeText(getApplicationContext(), "보호자로 부터 목적지 정보 수신...\n보호자 전화번호: " + pMobile, Toast.LENGTH_LONG).show();
+            if (finalPoint == null) {
+                Toast.makeText(getApplicationContext(), "현재위치가 정확히 설정되지 않았습니다. 목적위치를 재수신 받아야 합니다.", Toast.LENGTH_LONG)
+                        .show();
+            } else {
+                new FindPathData().execute();
+                Toast.makeText(getApplicationContext(), "보호자로 부터 목적지 정보 수신...\n보호자 전화번호: " + pMobile, Toast.LENGTH_LONG)
+                        .show();
+            }
         }
     }
 
@@ -1000,7 +1003,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         curPoint = new TMapPoint(location.getLatitude(), location.getLongitude());
         sateNum = gps.getSatellite();
 
-        if (location.getAltitude() != 0) currentAltitude = location.getAltitude();
+        if (location.getAltitude() != 0)
+            currentAltitude = location.getAltitude();
         /* check num of satellites */
     }
 
@@ -1011,7 +1015,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         @Override
         protected String doInBackground(String... strings) {
             Log.d(TAG, "doInBackground: start!");
-            try {   //  json accumulate
+            try { // json accumulate
                 JSONObject locationInfo = new JSONObject();
                 locationInfo.accumulate("uno", uno);
                 locationInfo.accumulate("longitude", strings[1]);
@@ -1020,37 +1024,37 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 Log.d(TAG, "doInBackground: create json");
                 HttpURLConnection conn = null;
                 BufferedReader reader = null;
-                try {   //  for HttpURLConnection
+                try { // for HttpURLConnection
                     URL url = new URL(strings[0]);
                     conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("POST");  //  POST방식
-                    conn.setRequestProperty("Cache-Control", "no-cache");        // 컨트롤 캐쉬 설정(?)
+                    conn.setRequestMethod("POST"); // POST방식
+                    conn.setRequestProperty("Cache-Control", "no-cache"); // 컨트롤 캐쉬 설정(?)
                     conn.setRequestProperty("Content-Type", "application/json"); // json형식 전달
-                    conn.setRequestProperty("Accept", "application/text");       // text형식 수신
-                    conn.setRequestProperty("Accept", "application/json");       // json형식 수신
-                    conn.setDoOutput(true); //  OutputStream으로 POST데이터 전송
-                    conn.setDoInput(true);  //  InputStream으로 서버로부터 응답 전달받음
+                    conn.setRequestProperty("Accept", "application/text"); // text형식 수신
+                    conn.setRequestProperty("Accept", "application/json"); // json형식 수신
+                    conn.setDoOutput(true); // OutputStream으로 POST데이터 전송
+                    conn.setDoInput(true); // InputStream으로 서버로부터 응답 전달받음
                     conn.connect();
 
                     OutputStream outputStream = conn.getOutputStream();
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-                    //  버퍼생성
+                    // 버퍼생성
                     writer.write(locationInfo.toString());
                     writer.flush();
                     writer.close();
-                    //  send Sign In Info to Server...
+                    // send Sign In Info to Server...
                     InputStream stream = conn.getInputStream();
                     reader = new BufferedReader(new InputStreamReader(stream));
                     StringBuffer buffer = new StringBuffer();
                     String line = "";
                     while ((line = reader.readLine()) != null) {
-                        //  readLine : string or null(if end of data...)
+                        // readLine : string or null(if end of data...)
                         buffer.append(line);
                         Log.d(TAG, "doInBackground: readLine, " + line);
                     }
                     return buffer.toString();
                 } catch (MalformedURLException e) {
-                    //  이상한 URL일 때
+                    // 이상한 URL일 때
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -1065,9 +1069,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             if (!result.equals("ok")) {
-                try {   //  새로운 목적지 정보가 도착한다면...
+                try { // 새로운 목적지 정보가 도착한다면...
                     JSONObject jsonObject = new JSONObject(result);
-                    destPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")); //  도착 포인트
+                    destPoint = new TMapPoint(jsonObject.getDouble("latitude"), jsonObject.getDouble("longitude")); // 도착
+                                                                                                                    // 포인트
                     Toast.makeText(getApplicationContext(), destPoint.toString(), Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1077,8 +1082,10 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
         }
     }
 
-    /*  curPoint와 destPoint로 경로 탐색 후, turnType과 위치 array에 저장과 맵에 경로 표시해주는 작업 수행
-    * FCM이 도착하면 실행된다.*/
+    /*
+     * curPoint와 destPoint로 경로 탐색 후, turnType과 위치 array에 저장과 맵에 경로 표시해주는 작업 수행 FCM이
+     * 도착하면 실행된다.
+     */
     public class FindPathData extends AsyncTask<String, Void, Document> {
 
         String TAG = "FindPathData>>>";
@@ -1091,14 +1098,14 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             pathlistIdx = 0;
             pathPointStr = new StringBuilder();
 
-            /*  새로운 PloyLine을 위해 기존의 view제거 */
+            /* 새로운 PloyLine을 위해 기존의 view제거 */
             linearLayoutTmap.removeView(tMapView);
 
             tMapView = new TMapView(getApplicationContext());
             tMapView.setSKTMapApiKey("85bd1e2c-d3c1-4bbf-93ca-e1f3abbc5788\n");
-            tMapView.setCenterPoint(finalPoint.getLongitude(), finalPoint.getLatitude());   //  finalPoint 12/02
+            tMapView.setCenterPoint(finalPoint.getLongitude(), finalPoint.getLatitude()); // finalPoint 12/02
 
-            /*  기존의 polyLine제거*/
+            /* 기존의 polyLine제거 */
             tMapView.removeAllTMapPolyLine();
             polyLine = new TMapPolyLine();
             polyLine.setLineWidth(2);
@@ -1110,7 +1117,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
             Log.d(TAG, "doInBackground: start!");
             Document document = null;
             try {
-                document = new TMapData().findPathDataAllType(TMapData.TMapPathType.PEDESTRIAN_PATH, finalPoint, destPoint);  //  send find query to TMapServer..
+                document = new TMapData().findPathDataAllType(TMapData.TMapPathType.PEDESTRIAN_PATH, finalPoint,
+                        destPoint); // send find query to TMapServer..
                 return document;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1120,13 +1128,13 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 e.printStackTrace();
             }
             Toast.makeText(getApplicationContext(), "경로탐색에 실패 하였습니다.", Toast.LENGTH_LONG).show();
-            return null;    //  if failed...
+            return null; // if failed...
         }
 
         @Override
         protected void onPostExecute(Document doc) {
             if (doc != null) {
-                /*  Parse by turntype and point information */
+                /* Parse by turntype and point information */
                 NodeList placemarkList = doc.getElementsByTagName("Placemark");
                 for (int i = 0; i < placemarkList.getLength(); i++) {
                     Element item = (Element) placemarkList.item(i);
@@ -1140,7 +1148,7 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                             pathlist.add(new PathItem(PathItem.NODETYPE_POINT, Integer.parseInt(turnType), point));
                             Log.d(TAG, "onPostExecute: add POINT item");
                         }
-                    } else if (nodeType.equals("LINE")){
+                    } else if (nodeType.equals("LINE")) {
                         String coordinates = HttpConnect.getContentFromNode(item, "coordinates");
                         if (coordinates != null) {
                             String[] str = coordinates.split(" ");
@@ -1148,7 +1156,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                             for (int k = 0; k < str.length; k++) {
                                 try {
                                     String[] str2 = str[k].split(",");
-                                    TMapPoint point = new TMapPoint(Double.parseDouble(str2[1]), Double.parseDouble(str2[0]));
+                                    TMapPoint point = new TMapPoint(Double.parseDouble(str2[1]),
+                                            Double.parseDouble(str2[0]));
                                     linePoints.add(point);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -1167,11 +1176,11 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                 }
                 for (int i = 0; i < pathlist.size(); i++) {
                     pathPointStr.append(pathlist.get(i).toString() + "\n");
-                    Log.d(TAG, "pathlist pIndex : " + i +"\n" + pathlist.get(i).toString());
+                    Log.d(TAG, "pathlist pIndex : " + i + "\n" + pathlist.get(i).toString());
                 }
                 pathtext.setText(pathPointStr.toString());
 
-                /*  Parse and draw PloyLine on TMapView */
+                /* Parse and draw PloyLine on TMapView */
                 NodeList list = doc.getElementsByTagName("LineString");
                 for (int i = 0; i < list.getLength(); i++) {
 
@@ -1182,7 +1191,8 @@ public class DeviceControlActivity extends Activity implements TMapGpsManager.on
                         for (int k = 0; k < str2.length; k++) {
                             try {
                                 String[] str3 = str2[k].split(",");
-                                TMapPoint point = new TMapPoint(Double.parseDouble(str3[1]), Double.parseDouble(str3[0]));
+                                TMapPoint point = new TMapPoint(Double.parseDouble(str3[1]),
+                                        Double.parseDouble(str3[0]));
                                 polyLine.addLinePoint(point);
                             } catch (Exception e) {
                                 e.printStackTrace();
